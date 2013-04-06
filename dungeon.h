@@ -8,7 +8,8 @@ enum Tiles{
 	EMPTY,
 	FLOOR,
 	WALL,
-	HALLWAY
+	HALLWAY,
+	DOOR
 };
 
 class Dungeon {
@@ -19,6 +20,8 @@ class Dungeon {
 	~Dungeon();
 	private:
 	void placeRndRoom();
+	bool placeArea(int xCord, int yCord, int xSize, int ySize, int floor);
+	void placeRndHallway();
 };
 
 #endif
