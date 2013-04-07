@@ -37,8 +37,8 @@ Ship::Ship(){
 				//j--;
 			}
 			//Check to make sure the rooms are actually on the grid
-			else if(room2.xPos+room2.xSize > dunXSize ||
-					room2.yPos+room2.ySize > dunYSize){
+			else if(room2.xPos+room2.xSize > dunXSize-1 ||
+					room2.yPos+room2.ySize > dunYSize-1){
 				roomList[j].rndRoom();
 				//j--;
 				recheck = true;
@@ -89,6 +89,26 @@ Ship::Ship(){
 		}
 	}
 
+	//Make walls
+	for(int y=0;y<dunYSize;y++){
+		for(int x=0;x<dunXSize;x++){
+			if(data[x][y] == FLOOR){
+				if(data[x-1][y] == EMPTY){
+					data[x-1][y] = WALL;
+				}
+				if(data[x+1][y] == EMPTY){
+					data[x+1][y] = WALL;
+				}
+				if(data[x][y-1] == EMPTY){
+					data[x][y-1] = WALL;
+				}
+				if(data[x][y+1] == EMPTY){
+					data[x][y+1] = WALL;
+				}
+			}
+		}
+	}
+
 	drawRoom();
 }
 
@@ -115,8 +135,8 @@ Room::Room(){
 
 void Room::rndRoom(){
 	//Set random (x,y) position
-	xPos = rand() % dunXSize;
-	yPos = rand() % dunYSize;
+	xPos = rand() % (dunXSize-1) + 1;
+	yPos = rand() % (dunYSize-1) + 1;
 
 	//Make ship have mix size 4x4 and max 10x10
 	xSize = rand() % 7 + 4;
