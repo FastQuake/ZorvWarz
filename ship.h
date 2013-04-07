@@ -19,7 +19,7 @@ class Room{
 	int xSize,ySize;
 	Room();
 	void rndRoom();
-	bool intersects(Room &otherRoom);
+	bool intersects(Room otherRoom);
 };
 
 class Ship{
