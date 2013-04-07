@@ -44,30 +44,6 @@ void Dungeon::placeRndRoom(){
 	int xCord = rand() % dunXSize; //Get (X,Y) coords of room
 	int yCord = rand() % dunYSize;
 
-	/*
-	* Make sure room fits on map
-	while(true){
-		if(xCord + xSize > dunXSize){
-			//Can't place room
-			xCord = rand() % dunXSize;
-		} else if(yCord + ySize > dunYSize){
-			//Also can't place room
-			yCord = rand() % dunYSize;
-		} else break;
-	}	
-
-	* Place room onto map *
-	for(int y=yCord;y<yCord+ySize;y++){
-		for(int x=xCord;x<xCord+xSize;x++){
-			if(y == yCord || y == yCord+ySize-1){
-				data[x][y] = WALL;
-			} else if(x == xCord || x == xCord+xSize-1){
-				data[x][y] = WALL;
-			} else {
-				data[x][y] = FLOOR;
-			}
-		}
-	}*/
 	while(!placeArea(xCord,yCord,xSize,ySize,FLOOR)){
 		xCord = rand() % dunXSize; //Get (X,Y) coords of room
 		yCord = rand() % dunYSize;	
