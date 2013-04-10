@@ -19,7 +19,7 @@ Ship::Ship(string tileFile){
 	}
 
 	//How many rooms to make
-	numOfRooms = rand() % 5 + 6;
+	numOfRooms = rand() % (maxRooms-minRooms+1) + minRooms;
 	roomList = new Room[numOfRooms];
 
 	//Make sure no rooms are inside eachother
@@ -111,7 +111,7 @@ Ship::Ship(string tileFile){
 		}
 	}
 
-	drawRoom();
+	//drawRoom();
 }
 
 Ship::~Ship(){

@@ -40,8 +40,15 @@ int main(int argc, char *argv[]){
 				else if(event.key.code == sf::Keyboard::Right){
 					x += 32;
 				}
+				else if(event.key.code == sf::Keyboard::PageUp){
+					view.zoom(0.9);
+				}
+				else if(event.key.code == sf::Keyboard::PageDown){
+					view.zoom(1.1);
+				}
 			}
 		}
+
 		view.setCenter(x,y);
 		window.setView(view);
 

@@ -3,7 +3,9 @@
 #include <SFML/Graphics.hpp>
 
 const int dunXSize = 80;
-const int dunYSize = 20;
+const int dunYSize = 80;
+const int minRooms = 7;
+const int maxRooms = 20;
 
 enum Tiles{
 	EMPTY,
