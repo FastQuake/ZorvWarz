@@ -3,7 +3,9 @@
 #include "ship.h"
 using namespace std;
 
-Ship::Ship(){
+Ship::Ship(string tileFile){
+	//Load texture data
+	tiles.loadFromFile(tileFile);
 	//Make data array
 	data = new int*[dunXSize];
 	for(int i=0;i<dunXSize;i++){
@@ -126,6 +128,24 @@ void Ship::drawRoom(){
 			cout << data[x][y];
 		}
 		cout << endl;
+	}
+}
+
+void Ship::drawMap(sf::RenderWindow *window){
+	sf::Sprite mapTile;
+	mapTile.setTexture(tiles);
+	for(int y=0;y<dunYSize;y++){
+		for(int x=0;x<dunXSize;x++){
+			 if(data[x][y] == 0){
+				continue;
+			 } else {
+				 int xx = (data[x][y] % 4) * 32;
+				 int yy = (data[x][y] / 4) * 32; 
+				 mapTile.setTextureRect(sf::IntRect(xx,yy,32,32));
+				 mapTile.setPosition(x*32,y*32);
+				 window->draw(mapTile);
+			 }
+		}
 	}
 }
 

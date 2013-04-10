@@ -1,7 +1,6 @@
 #ifndef SHIP_H
 #define SHIP_H
 #include <SFML/Graphics.hpp>
-#include <vector>
 
 const int dunXSize = 80;
 const int dunYSize = 20;
@@ -26,10 +25,12 @@ class Ship{
 	int **data;
 	int numOfRooms;
 	Room *roomList;
+	sf::Texture tiles;
 	public:
-	Ship();
+	Ship(std::string tileFile);
 	~Ship();
 	void drawRoom();
+	void drawMap(sf::RenderWindow *window);
 };
 
 #endif
