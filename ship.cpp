@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include "ship.h"
+#include "entity.h"
 #include "main.h"
 using namespace std;
 
@@ -171,4 +172,37 @@ bool Room::intersects(Room otherRoom){
 	if(yPos + ySize < otherRoom.yPos) return false;
 	if(yPos > otherRoom.yPos + otherRoom.ySize) return false;
 	return true;
+}
+
+ShipEntity::ShipEntity(string tilesFile){
+	type = "map";
+	drawable = true;
+	collides = true;
+	readyToUpdate = false;
+	alive = true;
+
+	x = 0;
+	y = 0;
+
+	map = new Ship(tilesFile);
+
+	//Get all collision boxes
+	for(int x=0;x<dunXSize;x++){
+		for(int y=0;y<dunYSize;y++){
+			if(map->data[x][y] == WALL){
+				collisionBox.push_back(sf::FloatRect(x*32,y*32,32,32));
+			}
+		}
+	}
+}
+
+ShipEntity::~ShipEntity(){
+	delete map;
+}
+
+void ShipEntity::onCollision(Entity Object,sf::FloatRect otherBox){
+}
+
+void ShipEntity::draw(sf::RenderWindow *screen, int screenx, int screeny){
+	map->drawMap(screen);
 }

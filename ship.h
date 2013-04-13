@@ -24,11 +24,11 @@ class Room{
 };
 
 class Ship{
-	int **data;
 	int numOfRooms;
 	Room *roomList;
 	sf::Texture tiles;
 	public:
+	int **data;
 	Ship(std::string tileFile);
 	~Ship();
 	void drawRoom();

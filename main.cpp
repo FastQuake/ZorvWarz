@@ -9,8 +9,9 @@ using namespace std;
 
 EntityManager entities;
 
-Ship bleh("data/textures/tiles.png");
-Player player("data/textures/player.png");
+//Ship bleh(tilesFile);
+ShipEntity ship(tilesFile);
+Player player(playerFile);
 
 string intToStr(int num){
 	stringstream ss;
@@ -19,6 +20,7 @@ string intToStr(int num){
 } 
 
 void addEntities(){
+	entities.entityList.push_back(&ship);
 	entities.entityList.push_back(&player);
 }
 
@@ -62,7 +64,7 @@ int main(int argc, char *argv[]){
 		entities.updateEntities(0);
 
 		window.clear();
-		bleh.drawMap(&window);
+		//bleh.drawMap(&window);
 		entities.drawEntities(&window,player.x,player.y);
 		window.draw(fpsText);
 		window.display();

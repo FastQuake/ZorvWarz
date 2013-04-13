@@ -45,7 +45,7 @@ void Player::update(int framecount){
 	//y = playerSprite.getPosition().y;
 }
 
-void Player::onCollision(Entity Object){
+void Player::onCollision(Entity Object, sf::FloatRect otherBox){
 }
 
 void Player::draw(sf::RenderWindow *screen, int screenx,int screeny){
