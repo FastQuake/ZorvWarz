@@ -63,7 +63,7 @@ int main(int argc, char *argv[]){
 
 		window.clear();
 		bleh.drawMap(&window);
-		entities.drawEntities(&window);
+		entities.drawEntities(&window,player.x,player.y);
 		window.draw(fpsText);
 		window.display();
 

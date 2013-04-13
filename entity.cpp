@@ -45,10 +45,10 @@ void EntityManager::collideEntities(){
 /**
   * Loop Through all entities and draw them if they are drawable
   */
-void EntityManager::drawEntities(sf::RenderWindow *screen){
+void EntityManager::drawEntities(sf::RenderWindow *screen,int screenx,int screeny){
 	for(int i=0;i<entityList.size();i++){
 		if(entityList[i]->drawable){
-			entityList[i]->draw(screen);
+			entityList[i]->draw(screen,screenx,screeny);
 		}
 	}
 }

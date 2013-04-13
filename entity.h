@@ -30,7 +30,7 @@ class EntityManager{
 	//~EntityManager();
 	void updateEntities(int framecount);
 	void collideEntities();
-	void drawEntities(sf::RenderWindow *screen);
+	void drawEntities(sf::RenderWindow *screen,int screenx,int screeny);
 	void removeByID(int ID);
 };
 
