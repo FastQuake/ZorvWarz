@@ -3,9 +3,19 @@
 #include <stdlib.h>
 #include <time.h>
 #include "ship.h"
+#include "entity.h"
 using namespace std;
 
-int main(int argc, char *argv[]){
+EntityManager entities;
+
+Ship bleh("data/textures/tiles.png");
+Player player("data/textures/player.png");
+
+void addEntities(){
+	entities.entityList.push_back(&player);
+}
+
+void setup(){
 	//Set seed based on time
 	int seed = time(NULL);
 	cout << "seed: " << seed << endl;
@@ -13,9 +23,15 @@ int main(int argc, char *argv[]){
 	//create level for testing
 	Ship bleh("data/textures/tiles.png");
 
+	addEntities();
+}
+
+int main(int argc, char *argv[]){
 	sf::RenderWindow window;
 	window.create(sf::VideoMode(800,600),"Test");
 	window.setFramerateLimit(60);
+
+	setup();
 
 	int x = window.getSize().x/2;
 	int y = window.getSize().y/2;
@@ -49,11 +65,15 @@ int main(int argc, char *argv[]){
 			}
 		}
 
-		view.setCenter(x,y);
+		entities.updateEntities(0);
+
+		//view.setCenter(x,y);
+		view.setCenter(player.x,player.y);
 		window.setView(view);
 
 		window.clear();
 		bleh.drawMap(&window);
+		entities.drawEntities(&window);
 		window.display();
 	}
 	return 0;

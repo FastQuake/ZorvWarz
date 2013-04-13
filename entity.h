@@ -27,11 +27,25 @@ class EntityManager{
 	public:
 	std::vector<Entity*> entityList;
 
-	~EntityManager();
+	//~EntityManager();
 	void updateEntities(int framecount);
 	void collideEntities();
 	void drawEntities(sf::RenderWindow *screen);
 	void removeByID(int ID);
+};
+
+class Player : public Entity {
+	public:
+	int xVol;
+	int yVol;
+	int speed;
+	sf::Sprite playerSprite;
+	sf::Texture texture;
+	
+	Player(std::string playerTexture);
+	void update(int framecount);
+	void onCollision(Entity Object);
+	void draw(sf::RenderWindow *screen);
 };
 
 
