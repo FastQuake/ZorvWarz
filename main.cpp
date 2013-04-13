@@ -79,6 +79,7 @@ int main(int argc, char *argv[]){
 		
 		//Update all the entities
 		entities.updateEntities(0);
+		entities.collideEntities();
 
 		//draw stuff
 		window.clear();
@@ -86,7 +87,7 @@ int main(int argc, char *argv[]){
 		window.draw(fpsText);
 		window.display();
 
-		//cout << player->x << " " << player->y << endl;
+
 	}
 	cleanup();
 	return 0;

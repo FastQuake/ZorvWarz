@@ -20,7 +20,7 @@ class Entity{
 		//virtual ~Entity(){};
 
 		virtual void update(int framecount){};
-		virtual void onCollision(Entity object, sf::FloatRect otherBox){};
+		virtual void onCollision(Entity *object, sf::FloatRect otherBox){};
 		virtual void draw(sf::RenderWindow *screen,int screenx,int screeny){};
 };
 
@@ -45,7 +45,7 @@ class Player : public Entity {
 	
 	Player(std::string playerTexture);
 	void update(int framecount);
-	void onCollision(Entity Object, sf::FloatRect otherBox);
+	void onCollision(Entity *object, sf::FloatRect otherBox);
 	void draw(sf::RenderWindow *screen,int screenx,int screeny);
 };
 
@@ -56,7 +56,7 @@ class ShipEntity : public Entity{
 	ShipEntity(std::string tilesFile);
 	~ShipEntity();
 
-	void onCollision(Entity Object, sf::FloatRect otherBox);
+	void onCollision(Entity *object, sf::FloatRect otherBox);
 	void draw(sf::RenderWindow *screen, int screenx, int screeny);
 
 };

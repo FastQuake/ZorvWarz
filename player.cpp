@@ -16,6 +16,8 @@ Player::Player(std::string playerTexture){
 	texture.loadFromFile(playerTexture);
 	playerSprite.setTexture(texture);
 	playerSprite.setPosition(x,y); //Hardcoded screen size, may fix later
+
+	collisionBox.push_back(sf::FloatRect(x,y,30,30));
 }
 
 void Player::update(int framecount){
@@ -41,11 +43,17 @@ void Player::update(int framecount){
 	y += yVol;
 	xVol = 0;
 	yVol = 0;
-	//x = playerSprite.getPosition().x;
-	//y = playerSprite.getPosition().y;
+
+	collisionBox[0].left = x;
+	collisionBox[0].top = y;
 }
 
-void Player::onCollision(Entity Object, sf::FloatRect otherBox){
+void Player::onCollision(Entity *object, sf::FloatRect otherBox){
+	sf::Vector2f bounceDir(-(otherBox.left - x), -(otherBox.top - y));
+	//xVol = bounceDir.x;
+	//yVol = bounceDir.y;
+	x += bounceDir.x/speed;
+	y += bounceDir.y/speed;
 }
 
 void Player::draw(sf::RenderWindow *screen, int screenx,int screeny){

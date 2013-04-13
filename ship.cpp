@@ -113,6 +113,10 @@ Ship::Ship(string tileFile){
 		}
 	}
 
+	/*
+	//debug room
+	data[0][0] = WALL;*/
+
 	//drawRoom();
 }
 
@@ -201,7 +205,7 @@ ShipEntity::~ShipEntity(){
 	delete map;
 }
 
-void ShipEntity::onCollision(Entity Object, sf::FloatRect otherBox){
+void ShipEntity::onCollision(Entity *object, sf::FloatRect otherBox){
 }
 
 void ShipEntity::draw(sf::RenderWindow *screen, int screenx, int screeny){

@@ -40,6 +40,28 @@ void EntityManager::updateEntities(int framecount){
   * Loop through all entities, and if they are collidable check if they had collided
   */
 void EntityManager::collideEntities(){
+	for(int i=0;i<entityList.size();i++){
+		if(entityList[i]->type == "map"){
+			continue;
+		}
+		for(int j=0;j<entityList.size();j++){
+			if(j == i){
+				continue;
+			}
+			if(entityList[i]->collides && entityList[j]->collides){
+				for(int k=0;k<entityList[i]->collisionBox.size();k++){
+					for(int l=0;l<entityList[j]->collisionBox.size();l++){
+						if(entityList[i]->collisionBox[k].intersects(
+									entityList[j]->collisionBox[l])){
+							std::cout << "COLLISON\n";
+							entityList[i]->onCollision(entityList[j],entityList[j]->collisionBox[l]);
+							entityList[j]->onCollision(entityList[i],entityList[i]->collisionBox[k]);
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 /**
