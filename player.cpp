@@ -9,13 +9,13 @@ Player::Player(std::string playerTexture){
 
 	xVol = 0;
 	yVol = 0;
-	x = 0;
-	y = 0;
+	x = 800/2;
+	y = 600/2;
 	speed = 5;
 
 	texture.loadFromFile(playerTexture);
 	playerSprite.setTexture(texture);
-	playerSprite.setPosition(800/2,600/2); //Hardcoded screen size, may fix later
+	playerSprite.setPosition(x,y); //Hardcoded screen size, may fix later
 }
 
 void Player::update(int framecount){

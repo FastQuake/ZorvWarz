@@ -10,8 +10,8 @@ using namespace std;
 EntityManager entities;
 
 //Ship bleh(tilesFile);
-ShipEntity ship(tilesFile);
-Player player(playerFile);
+ShipEntity *ship;
+Player *player;
 
 string intToStr(int num){
 	stringstream ss;
@@ -20,8 +20,10 @@ string intToStr(int num){
 } 
 
 void addEntities(){
-	entities.entityList.push_back(&ship);
-	entities.entityList.push_back(&player);
+	ship = new ShipEntity(tilesFile);
+	player = new Player(playerFile);
+	entities.entityList.push_back(ship);
+	entities.entityList.push_back(player);
 }
 
 void setup(){
@@ -33,10 +35,16 @@ void setup(){
 	addEntities();
 }
 
+void cleanup(){
+	delete ship;
+	delete player;
+}
+
 int main(int argc, char *argv[]){
 	sf::RenderWindow window;
 	window.create(sf::VideoMode(800,600),"Test");
 	window.setFramerateLimit(60);
+	sf::Event event;
 
 	setup();
 
@@ -54,30 +62,32 @@ int main(int argc, char *argv[]){
 	fpsText.setFont(font);
 
 	while(window.isOpen()){
-		sf::Event event;
-		while(window.pollEvent(event)){
-			if(event.type == sf::Event::Closed){
-				window.close();
-			} 
-		}
-
-		entities.updateEntities(0);
-
-		window.clear();
-		//bleh.drawMap(&window);
-		entities.drawEntities(&window,player.x,player.y);
-		window.draw(fpsText);
-		window.display();
-
-		if(counter.getElapsedTime().asMilliseconds() >= 1000){
+		//Get current FPS
+		if(counter.getElapsedTime().asSeconds() > 1){
 			counter.restart();
 			fpsText.setString(intToStr(fps));
 			fps = 0;
 		} else {
 			fps++;
 		}
+		//Get input
+		while(window.pollEvent(event)){
+			if(event.type == sf::Event::Closed){
+				window.close();
+			} 
+		}
+		
+		//Update all the entities
+		entities.updateEntities(0);
 
-		cout << player.x << " " << player.y << endl;
+		//draw stuff
+		window.clear();
+		entities.drawEntities(&window,player->x-400,player->y-300); //Hardcoded screenx and screeny, may fix later
+		window.draw(fpsText);
+		window.display();
+
+		//cout << player->x << " " << player->y << endl;
 	}
+	cleanup();
 	return 0;
 }

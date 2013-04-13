@@ -133,19 +133,20 @@ void Ship::drawRoom(){
 	}
 }
 
-void Ship::drawMap(sf::RenderWindow *window){
+void Ship::drawMap(sf::RenderWindow *window,int screenx, int screeny){
 	sf::Sprite mapTile;
 	mapTile.setTexture(tiles);
 	for(int y=0;y<dunYSize;y++){
 		for(int x=0;x<dunXSize;x++){
 			 if(data[x][y] == 0){
 				continue;
-			 } else if((x*32+32) >= (player.x) && (x*32) <= (player.x+800)&&
-					 (y*32+32) >= (player.y) && (y*32) <= (player.y+600)){
+			 } else if((x*32+32) >= (screenx) && (x*32) <= (screenx+800)&&
+					 (y*32+32) >= (screeny) && (y*32) <= (screeny+600)){
 				 int xx = (data[x][y] % 4) * 32;
 				 int yy = (data[x][y] / 4) * 32; 
 				 mapTile.setTextureRect(sf::IntRect(xx,yy,32,32));
-				 mapTile.setPosition(-player.x+(x*32),-player.y+(y*32));
+				 mapTile.setPosition(x*32,y*32);
+				 mapTile.move(-screenx,-screeny);
 				 window->draw(mapTile);
 			 }
 		}
@@ -200,9 +201,9 @@ ShipEntity::~ShipEntity(){
 	delete map;
 }
 
-void ShipEntity::onCollision(Entity Object,sf::FloatRect otherBox){
+void ShipEntity::onCollision(Entity Object, sf::FloatRect otherBox){
 }
 
 void ShipEntity::draw(sf::RenderWindow *screen, int screenx, int screeny){
-	map->drawMap(screen);
+	map->drawMap(screen,screenx,screeny);
 }

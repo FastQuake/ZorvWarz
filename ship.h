@@ -32,7 +32,7 @@ class Ship{
 	Ship(std::string tileFile);
 	~Ship();
 	void drawRoom();
-	void drawMap(sf::RenderWindow *window);
+	void drawMap(sf::RenderWindow *window,int screenx, int screeny);
 };
 
 #endif
