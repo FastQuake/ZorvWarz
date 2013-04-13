@@ -32,6 +32,7 @@ void Player::update(int framecount){
 		xVol = speed;
 	}
 
+
 	playerSprite.move(xVol,yVol);
 	xVol = 0;
 	yVol = 0;

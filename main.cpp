@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <SFML/Graphics.hpp>
 #include <stdlib.h>
 #include <time.h>
@@ -10,6 +11,12 @@ EntityManager entities;
 
 Ship bleh("data/textures/tiles.png");
 Player player("data/textures/player.png");
+
+string intToStr(int num){
+	stringstream ss;
+	ss << num;
+	return ss.str();
+} 
 
 void addEntities(){
 	entities.entityList.push_back(&player);
@@ -37,6 +44,16 @@ int main(int argc, char *argv[]){
 	int y = window.getSize().y/2;
 	
 	sf::View view = window.getView();
+
+	int fps = 0;
+	sf::Clock counter;
+	counter.restart();
+
+	sf::Font font;
+	font.loadFromFile("data/PressStart2P.ttf");
+
+	sf::Text fpsText;
+	fpsText.setFont(font);
 
 	while(window.isOpen()){
 		sf::Event event;
@@ -71,10 +88,22 @@ int main(int argc, char *argv[]){
 		view.setCenter(player.x,player.y);
 		window.setView(view);
 
+		fpsText.setPosition(player.x-(window.getSize().x/2),player.y-(window.getSize().y/2));
+		//fpsText.setString(intToStr(fps));
+
 		window.clear();
 		bleh.drawMap(&window);
 		entities.drawEntities(&window);
+		window.draw(fpsText);
 		window.display();
+
+		if(counter.getElapsedTime().asMilliseconds() >= 1000){
+			counter.restart();
+			fpsText.setString(intToStr(fps));
+			fps = 0;
+		} else {
+			fps++;
+		}
 	}
 	return 0;
 }
