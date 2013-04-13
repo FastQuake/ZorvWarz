@@ -9,10 +9,13 @@ Player::Player(std::string playerTexture){
 
 	xVol = 0;
 	yVol = 0;
+	x = 0;
+	y = 0;
 	speed = 5;
 
 	texture.loadFromFile(playerTexture);
 	playerSprite.setTexture(texture);
+	playerSprite.setPosition(800/2,600/2); //Hardcoded screen size, may fix later
 }
 
 void Player::update(int framecount){
@@ -33,16 +36,18 @@ void Player::update(int framecount){
 	}
 
 
-	playerSprite.move(xVol,yVol);
+	//playerSprite.move(xVol,yVol);
+	x -= xVol;
+	y -= yVol;
 	xVol = 0;
 	yVol = 0;
-	x = playerSprite.getPosition().x;
-	y = playerSprite.getPosition().y;
+	//x = playerSprite.getPosition().x;
+	//y = playerSprite.getPosition().y;
 }
 
 void Player::onCollision(Entity Object){
 }
 
-void Player::draw(sf::RenderWindow *screen){
+void Player::draw(sf::RenderWindow *screen, int screenx,int screeny){
 	screen->draw(playerSprite);
 }

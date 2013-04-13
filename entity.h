@@ -20,7 +20,7 @@ class Entity{
 
 		virtual void update(int framecount){};
 		virtual void onCollision(Entity object){};
-		virtual void draw(sf::RenderWindow *screen){};
+		virtual void draw(sf::RenderWindow *screen,int screenx,int screeny){};
 };
 
 class EntityManager{
@@ -45,7 +45,7 @@ class Player : public Entity {
 	Player(std::string playerTexture);
 	void update(int framecount);
 	void onCollision(Entity Object);
-	void draw(sf::RenderWindow *screen);
+	void draw(sf::RenderWindow *screen,int screenx,int screeny);
 };
 
 

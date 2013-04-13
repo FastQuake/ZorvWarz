@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include "ship.h"
+#include "main.h"
 using namespace std;
 
 Ship::Ship(string tileFile){
@@ -142,7 +143,7 @@ void Ship::drawMap(sf::RenderWindow *window){
 				 int xx = (data[x][y] % 4) * 32;
 				 int yy = (data[x][y] / 4) * 32; 
 				 mapTile.setTextureRect(sf::IntRect(xx,yy,32,32));
-				 mapTile.setPosition(x*32,y*32);
+				 mapTile.setPosition(player.x+(x*32),player.y+(y*32));
 				 window->draw(mapTile);
 			 }
 		}
