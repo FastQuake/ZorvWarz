@@ -139,11 +139,12 @@ void Ship::drawMap(sf::RenderWindow *window){
 		for(int x=0;x<dunXSize;x++){
 			 if(data[x][y] == 0){
 				continue;
-			 } else {
+			 } else if((x*32) >= (player.x) && (x*32) <= (player.x+800-32)&&
+					 (y*32) >= (player.y) && (y*32) <= (player.y+600-32)){
 				 int xx = (data[x][y] % 4) * 32;
 				 int yy = (data[x][y] / 4) * 32; 
 				 mapTile.setTextureRect(sf::IntRect(xx,yy,32,32));
-				 mapTile.setPosition(player.x+(x*32),player.y+(y*32));
+				 mapTile.setPosition(-player.x+(x*32),-player.y+(y*32));
 				 window->draw(mapTile);
 			 }
 		}

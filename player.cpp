@@ -37,8 +37,8 @@ void Player::update(int framecount){
 
 
 	//playerSprite.move(xVol,yVol);
-	x -= xVol;
-	y -= yVol;
+	x += xVol;
+	y += yVol;
 	xVol = 0;
 	yVol = 0;
 	//x = playerSprite.getPosition().x;
