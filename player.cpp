@@ -44,19 +44,19 @@ void Player::update(int framecount){
 
 
 	//playerSprite.move(xVol,yVol);
-	x += xVol;
-	y += yVol;
-	xVol = 0;
-	yVol = 0;
+	//x += xVol;
+	//y += yVol;
+	//xVol = 0;
+	//yVol = 0;
 
-	collisionBox[0].left = x;
-	collisionBox[0].top = y;
+	//collisionBox[0].left = x;
+	//collisionBox[0].top = y;
 }
 
 void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 	sf::Vector2f bounceDir(-(otherBox.left - x), -(otherBox.top - y));
-	//xVol = bounceDir.x;
-	//yVol = bounceDir.y;
+	xVol = 0;
+	yVol = 0;
 	int xx = (bounceDir.x/abs(bounceDir.x))*speed;
 	int yy = (bounceDir.y/abs(bounceDir.y))*speed;
 	if(xx == -2147483648){
@@ -74,5 +74,11 @@ void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 }
 
 void Player::draw(sf::RenderWindow *screen, int screenx,int screeny){
+	x += xVol;
+	y += yVol;
+	xVol = 0;
+	yVol = 0;
+	collisionBox[0].left = x;
+	collisionBox[0].top = y;
 	screen->draw(playerSprite);
 }
