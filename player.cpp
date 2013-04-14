@@ -1,4 +1,5 @@
-#include "entity.h" 
+#include <cmath>
+#include "entity.h"
 
 Player::Player(std::string playerTexture){
 	type = "player";
@@ -17,7 +18,7 @@ Player::Player(std::string playerTexture){
 	playerSprite.setTexture(texture);
 	playerSprite.setPosition(x,y); //Hardcoded screen size, may fix later
 
-	collisionBox.push_back(sf::FloatRect(x,y,30,30));
+	collisionBox.push_back(sf::FloatRect(x,y,28,28));
 }
 
 void Player::update(int framecount){
@@ -37,6 +38,10 @@ void Player::update(int framecount){
 		xVol = speed;
 	}
 
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::M)){
+		collides = !collides;
+	}
+
 
 	//playerSprite.move(xVol,yVol);
 	x += xVol;
@@ -52,8 +57,20 @@ void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 	sf::Vector2f bounceDir(-(otherBox.left - x), -(otherBox.top - y));
 	//xVol = bounceDir.x;
 	//yVol = bounceDir.y;
-	x += bounceDir.x/speed;
-	y += bounceDir.y/speed;
+	int xx = (bounceDir.x/abs(bounceDir.x))*speed;
+	int yy = (bounceDir.y/abs(bounceDir.y))*speed;
+	if(xx == -2147483648){
+		xx = 0;
+	}
+	if(yy == -2147483648){
+		yy = 0;
+	}
+	std::cout << bounceDir.x << " "<< xx << " " << yy << std::endl;
+
+	x += xx;
+	y += yy;
+	collisionBox[0].left = x;
+	collisionBox[0].top = y;
 }
 
 void Player::draw(sf::RenderWindow *screen, int screenx,int screeny){

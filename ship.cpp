@@ -97,17 +97,37 @@ Ship::Ship(string tileFile){
 	for(int y=0;y<dunYSize;y++){
 		for(int x=0;x<dunXSize;x++){
 			if(data[x][y] == FLOOR){
+				//Left
 				if(data[x-1][y] == EMPTY){
 					data[x-1][y] = WALL;
 				}
+				//Right
 				if(data[x+1][y] == EMPTY){
 					data[x+1][y] = WALL;
 				}
+				//Up
 				if(data[x][y-1] == EMPTY){
 					data[x][y-1] = WALL;
 				}
+				//Down
 				if(data[x][y+1] == EMPTY){
 					data[x][y+1] = WALL;
+				}
+				//Left-Down
+				if(data[x-1][y-1] == EMPTY){
+					data[x-1][y-1] = WALL;
+				}
+				//Left-Up
+				if(data[x-1][y+1] == EMPTY){
+					data[x-1][y+1] = WALL;
+				}
+				//Right-Down
+				if(data[x+1][y-1] == EMPTY){
+					data[x+1][y-1] = WALL;
+				}
+				//Right-Up
+				if(data[x+1][y+1] == EMPTY){
+					data[x+1][y+1] = WALL;
 				}
 			}
 		}
