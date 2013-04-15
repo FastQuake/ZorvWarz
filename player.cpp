@@ -58,24 +58,40 @@ void Player::update(int framecount){
 }
 
 void Player::onCollision(Entity *object, sf::FloatRect otherBox){
+
+	int xMag = (collisionBox[0].left+collisionBox[0].width) - (otherBox.left+otherBox.width);
+	int yMag = (collisionBox[0].top+collisionBox[0].height) - (otherBox.top+otherBox.height);
+	if(xMag == yMag){
+		xMag++;
+	}
+
 	int xx = 0;
 	int yy = 0;
-	if(xVol != 0){
-		xx = -xVol/abs(xVol);
+	if(xMag != 0){
+		xx = xMag/abs(xMag);
 	}
-	if(yVol != 0){
-		yy = -yVol/abs(yVol);
+	if(yMag != 0){
+		yy = yMag/abs(yMag);
 	}
 	std::cout << xx << " " << yy << std::endl;
 	std::cout << "VOLS: " << xVol << " " << yVol << std::endl;
+	std::cout << "MAGS: " << xMag << " " << yMag << std::endl;
 	while(collisionBox[0].intersects(otherBox)){
-		x += xx;
-		y += yy;
+		if(abs(xMag) > abs(yMag)){
+			std::cout << "DOIN X" << "\n";
+			x += xx;
+		} else {
+			std::cout << "DOIN Y" << "\n";
+			y += yy;
+		}
 		collisionBox[0].left = x;
 		collisionBox[0].top = y;
 	}
-	x += xx;
-	y += yy;
+	if(abs(xMag) > abs(yMag)){
+		x += xx;
+	} else {
+		y += yy;
+	}
 	collisionBox[0].left = x;
 	collisionBox[0].top = y;
 
