@@ -26,6 +26,7 @@ void Player::update(int framecount){
 	bool keyDown = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
 	bool keyLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
 	bool keyRight = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
+	bool keyEscape = sf::Keyboard::isKeyPressed(sf::Keyboard::Escape);
 
 	if(keyUp){
 		yVol = -speed;
@@ -37,6 +38,8 @@ void Player::update(int framecount){
 	} else if(keyRight){
 		xVol = speed;
 	}
+	if(keyEscape)
+		exit(0);
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::M)){
 		collides = !collides;
