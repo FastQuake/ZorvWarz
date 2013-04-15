@@ -18,7 +18,7 @@ Player::Player(std::string playerTexture){
 	playerSprite.setTexture(texture);
 	playerSprite.setPosition(x,y); //Hardcoded screen size, may fix later
 
-	collisionBox.push_back(sf::FloatRect(x,y,28,28));
+	collisionBox.push_back(sf::FloatRect(x,y,32,32));
 }
 
 void Player::update(int framecount){
