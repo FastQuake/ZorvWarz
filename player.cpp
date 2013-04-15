@@ -61,9 +61,9 @@ void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 
 	int xMag = (collisionBox[0].left+collisionBox[0].width) - (otherBox.left+otherBox.width);
 	int yMag = (collisionBox[0].top+collisionBox[0].height) - (otherBox.top+otherBox.height);
-	if(xMag == yMag){
+	/*if(xMag == yMag){
 		xMag++;
-	}
+	}*/
 
 	int xx = 0;
 	int yy = 0;
@@ -87,7 +87,7 @@ void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 		collisionBox[0].left = x;
 		collisionBox[0].top = y;
 	}
-	if(abs(xMag) > abs(yMag)){
+	if(abs(xMag) >= abs(yMag)){
 		x += xx;
 	} else {
 		y += yy;
