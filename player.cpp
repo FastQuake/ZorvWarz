@@ -51,34 +51,42 @@ void Player::update(int framecount){
 
 	//collisionBox[0].left = x;
 	//collisionBox[0].top = y;
+	x += xVol;
+	y += yVol;
+	collisionBox[0].left = x;
+	collisionBox[0].top = y;
 }
 
 void Player::onCollision(Entity *object, sf::FloatRect otherBox){
-	sf::Vector2f bounceDir(-(otherBox.left - x), -(otherBox.top - y));
-	xVol = 0;
-	yVol = 0;
-	int xx = (bounceDir.x/abs(bounceDir.x))*speed;
-	int yy = (bounceDir.y/abs(bounceDir.y))*speed;
-	if(xx == -2147483648){
-		xx = 0;
+	int xx = 0;
+	int yy = 0;
+	if(xVol != 0){
+		xx = -xVol/abs(xVol);
 	}
-	if(yy == -2147483648){
-		yy = 0;
+	if(yVol != 0){
+		yy = -yVol/abs(yVol);
 	}
-	std::cout << bounceDir.x << " "<< xx << " " << yy << std::endl;
-
+	std::cout << xx << " " << yy << std::endl;
+	std::cout << "VOLS: " << xVol << " " << yVol << std::endl;
+	while(collisionBox[0].intersects(otherBox)){
+		x += xx;
+		y += yy;
+		collisionBox[0].left = x;
+		collisionBox[0].top = y;
+	}
 	x += xx;
 	y += yy;
 	collisionBox[0].left = x;
 	collisionBox[0].top = y;
+
 }
 
 void Player::draw(sf::RenderWindow *screen, int screenx,int screeny){
-	x += xVol;
-	y += yVol;
+	//x += xVol;
+	//y += yVol;
 	xVol = 0;
 	yVol = 0;
-	collisionBox[0].left = x;
-	collisionBox[0].top = y;
+	//collisionBox[0].left = x;
+	//collisionBox[0].top = y;
 	screen->draw(playerSprite);
 }
