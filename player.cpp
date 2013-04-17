@@ -18,7 +18,7 @@ Player::Player(std::string playerTexture){
 	playerSprite.setTexture(texture);
 	playerSprite.setPosition(x,y); //Hardcoded screen size, may fix later
 
-	collisionBox.push_back(sf::FloatRect(x,y,28,28));
+	collisionBox.push_back(sf::FloatRect(x,y,32,32));
 }
 
 void Player::update(int framecount){
@@ -108,4 +108,26 @@ void Player::draw(sf::RenderWindow *screen, int screenx,int screeny){
 	//collisionBox[0].left = x;
 	//collisionBox[0].top = y;
 	screen->draw(playerSprite);
+}
+
+Mob::Mob(std::string textureFile){
+	type = "mob";
+	drawable = true;
+	collides = true;
+	readyToUpdate = true;
+	alive = true;
+
+	x = 0;
+	y = 0;
+
+	texture.loadFromFile(textureFile);
+	mobSprite.setTexture(texture);
+	mobSprite.setPosition(0,0); //Hardcoded screen size, may fix later
+
+	collisionBox.push_back(sf::FloatRect(x,y,32,32));
+}
+
+void Mob::draw(sf::RenderWindow *window,int screenx,int screeny){
+	mobSprite.setPosition(x-screenx,y-screeny);
+	window->draw(mobSprite);
 }

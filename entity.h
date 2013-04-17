@@ -35,6 +35,17 @@ class EntityManager{
 	void removeByID(int ID);
 };
 
+class Mob : public Entity {
+	public:
+	sf::Sprite mobSprite;
+	sf::Texture texture;
+
+	Mob(std::string textureFile);
+	void update(int framecount){};
+	void onCollision(Entity *object, sf::FloatRect otherBox){};
+	void draw(sf::RenderWindow *window, int screenx,int screeny);
+};
+
 class Player : public Entity {
 	public:
 	int xVol;
