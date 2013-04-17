@@ -1,6 +1,7 @@
 #include "server.h"
 #include "main.h"
 #include <sstream>
+#include <stdio.h>
 
 using namespace std;
 
@@ -52,7 +53,7 @@ void serverLoop(){
 			case ENET_EVENT_TYPE_CONNECT:
 				cout << "A new client connected from " << event.peer->address.host << event.peer->address.port << "." << endl;
 				/* Store any relevant client information here. */
-				event.peer -> data = "Client information";
+				//event.peer -> data = "Client information";
 				break;
 
 			case ENET_EVENT_TYPE_RECEIVE:
