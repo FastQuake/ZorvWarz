@@ -21,11 +21,9 @@ enum{
 	scMap
 };
 
-void runServer(){
+void initServer(){
 	serverShip = new ShipEntity(tilesFile);
 	ENetAddress address;
-
-	ENetEvent event;
 	
 	address.host = ENET_HOST_ANY;
 	address.port = 1255;
@@ -36,19 +34,23 @@ void runServer(){
 		cout << "The server's broken" << endl;
 		exit(EXIT_FAILURE);
 	}
+	cout << "The server is working :)" << endl;
+}
 
+void serverLoop(){
+	
+	ENetEvent event;
 	while(true){
-		while (enet_host_service (server, &event, 1) > 0)
+		while (enet_host_service(server, &event, 1) > 0)
 		{
+			cout << "something happen" << endl;
 			//if(window.isOpen() == false){
 			//	break;
 			//}
 			switch (event.type)
 			{
 			case ENET_EVENT_TYPE_CONNECT:
-				printf ("A new client connected from %x:%u.\n", 
-						event.peer -> address.host,
-						event.peer -> address.port);
+				cout << "A new client connected from " << event.peer->address.host << event.peer->address.port << "." << endl;
 				/* Store any relevant client information here. */
 				event.peer -> data = "Client information";
 				break;

@@ -5,7 +5,8 @@
 #include "entity.h"
 
 extern ShipEntity *serverShip;
-void runServer();
+void serverLoop();
+void initServer();
 std::string getMapData();
 
 #endif

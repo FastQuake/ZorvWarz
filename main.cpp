@@ -62,12 +62,13 @@ int main(int argc, char *argv[]){
 		cout << "1. Join game" << endl << "2. Host game" << endl << "Enter your selection: ";
 		cin >> selection;
 		clientThread = new sf::Thread(&runClient,selection);
-		serverThread = new sf::Thread(&runServer);
+		serverThread = new sf::Thread(&serverLoop);
 		if(selection == "1"){
 			clientThread->launch();
 			break;
 		}
 		else if(selection == "2"){
+			initServer();
 			clientThread->launch();
 			serverThread->launch();
 			break;
@@ -139,7 +140,6 @@ void runClient(string selection){
 	if(selection == "1"){
 		cout << "Enter the IP address: ";
 		cin >> ipAddress;
-		ipAddress = "127.0.0.1";
 		enet_address_set_host(&address,ipAddress.c_str());
 	}
 	else if(selection == "2"){
