@@ -5,13 +5,18 @@
 #include <time.h>
 #include "ship.h"
 #include "main.h"
+#include "server.h"
+
 using namespace std;
 
 EntityManager entities;
-
+sf::RenderWindow window;
 //Ship bleh(tilesFile);
 ShipEntity *ship;
 Player *player;
+
+sf::Thread *serverThread;
+sf::Thread *clientThread;
 
 string intToStr(int num){
 	stringstream ss;
@@ -38,10 +43,40 @@ void setup(){
 void cleanup(){
 	delete ship;
 	delete player;
+	delete serverThread;
+	delete clientThread;
 }
 
 int main(int argc, char *argv[]){
-	sf::RenderWindow window;
+	string selection;
+
+	if (enet_initialize() != 0){
+		cout << "An error occurred while initializing ENet." << endl;
+        return EXIT_FAILURE;
+	}
+    atexit (enet_deinitialize);
+
+	while(true){
+		string ipAddress;
+
+		cout << "1. Join game" << endl << "2. Host game" << endl << "Enter your selection: ";
+		cin >> selection;
+		clientThread = new sf::Thread(&runClient,selection);
+		serverThread = new sf::Thread(&runServer);
+		if(selection == "1"){
+			clientThread->launch();
+			break;
+		}
+		else if(selection == "2"){
+			clientThread->launch();
+			serverThread->launch();
+			break;
+		}else{
+			cout << "Invalid selection, please try again." << endl << endl;
+			continue;
+		}
+	}
+	
 	window.create(sf::VideoMode(800,600),"Test");
 	window.setFramerateLimit(60);
 	sf::Event event;
@@ -91,4 +126,48 @@ int main(int argc, char *argv[]){
 	}
 	cleanup();
 	return 0;
+}
+
+void runClient(string selection){
+	ENetHost *client;
+	ENetPeer *peer;
+	ENetAddress address;
+	ENetEvent event;
+
+	string ipAddress;
+
+	if(selection == "1"){
+		cout << "Enter the IP address: ";
+		cin >> ipAddress;
+		ipAddress = "127.0.0.1";
+		enet_address_set_host(&address,ipAddress.c_str());
+	}
+	else if(selection == "2"){
+		ipAddress = "127.0.0.1";
+		enet_address_set_host(&address,ipAddress.c_str());
+	}
+
+	address.port = 1255;
+	client = enet_host_create(NULL,1,2,0,0);
+	peer = enet_host_connect(client,&address,2,0);
+
+	if (peer == NULL){
+		cout <<	"No available peers for initiating an ENet connection." << endl;
+		exit (EXIT_FAILURE);
+	}
+
+		/* Wait up to 20 seconds for the connection attempt to succeed. */
+	if (enet_host_service (client, &event, 20000) > 0 &&
+		event.type == ENET_EVENT_TYPE_CONNECT)
+	{
+		cout << "Connection to some.server.net:1234 succeeded.";
+	}
+	else
+	{
+		/* Either the 5 seconds are up or a disconnect event was */
+		/* received. Reset the peer in the event the 5 seconds   */
+		/* had run out without any significant event.            */
+		enet_peer_reset (peer);
+		cout << "Connection to some.server.net:1234 failed.";
+	}
 }
