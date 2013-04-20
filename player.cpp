@@ -55,15 +55,15 @@ void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 	if(yMag != 0){
 		yy = yMag/abs(yMag);
 	}
-	std::cout << xx << " " << yy << std::endl;
-	std::cout << "VOLS: " << xVol << " " << yVol << std::endl;
-	std::cout << "MAGS: " << xMag << " " << yMag << std::endl;
+	//std::cout << xx << " " << yy << std::endl;
+	//std::cout << "VOLS: " << xVol << " " << yVol << std::endl;
+	//std::cout << "MAGS: " << xMag << " " << yMag << std::endl;
 	while(collisionBox[0].intersects(otherBox)){
 		if(abs(xMag) > abs(yMag)){
-			std::cout << "DOIN X" << "\n";
+			//std::cout << "DOIN X" << "\n";
 			x += xx;
 		} else {
-			std::cout << "DOIN Y" << "\n";
+			//std::cout << "DOIN Y" << "\n";
 			y += yy;
 		}
 		collisionBox[0].left = x;

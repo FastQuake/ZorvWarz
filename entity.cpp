@@ -48,6 +48,10 @@ void EntityManager::collideEntities(){
 			if(j == i){
 				continue;
 			}
+			if(entityList[i]->type == "player" &&
+					entityList[j]->type == "player"){
+				continue;
+			}
 			if(entityList[i]->collides && entityList[j]->collides){
 				for(int k=0;k<entityList[i]->collisionBox.size();k++){
 					for(int l=0;l<entityList[j]->collisionBox.size();l++){

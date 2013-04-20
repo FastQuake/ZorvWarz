@@ -51,6 +51,7 @@ void addEntities(){
 	ship = new ShipEntity(tilesFile);
 	player = new Player(playerFile);
 	player2 = new Mob(playerFile);
+	player2->type = "player";
 	entities.entityList.push_back(ship);
 	entities.entityList.push_back(player);
 	entities.entityList.push_back(player2);
@@ -188,7 +189,7 @@ int main(int argc, char *argv[]){
 			oldrot = player->rot;
 			stringstream ss;
 			ss << csMove << " " << player->x << " " << player->y << " " << player->rot;
-			cout << "SENDING: " << ss.str() << endl;
+			//cout << "SENDING: " << ss.str() << endl;
 			packetMutex.lock();
 			packetList.push_back(ss.str());
 			packetMutex.unlock();
@@ -262,7 +263,7 @@ void runClient(string selection){
 		//Loop through all packets and send them to server
 		packetMutex.lock();
 		for(int i=0;i<packetList.size();i++){
-			cout << "SENDING PACKET: " << packetList[i] << endl;
+			//cout << "SENDING PACKET: " << packetList[i] << endl;
 			ENetPacket *packet;
 			packet = enet_packet_create(packetList[i].c_str(),packetList[i].length(),
 					ENET_PACKET_FLAG_RELIABLE);
@@ -272,7 +273,7 @@ void runClient(string selection){
 		packetList.clear();
 		packetMutex.unlock();
 		while(enet_host_service(client,&event,33) > 0){
-			cout << "something happen in da client" << endl;
+			//cout << "something happen in da client" << endl;
 			switch(event.type){
 				case ENET_EVENT_TYPE_RECEIVE:
 					ss << event.packet->data;
@@ -310,12 +311,12 @@ void clientHandlePacket(string packetData){
 			ss >> id >> x >> y >> rot;
 			//If self then move self
 			if(id == 0){
-				cout << "MOVIN P1 TO " << x << " " << y << endl;
+				//cout << "MOVIN P1 TO " << x << " " << y << endl;
 				player->x = x;
 				player->y = y;
 				player->rot = rot;
 			} else { // else move player2 to wherever
-				cout << "MOVING P2 TO " << x << " " << y << endl;
+				//cout << "MOVING P2 TO " << x << " " << y << endl;
 				player2->x = x;
 				player2->y = y;
 				player2->rot = rot;

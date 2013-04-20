@@ -36,6 +36,8 @@ void initServer(){
 	//Assign player 1 and 2 their IDs
 	p1.ID = 1;
 	p2.ID = 2;
+	p1.type = "player";
+	p2.type = "player";
 }
 
 void serverLoop(){
@@ -44,7 +46,7 @@ void serverLoop(){
 	while(!doShutdown){
 		while (enet_host_service(server, &event, 1) > 0)
 		{
-			cout << "something happen" << endl;
+			//cout << "something happen" << endl;
 			switch (event.type)
 			{
 			case ENET_EVENT_TYPE_CONNECT:
