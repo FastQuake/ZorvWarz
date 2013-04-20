@@ -8,6 +8,9 @@ using namespace std;
 ShipEntity *serverShip;
 ENetHost *server;
 
+void handlePacket(string packetData, ENetPeer *peer);
+ENetPacket *createPacket(int packetType, string packetData, int packetFlag);
+
 enum{
 	csLogin,
 	csMove,
@@ -39,9 +42,8 @@ void initServer(){
 }
 
 void serverLoop(){
-	
 	ENetEvent event;
-	while(true){
+	while(!doShutdown){
 		while (enet_host_service(server, &event, 1) > 0)
 		{
 			cout << "something happen" << endl;
@@ -52,8 +54,7 @@ void serverLoop(){
 			{
 			case ENET_EVENT_TYPE_CONNECT:
 				cout << "A new client connected from " << event.peer->address.host << event.peer->address.port << "." << endl;
-				/* Store any relevant client information here. */
-				//event.peer -> data = "Client information";
+				handlePacket("0",event.peer);
 				break;
 
 			case ENET_EVENT_TYPE_RECEIVE:
@@ -88,9 +89,11 @@ void handlePacket(string packetData, ENetPeer *peer){
 
 	switch(packetType){
 	case csLogin:
-		cout << "fuck the you man login aasshole imatroll" << endl;
+		cout << "Login packet received." << endl;
 		map = getMapData();
-		packet = enet_packet_create(map.c_str(),map.length()+1,ENET_PACKET_FLAG_RELIABLE);
+		cout << "Server map" << endl << map << endl << endl;
+		packet = createPacket(scMap,map,ENET_PACKET_FLAG_RELIABLE);
+		enet_peer_send(peer,0,packet);
 		break;
 	case csMove:
 		float x;
@@ -115,4 +118,13 @@ string getMapData(){
 	}
 	
 	return ss.str();
+}
+
+ENetPacket *createPacket(int packetType, string packetData, int packetFlag){
+	stringstream ss;
+	ENetPacket *packet;
+
+	ss << packetType << " " << packetData;
+	packet = enet_packet_create(ss.str().c_str(),ss.str().length(),packetFlag);
+	return packet;
 }

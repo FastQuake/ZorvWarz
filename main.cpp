@@ -17,6 +17,12 @@ Player *player;
 
 sf::Thread *serverThread;
 sf::Thread *clientThread;
+sf::Mutex mapMutex;
+
+bool ready = false;
+bool doShutdown = false;
+
+void extractMap(string data);
 
 string intToStr(int num){
 	stringstream ss;
@@ -41,6 +47,11 @@ void setup(){
 }
 
 void cleanup(){
+	doShutdown = true;
+	//We want to wait for the threads to shutdown before deleting them
+	serverThread->wait();
+	clientThread->wait();
+
 	delete ship;
 	delete player;
 	delete serverThread;
@@ -63,14 +74,15 @@ int main(int argc, char *argv[]){
 		cin >> selection;
 		clientThread = new sf::Thread(&runClient,selection);
 		serverThread = new sf::Thread(&serverLoop);
+		mapMutex.lock();
 		if(selection == "1"){
 			clientThread->launch();
 			break;
 		}
 		else if(selection == "2"){
 			initServer();
-			clientThread->launch();
 			serverThread->launch();
+			clientThread->launch();
 			break;
 		}else{
 			cout << "Invalid selection, please try again." << endl << endl;
@@ -83,6 +95,10 @@ int main(int argc, char *argv[]){
 	sf::Event event;
 
 	setup();
+	mapMutex.unlock();
+
+	while(!ready)
+		continue;
 
 	int x = window.getSize().x/2;
 	int y = window.getSize().y/2;
@@ -136,10 +152,13 @@ void runClient(string selection){
 	ENetEvent event;
 
 	string ipAddress;
+	string packetData;
+	stringstream ss;
 
 	if(selection == "1"){
 		cout << "Enter the IP address: ";
-		cin >> ipAddress;
+		//cin >> ipAddress;
+		ipAddress = "127.0.0.1";
 		enet_address_set_host(&address,ipAddress.c_str());
 	}
 	else if(selection == "2"){
@@ -156,18 +175,45 @@ void runClient(string selection){
 		exit (EXIT_FAILURE);
 	}
 
-		/* Wait up to 20 seconds for the connection attempt to succeed. */
-	if (enet_host_service (client, &event, 20000) > 0 &&
-		event.type == ENET_EVENT_TYPE_CONNECT)
-	{
-		cout << "Connection to some.server.net:1234 succeeded.";
+		/* Wait up to 10 seconds for the connection attempt to succeed. */
+	if (enet_host_service (client, &event, 10000) > 0 &&
+		event.type == ENET_EVENT_TYPE_CONNECT){
+		cout << "Connection to some.server.net:1234 succeeded." << endl;
 	}
-	else
-	{
+	else{
 		/* Either the 5 seconds are up or a disconnect event was */
 		/* received. Reset the peer in the event the 5 seconds   */
 		/* had run out without any significant event.            */
 		enet_peer_reset (peer);
-		cout << "Connection to some.server.net:1234 failed.";
+		cout << "Connection to some.server.net:1234 failed." << endl;
 	}
+
+	while(!doShutdown){
+		while(enet_host_service(client,&event,33) > 0){
+			cout << "something happen in da client" << endl;
+			switch(event.type){
+				case ENET_EVENT_TYPE_RECEIVE:
+					ss << event.packet->data;
+					packetData = ss.str().substr(2,string::npos);
+					cout << "Client map" << endl << packetData << endl << endl;
+					extractMap(packetData);
+					ready = true;
+					break;
+			}
+		}
+	}
+}
+
+void extractMap(string data){
+	stringstream ss;
+
+	mapMutex.lock();
+	for(int y=0;y<dunYSize;y++){
+		for(int x=0;x<dunXSize;x++){
+			ss << data.at(x+(dunXSize*y));
+			ss >> ship->map->data[x][y];
+			ss.str("");
+		}
+	}
+	mapMutex.unlock();
 }

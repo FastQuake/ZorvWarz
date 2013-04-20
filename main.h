@@ -10,5 +10,6 @@ const std::string playerFile = "data/textures/player.png";
 void runClient(std::string selection);
 
 extern sf::RenderWindow window;
+extern bool doShutdown;
 
 #endif
