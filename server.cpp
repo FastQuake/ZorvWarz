@@ -11,20 +11,6 @@ ENetHost *server;
 void handlePacket(string packetData, ENetPeer *peer);
 ENetPacket *createPacket(int packetType, string packetData, int packetFlag);
 
-enum{
-	csLogin,
-	csMove,
-	csAttack
-};
-
-enum{
-	scSpawn,
-	scJoinack,
-	scAttack,
-	scMove,
-	scMap
-};
-
 void initServer(){
 	serverShip = new ShipEntity(tilesFile);
 	ENetAddress address;

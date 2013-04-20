@@ -10,13 +10,13 @@ Player::Player(std::string playerTexture){
 
 	xVol = 0;
 	yVol = 0;
-	x = 800/2;
+	x = 800/2; //Hardcoded screen size for x,y cause fight the power
 	y = 600/2;
 	speed = 5;
 
 	texture.loadFromFile(playerTexture);
 	playerSprite.setTexture(texture);
-	playerSprite.setPosition(x,y); //Hardcoded screen size, may fix later
+	playerSprite.setPosition(x,y);
 
 	collisionBox.push_back(sf::FloatRect(x,y,32,32));
 }

@@ -18,10 +18,14 @@ Player *player;
 sf::Thread *serverThread;
 sf::Thread *clientThread;
 sf::Mutex mapMutex;
+sf::Mutex packetMutex;
+
+vector<string> packetList;
 
 bool ready = false;
 bool doShutdown = false;
 
+void clientHandlePacket(string packetData);
 void extractMap(string data);
 
 string intToStr(int num){
@@ -68,6 +72,7 @@ void cleanup(){
 
 int main(int argc, char *argv[]){
 	string selection;
+	setup();
 
 	if (enet_initialize() != 0){
 		cout << "An error occurred while initializing ENet." << endl;
@@ -102,14 +107,17 @@ int main(int argc, char *argv[]){
 	window.setFramerateLimit(60);
 	sf::Event event;
 
-	setup();
+	//setup();
 	mapMutex.unlock();
 
 	while(!ready)
 		continue;
 
-	int x = window.getSize().x/2;
-	int y = window.getSize().y/2;
+	//int x = window.getSize().x/2;
+	//int y = window.getSize().y/2;
+	int oldx = 0;
+	int oldy = 0;
+	int oldrot = 0;
 	
 	int fps = 0;
 	sf::Clock counter;
@@ -135,6 +143,19 @@ int main(int argc, char *argv[]){
 			if(event.type == sf::Event::Closed){
 				window.close();
 			} 
+		}
+
+		//Check if player has moved, if they did move send create packet with
+		//new player location and rotation
+		if(player->x != oldx || player->y != oldy ||player->rot != oldrot){
+			oldx = player->x;
+			oldy = player->y;
+			oldrot = player->rot;
+			stringstream ss;
+			ss << csMove << " " << player->x << " " << player->y << " " << player->rot;
+			packetMutex.lock();
+			packetList.push_back(ss.str());
+			packetMutex.unlock();
 		}
 		
 		//Update all the entities
@@ -197,18 +218,55 @@ void runClient(string selection){
 	}
 
 	while(!doShutdown){
+		packetMutex.lock();
+		for(int i=0;i<packetList.size();i++){
+			ENetPacket *packet;
+			packet = enet_packet_create(packetList[i].c_str(),packetList[i].length(),
+					ENET_PACKET_FLAG_RELIABLE);
+			enet_peer_send(peer,0,packet);
+		}
+		packetList.clear();
+		packetMutex.unlock();
 		while(enet_host_service(client,&event,33) > 0){
 			cout << "something happen in da client" << endl;
 			switch(event.type){
 				case ENET_EVENT_TYPE_RECEIVE:
+					//ss << event.packet->data;
+					//packetData = ss.str().substr(2,string::npos);
+					//cout << "Client map" << endl << packetData << endl << endl;
+					//extractMap(packetData);
+					//ready = true;
 					ss << event.packet->data;
-					packetData = ss.str().substr(2,string::npos);
-					cout << "Client map" << endl << packetData << endl << endl;
-					extractMap(packetData);
-					ready = true;
+					clientHandlePacket(ss.str());
+					ss.str("");
 					break;
 			}
 		}
+	}
+}
+
+void clientHandlePacket(string packetData){
+	stringstream ss;
+	int packetType;
+
+	ss << packetData;
+	ss >> packetType;
+
+	switch(packetType){
+		case scSpawn:
+			break;
+		case scJoinack:
+			break;
+		case scAttack:
+			break;
+		case scMove:
+			break;
+		case scMap:
+			string mapData;
+			ss >> mapData;
+			extractMap(mapData);
+			ready = true;
+			break;
 	}
 }
 

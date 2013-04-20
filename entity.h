@@ -14,6 +14,7 @@ class Entity{
 		bool alive;
 		std::vector<sf::FloatRect> collisionBox;
 		int x,y;
+		int rot;
 		int ID;
 
 		Entity();
