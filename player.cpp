@@ -22,10 +22,6 @@ Player::Player(std::string playerTexture){
 }
 
 void Player::update(int framecount){
-	/*bool keyUp = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
-	bool keyDown = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
-	bool keyLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
-	bool keyRight = sf::Keyboard::isKeyPressed(sf::Keyboard::D);*/
 
 	if(keyUp){
 		yVol = -speed;
@@ -38,19 +34,6 @@ void Player::update(int framecount){
 		xVol = speed;
 	}
 
-	/*if(sf::Keyboard::isKeyPressed(sf::Keyboard::M)){
-		collides = !collides;
-	}*/
-
-
-	//playerSprite.move(xVol,yVol);
-	//x += xVol;
-	//y += yVol;
-	//xVol = 0;
-	//yVol = 0;
-
-	//collisionBox[0].left = x;
-	//collisionBox[0].top = y;
 	x += xVol;
 	y += yVol;
 	collisionBox[0].left = x;
@@ -98,12 +81,8 @@ void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 }
 
 void Player::draw(sf::RenderWindow *screen, int screenx,int screeny){
-	//x += xVol;
-	//y += yVol;
 	xVol = 0;
 	yVol = 0;
-	//collisionBox[0].left = x;
-	//collisionBox[0].top = y;
 	screen->draw(playerSprite);
 }
 

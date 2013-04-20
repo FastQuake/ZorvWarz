@@ -11,7 +11,6 @@ using namespace std;
 
 EntityManager entities;
 sf::RenderWindow window;
-//Ship bleh(tilesFile);
 ShipEntity *ship;
 Player *player;
 Mob *player2;
@@ -115,14 +114,11 @@ int main(int argc, char *argv[]){
 	window.setFramerateLimit(60);
 	sf::Event event;
 
-	//setup();
 	mapMutex.unlock();
 
 	while(!ready)
 		continue;
 
-	//int x = window.getSize().x/2;
-	//int y = window.getSize().y/2;
 	int oldx = 0;
 	int oldy = 0;
 	int oldrot = 0;
@@ -201,7 +197,6 @@ int main(int argc, char *argv[]){
 			ss.clear();
 		}
 
-		//cout << "CLIENT XY:" << player2->x << " " << player2->y << endl;
 		
 		//Update all the entities
 		entities.updateEntities(0);
@@ -219,6 +214,7 @@ int main(int argc, char *argv[]){
 	return 0;
 }
 
+/** Thread to handle all client networking **/
 void runClient(string selection){
 	ENetHost *client;
 	ENetPeer *peer;
@@ -263,6 +259,7 @@ void runClient(string selection){
 	}
 
 	while(!doShutdown){
+		//Loop through all packets and send them to server
 		packetMutex.lock();
 		for(int i=0;i<packetList.size();i++){
 			cout << "SENDING PACKET: " << packetList[i] << endl;
@@ -278,20 +275,17 @@ void runClient(string selection){
 			cout << "something happen in da client" << endl;
 			switch(event.type){
 				case ENET_EVENT_TYPE_RECEIVE:
-					//ss << event.packet->data;
-					//packetData = ss.str().substr(2,string::npos);
-					//cout << "Client map" << endl << packetData << endl << endl;
-					//extractMap(packetData);
-					//ready = true;
 					ss << event.packet->data;
 					clientHandlePacket(ss.str());
 					ss.str("");
+					ss.clear();
 					break;
 			}
 		}
 	}
 }
 
+/** Function to handle all client packet types **/
 void clientHandlePacket(string packetData){
 	stringstream ss;
 	int packetType;
@@ -304,21 +298,23 @@ void clientHandlePacket(string packetData){
 		case scSpawn:
 			break;
 		case scJoinack:
+			//Get player id and assign it to player
 			ss >> id;
-			//cout << "GOT ID" << id << endl;
 			player->ID = id;
 			break;
 		case scAttack:
 			break;
 		case scMove:
+			//Get player x y rot
 			int x,y,rot;
 			ss >> id >> x >> y >> rot;
+			//If self then move self
 			if(id == 0){
 				cout << "MOVIN P1 TO " << x << " " << y << endl;
 				player->x = x;
 				player->y = y;
 				player->rot = rot;
-			} else {
+			} else { // else move player2 to wherever
 				cout << "MOVING P2 TO " << x << " " << y << endl;
 				player2->x = x;
 				player2->y = y;
@@ -326,6 +322,7 @@ void clientHandlePacket(string packetData){
 			}
 			break;
 		case scMap:
+			//Get map data and apply it to game map
 			string mapData;
 			ss >> mapData;
 			extractMap(mapData);
@@ -334,6 +331,7 @@ void clientHandlePacket(string packetData){
 	}
 }
 
+/** Function to extract map data and assign it to the game map**/
 void extractMap(string data){
 	stringstream ss;
 	char bleh;
@@ -344,10 +342,6 @@ void extractMap(string data){
 		for(int x=0;x<dunXSize;x++){
 			ss >> bleh;
 			ship->map->data[x][y] = charToInt(bleh);
-
-			//ss << data.at(x+(dunXSize*y));
-			//ss >> ship->map->data[x][y];
-			//ss.str("");
 		}
 	}
 	ship->getColBoxes();
