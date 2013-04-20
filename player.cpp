@@ -1,5 +1,5 @@
 #include <cmath>
-#include "entity.h"
+#include "main.h"
 
 Player::Player(std::string playerTexture){
 	type = "player";
@@ -22,11 +22,10 @@ Player::Player(std::string playerTexture){
 }
 
 void Player::update(int framecount){
-	bool keyUp = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
+	/*bool keyUp = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
 	bool keyDown = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
 	bool keyLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
-	bool keyRight = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
-	bool keyEscape = sf::Keyboard::isKeyPressed(sf::Keyboard::Escape);
+	bool keyRight = sf::Keyboard::isKeyPressed(sf::Keyboard::D);*/
 
 	if(keyUp){
 		yVol = -speed;
@@ -38,8 +37,6 @@ void Player::update(int framecount){
 	} else if(keyRight){
 		xVol = speed;
 	}
-	if(keyEscape)
-		exit(0);
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::M)){
 		collides = !collides;
@@ -110,6 +107,19 @@ void Player::draw(sf::RenderWindow *screen, int screenx,int screeny){
 	screen->draw(playerSprite);
 }
 
+Mob::Mob(){
+	type = "mob";
+	drawable = false;
+	collides = true;
+	readyToUpdate = true;
+	alive = true;
+
+	x = 0;
+	y = 0;
+
+	collisionBox.push_back(sf::FloatRect(x,y,32,32));
+}
+
 Mob::Mob(std::string textureFile){
 	type = "mob";
 	drawable = true;
@@ -125,6 +135,11 @@ Mob::Mob(std::string textureFile){
 	mobSprite.setPosition(0,0); //Hardcoded screen size, may fix later
 
 	collisionBox.push_back(sf::FloatRect(x,y,32,32));
+}
+
+void Mob::update(int framecount){
+	collisionBox[0].left = x;
+	collisionBox[0].top = y;
 }
 
 void Mob::draw(sf::RenderWindow *window,int screenx,int screeny){

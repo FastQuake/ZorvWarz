@@ -53,7 +53,7 @@ void EntityManager::collideEntities(){
 					for(int l=0;l<entityList[j]->collisionBox.size();l++){
 						if(entityList[i]->collisionBox[k].intersects(
 									entityList[j]->collisionBox[l])){
-							std::cout << "COLLISON\n";
+							//std::cout << "COLLISON on " << entityList[i]->type << std::endl;
 							entityList[i]->onCollision(entityList[j],entityList[j]->collisionBox[l]);
 							entityList[j]->onCollision(entityList[i],entityList[i]->collisionBox[k]);
 						}

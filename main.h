@@ -12,8 +12,14 @@ const std::string playerFile = "data/textures/player.png";
 extern sf::RenderWindow window;
 extern bool doShutdown;
 
+extern bool keyUp;
+extern bool keyDown;
+extern bool keyLeft;
+extern bool keyRight;
+
 extern std::vector<std::string> packetList;
 
 void runClient(std::string selection);
+std::string intToStr(int num);
 
 #endif

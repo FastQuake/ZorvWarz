@@ -14,6 +14,7 @@ sf::RenderWindow window;
 //Ship bleh(tilesFile);
 ShipEntity *ship;
 Player *player;
+Mob *player2;
 
 sf::Thread *serverThread;
 sf::Thread *clientThread;
@@ -24,6 +25,11 @@ vector<string> packetList;
 
 bool ready = false;
 bool doShutdown = false;
+
+bool keyUp = false;
+bool keyDown = false;
+bool keyLeft = false;
+bool keyRight = false;
 
 void clientHandlePacket(string packetData);
 void extractMap(string data);
@@ -45,8 +51,10 @@ int charToInt(char num){
 void addEntities(){
 	ship = new ShipEntity(tilesFile);
 	player = new Player(playerFile);
+	player2 = new Mob(playerFile);
 	entities.entityList.push_back(ship);
 	entities.entityList.push_back(player);
+	entities.entityList.push_back(player2);
 }
 
 void setup(){
@@ -143,6 +151,30 @@ int main(int argc, char *argv[]){
 			if(event.type == sf::Event::Closed){
 				window.close();
 			} 
+			if(event.type == sf::Event::KeyPressed){
+				if(event.key.code == sf::Keyboard::W){
+					keyUp = true;
+				} else if(event.key.code == sf::Keyboard::S){
+					keyDown = true;
+				} else if(event.key.code == sf::Keyboard::A){
+					keyLeft = true;
+				} else if(event.key.code == sf::Keyboard::D){
+					keyRight = true;
+				} else if(event.key.code == sf::Keyboard::Escape){
+					window.close();
+				}
+			}
+			if(event.type == sf::Event::KeyReleased){
+				if(event.key.code == sf::Keyboard::W){
+					keyUp = false;
+				} else if(event.key.code == sf::Keyboard::S){
+					keyDown = false;
+				} else if(event.key.code == sf::Keyboard::A){
+					keyLeft = false;
+				} else if(event.key.code == sf::Keyboard::D){
+					keyRight = false;
+				}
+			}
 		}
 
 		//Check if player has moved, if they did move send create packet with
@@ -153,10 +185,13 @@ int main(int argc, char *argv[]){
 			oldrot = player->rot;
 			stringstream ss;
 			ss << csMove << " " << player->x << " " << player->y << " " << player->rot;
+			cout << "SENDING: " << ss.str() << endl;
 			packetMutex.lock();
 			packetList.push_back(ss.str());
 			packetMutex.unlock();
 		}
+
+		//cout << "CLIENT XY:" << player2->x << " " << player2->y << endl;
 		
 		//Update all the entities
 		entities.updateEntities(0);
@@ -248,6 +283,7 @@ void runClient(string selection){
 void clientHandlePacket(string packetData){
 	stringstream ss;
 	int packetType;
+	int id;
 
 	ss << packetData;
 	ss >> packetType;
@@ -256,10 +292,27 @@ void clientHandlePacket(string packetData){
 		case scSpawn:
 			break;
 		case scJoinack:
+			ss >> id;
+			//cout << "GOT ID" << id << endl;
+			player->ID = id;
 			break;
 		case scAttack:
 			break;
 		case scMove:
+			int x,y,rot;
+			ss >> id >> x >> y >> rot;
+			cout << "GOT MOVE " << x << " " << y << endl; 
+			if(id == 0){
+				cout << "MOVIN P1" << endl;
+				player->x = x;
+				player->y = y;
+				player->rot = rot;
+			} else {
+				cout << "MOVING P2" << endl;
+				player2->x = x;
+				player2->y = y;
+				player2->rot = rot;
+			}
 			break;
 		case scMap:
 			string mapData;

@@ -234,3 +234,19 @@ void ShipEntity::getColBoxes(){
 void ShipEntity::draw(sf::RenderWindow *screen, int screenx, int screeny){
 	map->drawMap(screen,screenx,screeny);
 }
+
+sf::Vector2i ShipEntity::getRandomFloorTile(){
+	sf::Vector2i vec;
+	int x;
+	int y;
+	while(true){
+		x = rand() % dunXSize;
+		y = rand() % dunYSize;
+		if(map->data[x][y] == FLOOR){
+			break;
+		}
+	}
+	vec.x = x;
+	vec.y = y;
+	return vec;
+}

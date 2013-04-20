@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
+#include <enet/enet.h>
 #include "ship.h"
 
 extern int idCounter;
@@ -40,9 +41,11 @@ class Mob : public Entity {
 	public:
 	sf::Sprite mobSprite;
 	sf::Texture texture;
+	ENetPeer *peer;
 
+	Mob();
 	Mob(std::string textureFile);
-	void update(int framecount){};
+	void update(int framecount);
 	void onCollision(Entity *object, sf::FloatRect otherBox){};
 	void draw(sf::RenderWindow *window, int screenx,int screeny);
 };
@@ -71,6 +74,7 @@ class ShipEntity : public Entity{
 	void onCollision(Entity *object, sf::FloatRect otherBox){};
 	void draw(sf::RenderWindow *screen, int screenx, int screeny);
 	void getColBoxes();
+	sf::Vector2i getRandomFloorTile();
 
 };
 
