@@ -22,15 +22,14 @@ Player::Player(std::string playerTexture){
 }
 
 void Player::update(int framecount){
-
-	if(keyUp){
+	if(keyUp && sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
 		yVol = -speed;
-	} else if(keyDown){
+	} else if(keyDown && sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
 		yVol = speed;
 	}
-	if(keyLeft){
+	if(keyLeft && sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
 		xVol = -speed;
-	} else if(keyRight){
+	} else if(keyRight && sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
 		xVol = speed;
 	}
 

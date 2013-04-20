@@ -147,6 +147,20 @@ int main(int argc, char *argv[]){
 			if(event.type == sf::Event::Closed){
 				window.close();
 			} 
+			if(event.type == sf::Event::KeyReleased){
+				if(event.key.code == sf::Keyboard::W){
+					keyUp = false;
+				}
+				if(event.key.code == sf::Keyboard::S){
+					keyDown = false;
+				}
+				if(event.key.code == sf::Keyboard::A){
+					keyLeft = false;
+				}
+				if(event.key.code == sf::Keyboard::D){
+					keyRight = false;
+				}
+			}
 			if(event.type == sf::Event::KeyPressed){
 				if(event.key.code == sf::Keyboard::W){
 					keyUp = true;
@@ -162,20 +176,6 @@ int main(int argc, char *argv[]){
 				}
 				if(event.key.code == sf::Keyboard::Escape){
 					window.close();
-				}
-			}
-			if(event.type == sf::Event::KeyReleased){
-				if(event.key.code == sf::Keyboard::W){
-					keyUp = false;
-				}
-				if(event.key.code == sf::Keyboard::S){
-					keyDown = false;
-				}
-				if(event.key.code == sf::Keyboard::A){
-					keyLeft = false;
-				}
-				if(event.key.code == sf::Keyboard::D){
-					keyRight = false;
 				}
 			}
 		}
