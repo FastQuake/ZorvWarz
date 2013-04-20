@@ -308,14 +308,13 @@ void clientHandlePacket(string packetData){
 		case scMove:
 			int x,y,rot;
 			ss >> id >> x >> y >> rot;
-			cout << "GOT MOVE " << x << " " << y << endl; 
 			if(id == 0){
-				cout << "MOVIN P1" << endl;
+				cout << "MOVIN P1 TO " << x << " " << y << endl;
 				player->x = x;
 				player->y = y;
 				player->rot = rot;
 			} else {
-				cout << "MOVING P2" << endl;
+				cout << "MOVING P2 TO " << x << " " << y << endl;
 				player2->x = x;
 				player2->y = y;
 				player2->rot = rot;
