@@ -38,9 +38,9 @@ void Player::update(int framecount){
 		xVol = speed;
 	}
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::M)){
+	/*if(sf::Keyboard::isKeyPressed(sf::Keyboard::M)){
 		collides = !collides;
-	}
+	}*/
 
 
 	//playerSprite.move(xVol,yVol);

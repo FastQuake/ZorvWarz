@@ -151,27 +151,34 @@ int main(int argc, char *argv[]){
 			if(event.type == sf::Event::Closed){
 				window.close();
 			} 
-			if(event.type == sf::Event::KeyPressed){
+			else if(event.type == sf::Event::KeyPressed){
 				if(event.key.code == sf::Keyboard::W){
 					keyUp = true;
-				} else if(event.key.code == sf::Keyboard::S){
+				}
+				if(event.key.code == sf::Keyboard::S){
 					keyDown = true;
-				} else if(event.key.code == sf::Keyboard::A){
+				}
+				if(event.key.code == sf::Keyboard::A){
 					keyLeft = true;
-				} else if(event.key.code == sf::Keyboard::D){
+				}
+				if(event.key.code == sf::Keyboard::D){
 					keyRight = true;
-				} else if(event.key.code == sf::Keyboard::Escape){
+				}
+				if(event.key.code == sf::Keyboard::Escape){
 					window.close();
 				}
 			}
-			if(event.type == sf::Event::KeyReleased){
+			else if(event.type == sf::Event::KeyReleased){
 				if(event.key.code == sf::Keyboard::W){
 					keyUp = false;
-				} else if(event.key.code == sf::Keyboard::S){
+				}
+				if(event.key.code == sf::Keyboard::S){
 					keyDown = false;
-				} else if(event.key.code == sf::Keyboard::A){
+				}
+				if(event.key.code == sf::Keyboard::A){
 					keyLeft = false;
-				} else if(event.key.code == sf::Keyboard::D){
+				}
+				if(event.key.code == sf::Keyboard::D){
 					keyRight = false;
 				}
 			}
