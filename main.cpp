@@ -30,6 +30,14 @@ string intToStr(int num){
 	return ss.str();
 } 
 
+int charToInt(char num){
+	int intnum;
+	stringstream ss;
+	ss << num;
+	ss >> intnum;
+	return intnum;
+}
+
 void addEntities(){
 	ship = new ShipEntity(tilesFile);
 	player = new Player(playerFile);
@@ -206,14 +214,20 @@ void runClient(string selection){
 
 void extractMap(string data){
 	stringstream ss;
+	char bleh;
+	ss << data;
 
 	mapMutex.lock();
 	for(int y=0;y<dunYSize;y++){
 		for(int x=0;x<dunXSize;x++){
-			ss << data.at(x+(dunXSize*y));
-			ss >> ship->map->data[x][y];
-			ss.str("");
+			ss >> bleh;
+			ship->map->data[x][y] = charToInt(bleh);
+
+			//ss << data.at(x+(dunXSize*y));
+			//ss >> ship->map->data[x][y];
+			//ss.str("");
 		}
 	}
+	ship->getColBoxes();
 	mapMutex.unlock();
 }

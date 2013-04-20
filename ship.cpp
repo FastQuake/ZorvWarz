@@ -212,6 +212,15 @@ ShipEntity::ShipEntity(string tilesFile){
 
 	map = new Ship(tilesFile);
 
+	getColBoxes();
+}
+
+ShipEntity::~ShipEntity(){
+	delete map;
+}
+
+void ShipEntity::getColBoxes(){
+	collisionBox.clear();
 	//Get all collision boxes
 	for(int x=0;x<dunXSize;x++){
 		for(int y=0;y<dunYSize;y++){
@@ -220,13 +229,6 @@ ShipEntity::ShipEntity(string tilesFile){
 			}
 		}
 	}
-}
-
-ShipEntity::~ShipEntity(){
-	delete map;
-}
-
-void ShipEntity::onCollision(Entity *object, sf::FloatRect otherBox){
 }
 
 void ShipEntity::draw(sf::RenderWindow *screen, int screenx, int screeny){

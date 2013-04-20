@@ -67,8 +67,9 @@ class ShipEntity : public Entity{
 	ShipEntity(std::string tilesFile);
 	~ShipEntity();
 
-	void onCollision(Entity *object, sf::FloatRect otherBox);
+	void onCollision(Entity *object, sf::FloatRect otherBox){};
 	void draw(sf::RenderWindow *screen, int screenx, int screeny);
+	void getColBoxes();
 
 };
 
