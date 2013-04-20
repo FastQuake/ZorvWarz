@@ -68,7 +68,8 @@ void serverLoop(){
 						event.channelID);*/
 				ss << event.packet->data;
 				handlePacket(ss.str(),event.peer);
-				ss.str();
+				ss.str("");
+				ss.clear();
 				/* Clean up the packet now that we're done using it. */
 				enet_packet_destroy (event.packet);
         
@@ -95,6 +96,10 @@ void handlePacket(string packetData, ENetPeer *peer){
 	int packetType;
 	ENetPacket *packet;
 	string map;
+
+	int x;
+	int y;
+	int rot;
 
 	sf::Vector2i vec;
 
@@ -136,12 +141,15 @@ void handlePacket(string packetData, ENetPeer *peer){
 		}
 		break;
 	case csMove:
-		int x;
+		/*int x;
 		int y;
-		int rot;
+		int rot;*/
 		ss >> x >> y >> rot;
 		ss.str("");
 		ss.clear();
+
+		//cout << "GOT MOVE PACKET WITH " << x << " " << y << endl;
+		cout << "PACKET DATA: " << packetData << endl;
 
 		switch(p1Orp2(peer)){
 			case 1:

@@ -151,7 +151,7 @@ int main(int argc, char *argv[]){
 			if(event.type == sf::Event::Closed){
 				window.close();
 			} 
-			else if(event.type == sf::Event::KeyPressed){
+			if(event.type == sf::Event::KeyPressed){
 				if(event.key.code == sf::Keyboard::W){
 					keyUp = true;
 				}
@@ -168,7 +168,7 @@ int main(int argc, char *argv[]){
 					window.close();
 				}
 			}
-			else if(event.type == sf::Event::KeyReleased){
+			if(event.type == sf::Event::KeyReleased){
 				if(event.key.code == sf::Keyboard::W){
 					keyUp = false;
 				}
@@ -196,6 +196,9 @@ int main(int argc, char *argv[]){
 			packetMutex.lock();
 			packetList.push_back(ss.str());
 			packetMutex.unlock();
+
+			ss.str("");
+			ss.clear();
 		}
 
 		//cout << "CLIENT XY:" << player2->x << " " << player2->y << endl;
@@ -262,10 +265,12 @@ void runClient(string selection){
 	while(!doShutdown){
 		packetMutex.lock();
 		for(int i=0;i<packetList.size();i++){
+			cout << "SENDING PACKET: " << packetList[i] << endl;
 			ENetPacket *packet;
 			packet = enet_packet_create(packetList[i].c_str(),packetList[i].length(),
 					ENET_PACKET_FLAG_RELIABLE);
 			enet_peer_send(peer,0,packet);
+			enet_host_flush(client);
 		}
 		packetList.clear();
 		packetMutex.unlock();
