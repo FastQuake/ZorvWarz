@@ -54,25 +54,20 @@ void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 			float len = sqrt(pow(middle.x,2)+pow(middle.y,2));
 			float angle = atan2(middle.y,middle.x)*180/PI;
 			
-			if(angle < 0){
-				angle = 360+angle;
-			}
-
-			//Find left point
+			//Find right point
 			while(targetBoxes[j].contains(getCirclePoint(len,angle,me))){
 				angle-=1;	
-				//cout << "DOIN LINE" << endl;
 			}
 			angle += 1;
 			sf::Vector2f p1 = getCirclePoint(len,angle,me);
-			sf::Vector2f p2 = getCirclePoint(lightList[i]->radius,angle,me);
+			sf::Vector2f p2 = getCirclePoint(lightList[i]->radius,angle-1,me);
 
-			//Find right point
+			//Find left point
 			while(targetBoxes[j].contains(getCirclePoint(len,angle,me))){
 				angle+=1;
 			}
 			angle -= 1;
-			sf::Vector2f p3 = getCirclePoint(lightList[i]->radius,angle,me);
+			sf::Vector2f p3 = getCirclePoint(lightList[i]->radius,angle+1,me);
 			sf::Vector2f p4 = getCirclePoint(len,angle,me);
 
 			sf::ConvexShape shadow;
@@ -87,8 +82,8 @@ void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 			
 
 			sf::Vector2f bleh2 = getCirclePoint(len,angle,me);
-			bleh2.x -= screenx;//-me.x;
-			bleh2.y -= screeny;//-me.y;
+			bleh2.x -= screenx;
+			bleh2.y -= screeny;
 			
 			middle += me;
 			middle.x -= screenx;
@@ -119,8 +114,17 @@ void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 		for(int j=0;j<shadowList.size();j++){
 			shadowList[j].move(-screenx,-screeny);
 			shadowList[j].setFillColor(sf::Color(10,10,10));
+			shadowList[j].setOutlineThickness(0.5);
+			shadowList[j].setOutlineColor(sf::Color(10,10,10));
 			//lightLayer.draw(shadowList[j]);
 			lightMask.draw(shadowList[j]);
+		}
+
+		for(int j=0;j<targetBoxes.size();j++){
+			sf::RectangleShape rect(sf::Vector2f(targetBoxes[j].width,targetBoxes[j].height));
+			rect.setPosition(targetBoxes[j].left-screenx,targetBoxes[j].top-screeny);
+			rect.setFillColor(sf::Color(100,100,100));
+			lightMask.draw(rect);
 		}
 		
 		lights.setScale(lightList[i]->radius/32,lightList[i]->radius/32);
@@ -131,6 +135,7 @@ void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 	}
 
 	lightLayer.draw(sLightMask,sf::RenderStates(sf::BlendMultiply));
+	//lightLayer.draw(sLightMask);
 
 	screen->draw(sLightsLayer,sf::RenderStates(sf::BlendMultiply));
 	//screen->draw(lights);

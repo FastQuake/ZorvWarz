@@ -61,7 +61,7 @@ void addEntities(){
 	entities.entityList.push_back(player2);
 
 	//Lights
-	p1Light = new Light(100,100,500);
+	p1Light = new Light(100,100,300);
 	lm.lightList.push_back(p1Light);
 }
 
