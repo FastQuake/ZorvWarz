@@ -5,6 +5,7 @@
 #include <time.h>
 #include "ship.h"
 #include "main.h"
+#include "lighting.h"
 #include "server.h"
 
 using namespace std;
@@ -14,6 +15,9 @@ sf::RenderWindow window;
 ShipEntity *ship;
 Player *player;
 Mob *player2;
+
+Light *p1Light;
+LightManager lm;
 
 sf::Thread *serverThread;
 sf::Thread *clientThread;
@@ -55,6 +59,10 @@ void addEntities(){
 	entities.entityList.push_back(ship);
 	entities.entityList.push_back(player);
 	entities.entityList.push_back(player2);
+
+	//Lights
+	p1Light = new Light(100,100,500);
+	lm.lightList.push_back(p1Light);
 }
 
 void setup(){
@@ -199,6 +207,9 @@ int main(int argc, char *argv[]){
 		}
 
 		
+		p1Light->x = player->x+16;
+		p1Light->y = player->y+16;
+		p1Light->update();
 		//Update all the entities
 		entities.updateEntities(0);
 		entities.collideEntities();
@@ -206,6 +217,7 @@ int main(int argc, char *argv[]){
 		//draw stuff
 		window.clear();
 		entities.drawEntities(&window,player->x-400,player->y-300); //Hardcoded screenx and screeny, may fix later
+		lm.drawLights(&window,player->x-400,player->y-300);
 		window.draw(fpsText);
 		window.display();
 
