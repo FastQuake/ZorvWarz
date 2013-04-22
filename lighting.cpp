@@ -34,6 +34,7 @@ void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 	lightLayer.clear();
 	lightMask.clear(sf::Color(255,255,255));
 	for(int i=0;i<lightList.size();i++){
+		cout << "Drawing light " << i << endl;
 		vector<sf::FloatRect> targetBoxes;
 		//Get list of objects that collide with light
 		for(int j=0;j<ship->collisionBox.size();j++){
@@ -92,11 +93,9 @@ void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 			me.x -= screenx;
 			me.y -= screeny;
 
-			//p1 += me;
 			p1.x -= screenx;
 			p1.y -= screeny;
 
-			//p4 += me;
 			p4.x -= screenx;
 			p4.y -= screeny;
 
@@ -128,17 +127,19 @@ void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 		}
 		
 		lights.setScale(lightList[i]->radius/32,lightList[i]->radius/32);
-		lights.setPosition(lightList[i]->x-screenx-lightList[i]->radius/2,
+		sf::Vector2f fakePos(lightList[i]->x-screenx-lightList[i]->radius/2,
 				lightList[i]->y-screeny-lightList[i]->radius/2);
+		lights.setPosition(fakePos);
 		lightLayer.draw(lights);
-
 	}
 
+	lightMask.display();
 	lightLayer.draw(sLightMask,sf::RenderStates(sf::BlendMultiply));
 	//lightLayer.draw(sLightMask);
+	lightLayer.display();
 
 	screen->draw(sLightsLayer,sf::RenderStates(sf::BlendMultiply));
-	//screen->draw(lights);
+	//screen->draw(sLightsLayer);
 }
 
 sf::Vector2f LightManager::getCirclePoint(float radius, float angle,sf::Vector2f relPoint){

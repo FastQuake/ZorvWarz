@@ -17,6 +17,7 @@ Player *player;
 Mob *player2;
 
 Light *p1Light;
+Light *p2Light;
 LightManager lm;
 
 sf::Thread *serverThread;
@@ -62,7 +63,9 @@ void addEntities(){
 
 	//Lights
 	p1Light = new Light(100,100,300);
+	p2Light = new Light(100,100,300);
 	lm.lightList.push_back(p1Light);
+	lm.lightList.push_back(p2Light);
 }
 
 void setup(){
@@ -84,6 +87,9 @@ void cleanup(){
 	delete player;
 	delete serverThread;
 	delete clientThread;
+
+	delete p1Light;
+	delete p2Light;
 }
 
 int main(int argc, char *argv[]){
@@ -210,6 +216,11 @@ int main(int argc, char *argv[]){
 		p1Light->x = player->x+16;
 		p1Light->y = player->y+16;
 		p1Light->update();
+
+		p2Light->x = player2->x+16;
+		p2Light->y = player2->y+16;
+		p2Light->update();
+
 		//Update all the entities
 		entities.updateEntities(0);
 		entities.collideEntities();
