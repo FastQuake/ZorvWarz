@@ -4,6 +4,8 @@
 
 #define PI 3.14159265
 
+sf::ConvexShape shadowList[512];
+
 Light::Light(int xx, int yy,int rad){
 	x = xx;
 	y = yy;
@@ -33,8 +35,9 @@ LightManager::LightManager(){
 void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 	lightLayer.clear();
 	lightMask.clear(sf::Color(255,255,255));
+	int shadowSize = 0;
 	for(int i=0;i<lightList.size();i++){
-		cout << "Drawing light " << i << endl;
+		//cout << "Drawing light " << i << endl;
 		vector<sf::FloatRect> targetBoxes;
 		//Get list of objects that collide with light
 		for(int j=0;j<ship->collisionBox.size();j++){
@@ -43,7 +46,7 @@ void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 			}
 		}	
 
-		vector<sf::ConvexShape> shadowList;
+		shadowSize = 0;
 		for(int j=0;j<targetBoxes.size();j++){
 			//find middle of box
 			sf::Vector2f middle(targetBoxes[j].left+(targetBoxes[j].width/2),
@@ -78,39 +81,11 @@ void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 			shadow.setPoint(2,p3);
 			shadow.setPoint(3,p4);
 
-			shadowList.push_back(shadow);
-
-			
-
-			sf::Vector2f bleh2 = getCirclePoint(len,angle,me);
-			bleh2.x -= screenx;
-			bleh2.y -= screeny;
-			
-			middle += me;
-			middle.x -= screenx;
-			middle.y -= screeny;
-
-			me.x -= screenx;
-			me.y -= screeny;
-
-			p1.x -= screenx;
-			p1.y -= screeny;
-
-			p4.x -= screenx;
-			p4.y -= screeny;
-
-
-
-			sf::Vertex line[] = {me,p1};
-			//screen->draw(line,2,sf::Lines);
-
-			sf::Vertex line2[] = {me,bleh2};
-			line2[0].color = sf::Color::Green;
-			line2[1].color = sf::Color::Green;
-			//screen->draw(line2,2,sf::Lines);
+			shadowList[j] = shadow;
+			shadowSize++;
 		}
 
-		for(int j=0;j<shadowList.size();j++){
+		for(int j=0;j<shadowSize;j++){
 			shadowList[j].move(-screenx,-screeny);
 			shadowList[j].setFillColor(sf::Color(10,10,10));
 			shadowList[j].setOutlineThickness(0.5);
