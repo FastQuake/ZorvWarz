@@ -11,7 +11,8 @@ enum Tiles{
 	EMPTY,
 	FLOOR,
 	WALL,
-	DOOR
+	DOOR,
+	NODE
 };
 
 class Room{

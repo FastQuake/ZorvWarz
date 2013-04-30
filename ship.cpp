@@ -74,30 +74,63 @@ Ship::Ship(string tileFile){
 		//Find room 2 middle(x,y) cord
 		int room2x = room2.xPos+(room2.xSize/2);
 		int room2y = room2.yPos+(room2.ySize/2);
+
+		int lastType = -1;
+		int type;
 		//Draw the y part of the hallway
 		while(room1y != room2y){
 			if(room1y < room2y){
 				room1y++;
+				type = 1;
 			}else if(room1y > room2y){
 				room1y--;
+				type = -1;
 			}
-			data[room1x][room1y] = FLOOR;
+			if(data[room1x][room1y] == FLOOR && lastType == EMPTY){
+				data[room1x][room1y] = NODE;
+				lastType = NODE;
+			} else if(data[room1x][room1y] == EMPTY && lastType == FLOOR){
+				data[room1x][room1y-type] = NODE;
+				data[room1x][room1y] = FLOOR;
+				lastType = NODE;
+			}else if(data[room1x][room1y] == EMPTY){
+				data[room1x][room1y] = FLOOR;
+				lastType = EMPTY;
+			} else {
+				lastType = FLOOR;
+			}
 		}
+		data[room1x][room1y] = NODE;
+		lastType = NODE;
 		//Draw the x part of the hallway
 		while(room1x != room2x){
 			if(room1x < room2x){
 				room1x++;
+				type = 1;
 			}else if(room1x > room2x){
 				room1x--;
+				type = -1;
 			}
-			data[room1x][room1y] = FLOOR;
+			if(data[room1x][room1y] == FLOOR && lastType == EMPTY){
+				data[room1x][room1y] = NODE;
+				lastType = NODE;
+			} else if(data[room1x][room1y] == EMPTY && lastType == FLOOR){
+				data[room1x-type][room1y] = NODE;
+				data[room1x][room1y] = FLOOR;
+				lastType = NODE;
+			}else if(data[room1x][room1y] == EMPTY){
+				data[room1x][room1y] = FLOOR;
+				lastType = EMPTY;
+			} else {
+				lastType = FLOOR;
+			}
 		}
 	}
 
 	//Make walls
 	for(int y=0;y<dunYSize;y++){
 		for(int x=0;x<dunXSize;x++){
-			if(data[x][y] == FLOOR){
+			if(data[x][y] == FLOOR || data[x][y] == NODE){
 				//Left
 				if(data[x-1][y] == EMPTY){
 					data[x-1][y] = WALL;
