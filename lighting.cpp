@@ -5,6 +5,7 @@
 #define PI 3.14159265
 
 sf::ConvexShape shadowList[512];
+sf::FloatRect targetBoxes[512];
 
 Light::Light(int xx, int yy,int rad){
 	x = xx;
@@ -38,16 +39,21 @@ void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 	int shadowSize = 0;
 	for(int i=0;i<lightList.size();i++){
 		//cout << "Drawing light " << i << endl;
-		vector<sf::FloatRect> targetBoxes;
+		//vector<sf::FloatRect> targetBoxes;
 		//Get list of objects that collide with light
+		int numOfBoxes = 0;
 		for(int j=0;j<ship->collisionBox.size();j++){
 			if(lightList[i]->hitBox.intersects(ship->collisionBox[j])){
-				targetBoxes.push_back(ship->collisionBox[j]);
+				//targetBoxes.push_back(ship->collisionBox[j]);
+				targetBoxes[numOfBoxes] = ship->collisionBox[j]; 
+				numOfBoxes++;
 			}
 		}	
 
 		shadowSize = 0;
-		for(int j=0;j<targetBoxes.size();j++){
+		sf::ConvexShape shadow;
+		shadow.setPointCount(4);
+		for(int j=0;j<numOfBoxes;j++){
 			//find middle of box
 			sf::Vector2f middle(targetBoxes[j].left+(targetBoxes[j].width/2),
 					targetBoxes[j].top+(targetBoxes[j].height/2));	
@@ -74,8 +80,6 @@ void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 			sf::Vector2f p3 = getCirclePoint(lightList[i]->radius,angle+1,me);
 			sf::Vector2f p4 = getCirclePoint(len,angle,me);
 
-			sf::ConvexShape shadow;
-			shadow.setPointCount(4);
 			shadow.setPoint(0,p1);
 			shadow.setPoint(1,p2);
 			shadow.setPoint(2,p3);
@@ -94,7 +98,7 @@ void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 			lightMask.draw(shadowList[j]);
 		}
 
-		for(int j=0;j<targetBoxes.size();j++){
+		for(int j=0;j<numOfBoxes;j++){
 			sf::RectangleShape rect(sf::Vector2f(targetBoxes[j].width,targetBoxes[j].height));
 			rect.setPosition(targetBoxes[j].left-screenx,targetBoxes[j].top-screeny);
 			rect.setFillColor(sf::Color(100,100,100));
