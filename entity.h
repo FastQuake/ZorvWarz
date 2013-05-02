@@ -13,7 +13,7 @@ class Entity{
 		std::string type;
 		bool drawable,collides,readyToUpdate;
 		bool alive;
-		std::vector<sf::FloatRect> collisionBox;
+		std::vector<sf::FloatRect> collisionBoxes;
 		int x,y;
 		int rot;
 		int ID;

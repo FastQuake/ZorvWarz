@@ -53,13 +53,13 @@ void EntityManager::collideEntities(){
 				continue;
 			}
 			if(entityList[i]->collides && entityList[j]->collides){
-				for(int k=0;k<entityList[i]->collisionBox.size();k++){
-					for(int l=0;l<entityList[j]->collisionBox.size();l++){
-						if(entityList[i]->collisionBox[k].intersects(
-									entityList[j]->collisionBox[l])){
+				for(int k=0;k<entityList[i]->collisionBoxes.size();k++){
+					for(int l=0;l<entityList[j]->collisionBoxes.size();l++){
+						if(entityList[i]->collisionBoxes[k].intersects(
+									entityList[j]->collisionBoxes[l])){
 							//std::cout << "COLLISON on " << entityList[i]->type << std::endl;
-							entityList[i]->onCollision(entityList[j],entityList[j]->collisionBox[l]);
-							entityList[j]->onCollision(entityList[i],entityList[i]->collisionBox[k]);
+							entityList[i]->onCollision(entityList[j],entityList[j]->collisionBoxes[l]);
+							entityList[j]->onCollision(entityList[i],entityList[i]->collisionBoxes[k]);
 						}
 					}
 				}

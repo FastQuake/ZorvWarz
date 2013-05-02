@@ -18,7 +18,7 @@ Player::Player(std::string playerTexture){
 	playerSprite.setTexture(texture);
 	playerSprite.setPosition(x,y);
 
-	collisionBox.push_back(sf::FloatRect(x,y,32,32));
+	collisionBoxes.push_back(sf::FloatRect(x,y,32,32));
 }
 
 void Player::update(int framecount){
@@ -35,14 +35,14 @@ void Player::update(int framecount){
 
 	x += xVol;
 	y += yVol;
-	collisionBox[0].left = x;
-	collisionBox[0].top = y;
+	collisionBoxes[0].left = x;
+	collisionBoxes[0].top = y;
 }
 
 void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 
-	int xMag = (collisionBox[0].left+collisionBox[0].width) - (otherBox.left+otherBox.width);
-	int yMag = (collisionBox[0].top+collisionBox[0].height) - (otherBox.top+otherBox.height);
+	int xMag = (collisionBoxes[0].left+collisionBoxes[0].width) - (otherBox.left+otherBox.width);
+	int yMag = (collisionBoxes[0].top+collisionBoxes[0].height) - (otherBox.top+otherBox.height);
 	/*if(xMag == yMag){
 		xMag--;
 	}*/
@@ -63,7 +63,7 @@ void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 	//std::cout << xx << " " << yy << std::endl;
 	//std::cout << "VOLS: " << xVol << " " << yVol << std::endl;
 	//std::cout << "MAGS: " << xMag << " " << yMag << std::endl;
-	while(collisionBox[0].intersects(otherBox)){
+	while(collisionBoxes[0].intersects(otherBox)){
 		if(abs(xMag) > abs(yMag)){
 			//std::cout << "DOIN X" << "\n";
 			x += xx;
@@ -71,16 +71,16 @@ void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 			//std::cout << "DOIN Y" << "\n";
 			y += yy;
 		}
-		collisionBox[0].left = x;
-		collisionBox[0].top = y;
+		collisionBoxes[0].left = x;
+		collisionBoxes[0].top = y;
 	}
 	if(abs(xMag) >= abs(yMag)){
 		x += xx;
 	} else {
 		y += yy;
 	}
-	collisionBox[0].left = x;
-	collisionBox[0].top = y;
+	collisionBoxes[0].left = x;
+	collisionBoxes[0].top = y;
 
 }
 
@@ -100,7 +100,7 @@ Mob::Mob(){
 	x = 0;
 	y = 0;
 
-	collisionBox.push_back(sf::FloatRect(x,y,32,32));
+	collisionBoxes.push_back(sf::FloatRect(x,y,32,32));
 }
 
 Mob::Mob(std::string textureFile){
@@ -117,12 +117,12 @@ Mob::Mob(std::string textureFile){
 	mobSprite.setTexture(texture);
 	mobSprite.setPosition(0,0); //Hardcoded screen size, may fix later
 
-	collisionBox.push_back(sf::FloatRect(x,y,32,32));
+	collisionBoxes.push_back(sf::FloatRect(x,y,32,32));
 }
 
 void Mob::update(int framecount){
-	collisionBox[0].left = x;
-	collisionBox[0].top = y;
+	collisionBoxes[0].left = x;
+	collisionBoxes[0].top = y;
 }
 
 void Mob::draw(sf::RenderWindow *window,int screenx,int screeny){
