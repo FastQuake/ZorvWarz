@@ -30,8 +30,9 @@ class LightManager{
 
 	LightManager();
 	void drawLights(sf::RenderWindow *screen,int screenx, int screeny);
+	static sf::Vector2f getCirclePoint(float radius,float angle,sf::Vector2f relPoint);
+
 	private:
-	sf::Vector2f getCirclePoint(float radius,float angle,sf::Vector2f relPoint);
 	bool checkBoxes(vector<sf::FloatRect>, sf::Vector2f point);
 };
 

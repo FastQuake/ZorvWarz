@@ -7,6 +7,7 @@
 #include "main.h"
 #include "lighting.h"
 #include "server.h"
+#include "ai.h"
 
 using namespace std;
 
@@ -19,6 +20,8 @@ Mob *player2;
 Light *p1Light;
 Light *p2Light;
 LightManager lm;
+
+AIManager aim;
 
 sf::Thread *serverThread;
 sf::Thread *clientThread;
@@ -66,6 +69,9 @@ void addEntities(){
 	p2Light = new Light(100,100,300);
 	lm.lightList.push_back(p1Light);
 	lm.lightList.push_back(p2Light);
+
+	//AI
+	aim.init(ship);
 }
 
 void setup(){
