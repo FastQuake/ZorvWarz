@@ -1,16 +1,18 @@
 #include "ai.h"
 #include "lighting.h"
+#include "main.h"
 
 Node::Node(sf::FloatRect nodeBox){
 	this->nodeBox = nodeBox;
 
-	int x = nodeBox.left+(this->nodeBox.width/2);
+	int x = this->nodeBox.left+(this->nodeBox.width/2);
 	int y = this->nodeBox.top+(this->nodeBox.height/2);
 	
 	this->hitBox.left = x-(radius);
 	this->hitBox.top = y-(radius);
 	this->hitBox.width = radius*2;
 	this->hitBox.height = radius*2;
+	this->middle = sf::Vector2f(x,y);
 }
 
 void Node::findNeighbors(vector<sf::FloatRect> collisionBoxes){
@@ -22,13 +24,11 @@ void Node::findNeighbors(vector<sf::FloatRect> collisionBoxes){
 		}
 	}	
 
-	sf::Vector2f middle(this->nodeBox.left+(this->nodeBox.width/2),
-		this->nodeBox.top+(this->nodeBox.height/2));	
 	for(int i=0;i<360;i++){
 		for(int j=32;j<=radius;j++){
 			bool hit = false;
 			for(int k=0;k<targetColBoxes.size();k++){
-				if(targetColBoxes[k].contains(LightManager::getCirclePoint(j,i,middle))){
+				if(targetColBoxes[k].contains(LightManager::getCirclePoint(j,i,this->middle))){
 					hit = true;
 					break;
 					//cout << "hit" << endl;
@@ -40,7 +40,7 @@ void Node::findNeighbors(vector<sf::FloatRect> collisionBoxes){
 			}
 			for(int k=0;k<aim.nodeList.size();k++)
 			{
-				if(aim.nodeList[k].nodeBox.contains(LightManager::getCirclePoint(j,i,middle))){
+				if(aim.nodeList[k].nodeBox.contains(LightManager::getCirclePoint(j,i,this->middle))){
 					bool seen = false;
 					for(int l=0;l<this->neighbors.size();l++)
 						if(this->neighbors[l] == &aim.nodeList[k])
@@ -50,7 +50,7 @@ void Node::findNeighbors(vector<sf::FloatRect> collisionBoxes){
 					this->neighbors.push_back(&aim.nodeList[k]);
 					sf::Vector2f middle2(aim.nodeList[k].nodeBox.left+(aim.nodeList[k].nodeBox.width/2),
 						aim.nodeList[k].nodeBox.top+(aim.nodeList[k].nodeBox.height/2));	
-					cout << "pushing back node " << middle2.x << "," << middle2.y << "-" << middle.x << "," << middle.y << endl;
+					cout << "pushing back node " << middle2.x << "," << middle2.y << "-" << this->middle.x << "," << this->middle.y << endl;
 					break;
 				}
 			}
@@ -72,8 +72,26 @@ void AIManager::init(ShipEntity *ship){
 		}
 	}
 	for(int i=0;i<this->nodeList.size();i++){
-		cout << "finding neighbors " << i << "," << nodeList.size() << endl;
+		cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
 		this->nodeList[i].findNeighbors(ship->collisionBoxes);
 	}
-	int debug = 0;
+}
+
+void AIManager::drawNet(sf::RenderWindow *screen, int screenx, int screeny){
+	sf::Vector2f p1;
+	sf::Vector2f p2;
+	for(int i=0;i<this->nodeList.size();i++){
+		p1 = this->nodeList[i].middle;
+		p1.x -= screenx;
+		p1.y -= screeny;
+		for(int j=0;j<this->nodeList[i].neighbors.size();j++){
+			p2 = this->nodeList[i].neighbors[j]->middle;
+			p2.x -= screenx;
+			p2.y -= screeny;
+			sf::Vertex line[] = {p1,p2};
+			line[0].color = sf::Color::Green;
+			line[1].color = sf::Color::Green;
+			screen->draw(line,2,sf::Lines);
+		}
+	}
 }

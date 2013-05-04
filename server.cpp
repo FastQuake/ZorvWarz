@@ -104,8 +104,8 @@ void handlePacket(string packetData, ENetPeer *peer){
 		cout << "Login packet received." << endl;
 
 		//Send map data to client
-		map = getMapData();
-		cout << "Server map" << endl << map << endl << endl;
+		map = getMapData(false);
+		cout << "Server map" << endl << getMapData(true) << endl << endl;
 		packet = createPacket(scMap,map,ENET_PACKET_FLAG_RELIABLE);
 		enet_peer_send(peer,0,packet);
 		//get random floor tile
@@ -180,11 +180,14 @@ void handlePacket(string packetData, ENetPeer *peer){
 }
 
 /** Get map data as string to send to client **/
-string getMapData(){
+string getMapData(bool newlines){
 	stringstream ss;
 	for(int y=0;y<dunYSize;y++){
 		for(int x=0;x<dunXSize;x++){
 			ss << serverShip->map->data[x][y];
+			if(newlines)
+				if(x == dunXSize-1)
+					ss << endl;
 		}
 	}
 	

@@ -258,6 +258,7 @@ void ShipEntity::getColBoxes(){
 	for(int x=0;x<dunXSize;x++){
 		for(int y=0;y<dunYSize;y++){
 			if(map->data[x][y] == WALL){
+				//cout << "pushing back collisionBoxes " << x << "," << y << endl;
 				collisionBoxes.push_back(sf::FloatRect(x*32,y*32,32,32));
 			}
 		}

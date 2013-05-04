@@ -26,7 +26,7 @@ extern ShipEntity *serverShip;
 
 void serverLoop();
 void initServer();
-std::string getMapData();
+std::string getMapData(bool newlines);
 void handlePacket(string packetData, ENetPeer *peer);
 int p1Orp2(ENetPeer *peer);
 ENetPacket *createPacket(int packetType, string packetData, int packetFlag);

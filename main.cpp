@@ -69,9 +69,6 @@ void addEntities(){
 	p2Light = new Light(100,100,300);
 	lm.lightList.push_back(p1Light);
 	lm.lightList.push_back(p2Light);
-
-	//AI
-	aim.init(ship);
 }
 
 void setup(){
@@ -158,7 +155,7 @@ int main(int argc, char *argv[]){
 		//Get current FPS
 		if(counter.getElapsedTime().asSeconds() > 1){
 			counter.restart();
-			fpsText.setString(intToStr(fps));
+			fpsText.setString(intToStr(fps) + " " + intToStr(player->x) + " " + intToStr(player->y));
 			fps = 0;
 		} else {
 			fps++;
@@ -235,10 +232,9 @@ int main(int argc, char *argv[]){
 		window.clear();
 		entities.drawEntities(&window,player->x-400,player->y-300); //Hardcoded screenx and screeny, may fix later
 		lm.drawLights(&window,player->x-400,player->y-300);
+		aim.drawNet(&window,player->x-400,player->y-300);
 		window.draw(fpsText);
 		window.display();
-
-
 	}
 	cleanup();
 	return 0;
@@ -375,5 +371,6 @@ void extractMap(string data){
 		}
 	}
 	ship->getColBoxes();
+	aim.init(ship);
 	mapMutex.unlock();
 }
