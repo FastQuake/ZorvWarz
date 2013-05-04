@@ -2,6 +2,8 @@
 #include "lighting.h"
 #include "main.h"
 
+sf::Mutex neighborMutex;
+
 Node::Node(sf::FloatRect nodeBox){
 	this->nodeBox = nodeBox;
 
@@ -15,20 +17,25 @@ Node::Node(sf::FloatRect nodeBox){
 	this->middle = sf::Vector2f(x,y);
 }
 
-void Node::findNeighbors(vector<sf::FloatRect> collisionBoxes){
+void Node::findNeighbors(threadArgs args){
+	Node *thisNode = args.thisNode;
+	vector<sf::FloatRect> collisionBoxes = args.collisionBoxes;
+	int startAngle = args.startAngle;
+	int endAngle = args.endAngle;
+
 	vector<sf::FloatRect> targetColBoxes;
 	for(int i=0;i<collisionBoxes.size();i++){
-		if(this->hitBox.intersects(collisionBoxes[i])){
+		if(thisNode->hitBox.intersects(collisionBoxes[i])){
 			//cout << "pushing back targetbox " << i << endl;
 			targetColBoxes.push_back(collisionBoxes[i]);
 		}
-	}	
+	}
 
-	for(int i=0;i<360;i++){
+	for(int i=startAngle;i<endAngle;i++){
 		for(int j=32;j<=radius;j++){
 			bool hit = false;
 			for(int k=0;k<targetColBoxes.size();k++){
-				if(targetColBoxes[k].contains(LightManager::getCirclePoint(j,i,this->middle))){
+				if(targetColBoxes[k].contains(LightManager::getCirclePoint(j,i,thisNode->middle))){
 					hit = true;
 					break;
 					//cout << "hit" << endl;
@@ -40,17 +47,19 @@ void Node::findNeighbors(vector<sf::FloatRect> collisionBoxes){
 			}
 			for(int k=0;k<aim.nodeList.size();k++)
 			{
-				if(aim.nodeList[k].nodeBox.contains(LightManager::getCirclePoint(j,i,this->middle))){
+				if(aim.nodeList[k].nodeBox.contains(LightManager::getCirclePoint(j,i,thisNode->middle))){
 					bool seen = false;
-					for(int l=0;l<this->neighbors.size();l++)
-						if(this->neighbors[l] == &aim.nodeList[k])
+					for(int l=0;l<thisNode->neighbors.size();l++)
+						if(thisNode->neighbors[l] == &aim.nodeList[k])
 							seen = true;
 					if(seen)
 						break;
-					this->neighbors.push_back(&aim.nodeList[k]);
 					sf::Vector2f middle2(aim.nodeList[k].nodeBox.left+(aim.nodeList[k].nodeBox.width/2),
 						aim.nodeList[k].nodeBox.top+(aim.nodeList[k].nodeBox.height/2));	
-					cout << "pushing back node " << middle2.x << "," << middle2.y << "-" << this->middle.x << "," << this->middle.y << endl;
+					cout << "pushing back node " << middle2.x << "," << middle2.y << "-" << thisNode->middle.x << "," << thisNode->middle.y << endl;
+					neighborMutex.lock();
+					thisNode->neighbors.push_back(&aim.nodeList[k]);
+					neighborMutex.unlock();
 					break;
 				}
 			}
@@ -73,7 +82,30 @@ void AIManager::init(ShipEntity *ship){
 	}
 	for(int i=0;i<this->nodeList.size();i++){
 		cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
-		this->nodeList[i].findNeighbors(ship->collisionBoxes);
+		Node::threadArgs thread1Args;
+		thread1Args.collisionBoxes = ship->collisionBoxes;
+		thread1Args.startAngle = 0;
+		thread1Args.endAngle = 120;
+		thread1Args.thisNode = &this->nodeList[i];
+
+		Node::threadArgs thread2Args = thread1Args;
+		thread2Args.startAngle = 120;
+		thread2Args.endAngle = 240;
+
+		Node::threadArgs thread3Args = thread1Args;
+		thread3Args.startAngle = 240;
+		thread3Args.endAngle = 360;
+
+		sf::Thread *thread1 = new sf::Thread(&Node::findNeighbors,thread1Args);
+		sf::Thread *thread2 = new sf::Thread(&Node::findNeighbors,thread2Args);
+		sf::Thread *thread3 = new sf::Thread(&Node::findNeighbors,thread3Args);
+		thread1->launch();
+		thread2->launch();
+		thread3->launch();
+
+		thread1->wait();
+		thread2->wait();
+		thread3->wait();
 	}
 }
 

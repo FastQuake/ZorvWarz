@@ -9,16 +9,25 @@ using namespace std;
 
 class Node{
 public:
+	struct threadArgs{
+	Node *thisNode;
+	vector<sf::FloatRect> collisionBoxes;
+	int startAngle;
+	int endAngle;
+	};
+
 	sf::FloatRect nodeBox;
 	sf::Vector2f middle;
 	vector<Node*> neighbors;
 
 	Node(sf::FloatRect nodeBox);
-	void findNeighbors(vector<sf::FloatRect> collisionBox);
+	static void findNeighbors(threadArgs args);
 
 private:
-	static const int radius = 512;
+	static const int radius = 928;
 	sf::FloatRect hitBox;
+
+
 };
 
 class AIManager{
