@@ -12,9 +12,9 @@ public:
 	struct threadArgs{
 	Node *thisNode;
 	vector<sf::FloatRect> collisionBoxes;
-	int startAngle;
-	int endAngle;
 	};
+
+	static const int radius = 896;
 
 	sf::FloatRect nodeBox;
 	sf::Vector2f middle;
@@ -22,12 +22,7 @@ public:
 
 	Node(sf::FloatRect nodeBox);
 	static void findNeighbors(threadArgs args);
-
-private:
-	static const int radius = 928;
 	sf::FloatRect hitBox;
-
-
 };
 
 class AIManager{

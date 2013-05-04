@@ -25,8 +25,8 @@ AIManager aim;
 
 sf::Thread *serverThread;
 sf::Thread *clientThread;
-sf::Mutex mapMutex;
 sf::Mutex packetMutex;
+sf::Mutex readyMutex;
 
 vector<string> packetList;
 
@@ -76,7 +76,6 @@ void setup(){
 	int seed = time(NULL);
 	cout << "seed: " << seed << endl;
 	srand(seed);
-
 	addEntities();
 }
 
@@ -112,7 +111,7 @@ int main(int argc, char *argv[]){
 		cin >> selection;
 		clientThread = new sf::Thread(&runClient,selection);
 		serverThread = new sf::Thread(&serverLoop);
-		mapMutex.lock();
+		//mapMutex.lock();
 		if(selection == "1"){
 			clientThread->launch();
 			break;
@@ -127,15 +126,13 @@ int main(int argc, char *argv[]){
 			continue;
 		}
 	}
-	
+
+	sf::sleep(sf::milliseconds(500));
+	readyMutex.lock();
+
 	window.create(sf::VideoMode(800,600),"Test");
 	window.setFramerateLimit(60);
 	sf::Event event;
-
-	mapMutex.unlock();
-
-	while(!ready)
-		continue;
 
 	int oldx = 0;
 	int oldy = 0;
@@ -242,6 +239,7 @@ int main(int argc, char *argv[]){
 
 /** Thread to handle all client networking **/
 void runClient(string selection){
+	readyMutex.lock();
 	ENetHost *client;
 	ENetPeer *peer;
 	ENetAddress address;
@@ -297,7 +295,7 @@ void runClient(string selection){
 		}
 		packetList.clear();
 		packetMutex.unlock();
-		while(enet_host_service(client,&event,33) > 0){
+		while(enet_host_service(client,&event,1000) > 0){
 			//cout << "something happen in da client" << endl;
 			switch(event.type){
 				case ENET_EVENT_TYPE_RECEIVE:
@@ -352,7 +350,7 @@ void clientHandlePacket(string packetData){
 			string mapData;
 			ss >> mapData;
 			extractMap(mapData);
-			ready = true;
+			readyMutex.unlock();
 			break;
 	}
 }
@@ -363,7 +361,6 @@ void extractMap(string data){
 	char bleh;
 	ss << data;
 
-	mapMutex.lock();
 	for(int y=0;y<dunYSize;y++){
 		for(int x=0;x<dunXSize;x++){
 			ss >> bleh;
@@ -372,5 +369,4 @@ void extractMap(string data){
 	}
 	ship->getColBoxes();
 	aim.init(ship);
-	mapMutex.unlock();
 }
