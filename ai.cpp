@@ -1,6 +1,7 @@
 #include "ai.h"
 #include "lighting.h"
 #include "main.h"
+#include <math.h>
 
 Node::Node(sf::FloatRect nodeBox){
 	this->nodeBox = nodeBox;

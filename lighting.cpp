@@ -1,6 +1,6 @@
 #include "main.h"
 #include "lighting.h"
-#include "math.h"
+#include <math.h>
 
 sf::ConvexShape shadowList[512];
 
