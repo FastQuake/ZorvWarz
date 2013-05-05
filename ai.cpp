@@ -7,11 +7,6 @@ Node::Node(sf::FloatRect nodeBox){
 
 	int x = this->nodeBox.left+(this->nodeBox.width/2);
 	int y = this->nodeBox.top+(this->nodeBox.height/2);
-	
-	this->hitBox.left = x-(radius);
-	this->hitBox.top = y-(radius);
-	this->hitBox.width = radius*2;
-	this->hitBox.height = radius*2;
 	this->middle = sf::Vector2f(x,y);
 }
 
@@ -25,21 +20,22 @@ void Node::findNeighbors(threadArgs args){
 		bool hit = false;
 		for(int j=16;;j+=16){
 			//cout << "radius: " << j << endl;
-			for(int k=0;k<targetColBoxes.size();k++){
+			for(int k=0;k<targetColBoxes.size();k++){	//Loop through all the collision objects
+														//and check if they're in the path of the ray
 				if(targetColBoxes[k].contains(LightManager::getCirclePoint(j,angle,thisNode->middle))){
 					hit = true;
 					break;
-					//cout << "hit" << endl;
 				}
 			}
-			if(hit){
+			if(hit){ //If there was an object blocking the "ray"
 				//cout << "hitbreak" << endl;
 				break;
 			}
+			//Confirm that the node was actually reached
 			if(aim.nodeList[i].nodeBox.contains(LightManager::getCirclePoint(j,angle,thisNode->middle))){
-				sf::Vector2f middle2(aim.nodeList[i].nodeBox.left+(aim.nodeList[i].nodeBox.width/2),
+				/*sf::Vector2f middle2(aim.nodeList[i].nodeBox.left+(aim.nodeList[i].nodeBox.width/2),
 					aim.nodeList[i].nodeBox.top+(aim.nodeList[i].nodeBox.height/2));	
-				//cout << "pushing back node " << middle2.x << "," << middle2.y << "-" << thisNode->middle.x << "," << thisNode->middle.y << endl;
+				cout << "pushing back node " << middle2.x << "," << middle2.y << "-" << thisNode->middle.x << "," << thisNode->middle.y << endl;*/
 				thisNode->neighbors.push_back(&aim.nodeList[i]);
 				break;
 			}
@@ -47,16 +43,19 @@ void Node::findNeighbors(threadArgs args){
 	}
 }
 
-AIManager::AIManager(){
+AIManager::AIManager(){ //This constructor does nothing. It's just here so that the object can be declared in a wide scope
+						//as it can't be initialized until other stuff is initialized first.
 }
 
-void AIManager::init(ShipEntity *ship){
+void AIManager::init(ShipEntity *ship){ //This actually initializes the AI Manager
+	//Thread objects
 	sf::Thread *thread1;
 	sf::Thread *thread2;
 	sf::Thread *thread3;
 	sf::Thread *thread4;
 
 	int **level = ship->map->data;
+	//Get all the nodes, put them in a vector
 	for(int y=0;y<dunYSize;y++){
 		for(int x=0;x<dunXSize;x++){
 			if(level[x][y] == NODE){
@@ -67,21 +66,24 @@ void AIManager::init(ShipEntity *ship){
 	}
 	bool first = true;
 	for(int i=0;i<this->nodeList.size();i){
+		//We need a struct to contain arguments, as SFML threading only allows you to give one argument to the function
 		Node::threadArgs thread1Args;
-		//thread1Args.collisionBoxes = whatIntersectsBox(this->nodeList[i].hitBox);
 		thread1Args.collisionBoxes = ship->collisionBoxes;
+		//Initialize other thread argument objects with the same data
 		Node::threadArgs thread2Args = thread1Args;
 		Node::threadArgs thread3Args = thread1Args;
 		Node::threadArgs thread4Args = thread1Args;
-		if(first){
+		if(first){	//Start the threads for the first time, only do this once as afterwards, 
+					//threads will be restarted when they're finished.
 			thread1Args.thisNode = &this->nodeList[i];
 			thread1 = new sf::Thread(&Node::findNeighbors,thread1Args);
 			cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
 			thread1->launch();
+			//i++ increments the node ID, so every thread works on a different node.
+			//The thread's argument obejct is modified with the new node each time.
 			i++;
 			if(i<this->nodeList.size()){
 				thread2Args.thisNode = &this->nodeList[i];
-				//thread2Args.collisionBoxes = whatIntersectsBox(this->nodeList[i].hitBox);
 				thread2Args.collisionBoxes = ship->collisionBoxes;
 				thread2 = new sf::Thread(&Node::findNeighbors,thread2Args);
 				cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
@@ -90,7 +92,6 @@ void AIManager::init(ShipEntity *ship){
 			i++;
 			if(i<this->nodeList.size()){
 				thread3Args.thisNode = &this->nodeList[i];
-				//thread3Args.collisionBoxes = whatIntersectsBox(this->nodeList[i].hitBox);
 				thread3Args.collisionBoxes = ship->collisionBoxes;
 				thread3 = new sf::Thread(&Node::findNeighbors,thread3Args);		
 				cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
@@ -99,7 +100,6 @@ void AIManager::init(ShipEntity *ship){
 			i++;
 			if(i<this->nodeList.size()){
 				thread4Args.thisNode = &this->nodeList[i];
-				//thread4Args.collisionBoxes = whatIntersectsBox(this->nodeList[i].hitBox);
 				thread4Args.collisionBoxes = ship->collisionBoxes;
 				thread4 = new sf::Thread(&Node::findNeighbors,thread4Args);		
 				cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
@@ -108,25 +108,24 @@ void AIManager::init(ShipEntity *ship){
 		}
 		first = false;
 
-		thread1->wait();
-		i++;
-		if(i<this->nodeList.size()){
+		thread1->wait(); //Wait for thread to end
+		i++;	//Increment node number, and then start it again with that node number
+				//Same goes for all other threads, which is why the code below is repetitive
+		if(i<this->nodeList.size()){ 
 			thread1Args.thisNode = &this->nodeList[i];
-			//thread1Args.collisionBoxes = whatIntersectsBox(this->nodeList[i].hitBox);
 			thread1Args.collisionBoxes = ship->collisionBoxes;
-			cout << "Thread 1 finished; starting again." << endl;
+			//cout << "Thread 1 finished; starting again." << endl;
 			cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
-			delete thread1;
-			thread1 = new sf::Thread(&Node::findNeighbors,thread1Args);		
+			delete thread1; //Delete it, because it's using an old argument object
+			thread1 = new sf::Thread(&Node::findNeighbors,thread1Args); //Recreate it with new arguments
 			thread1->launch();
 		}
 		thread2->wait();
 		i++;
 		if(i<this->nodeList.size()){
 			thread2Args.thisNode = &this->nodeList[i];
-			//thread2Args.collisionBoxes = whatIntersectsBox(this->nodeList[i].hitBox);
 			thread2Args.collisionBoxes = ship->collisionBoxes;
-			cout << "Thread 2 finished; starting again." << endl;
+			//cout << "Thread 2 finished; starting again." << endl;
 			cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
 			delete thread2;
 			thread2 = new sf::Thread(&Node::findNeighbors,thread2Args);	
@@ -136,9 +135,8 @@ void AIManager::init(ShipEntity *ship){
 		i++;
 		if(i<this->nodeList.size()){
 			thread3Args.thisNode = &this->nodeList[i];
-			//thread3Args.collisionBoxes = whatIntersectsBox(this->nodeList[i].hitBox);
 			thread3Args.collisionBoxes = ship->collisionBoxes;
-			cout << "Thread 3 finished; starting again." << endl;
+			//cout << "Thread 3 finished; starting again." << endl;
 			cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
 			delete thread3;
 			thread3 = new sf::Thread(&Node::findNeighbors,thread3Args);	
@@ -148,10 +146,9 @@ void AIManager::init(ShipEntity *ship){
 		i++;
 		if(i<this->nodeList.size()){
 			thread4Args.thisNode = &this->nodeList[i];
-			//thread4Args.collisionBoxes = whatIntersectsBox(this->nodeList[i].hitBox);
 			thread4Args.collisionBoxes = ship->collisionBoxes;
-			cout << "Thread 4 finished; starting again." << endl;
-			cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
+			//cout << "Thread 4 finished; starting again." << endl;
+			cout << "Finding neighbors " << i+1 << "/" << nodeList.size() << endl;
 			delete thread4;
 			thread4 = new sf::Thread(&Node::findNeighbors,thread4Args);	
 			thread4->launch();
@@ -159,6 +156,9 @@ void AIManager::init(ShipEntity *ship){
 	}
 }
 
+/**
+Draws the node net; useful for debugging.
+*/
 void AIManager::drawNet(sf::RenderWindow *screen, int screenx, int screeny){
 	sf::Vector2f p1;
 	sf::Vector2f p2;

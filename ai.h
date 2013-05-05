@@ -14,15 +14,12 @@ public:
 	vector<sf::FloatRect> collisionBoxes;
 	};
 
-	static const int radius = 896;
-
 	sf::FloatRect nodeBox;
 	sf::Vector2f middle;
 	vector<Node*> neighbors;
 
 	Node(sf::FloatRect nodeBox);
 	static void findNeighbors(threadArgs args);
-	sf::FloatRect hitBox;
 };
 
 class AIManager{
