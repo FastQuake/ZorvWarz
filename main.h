@@ -5,6 +5,8 @@
 #include "entity.h"
 #include <SFML/Graphics.hpp>
 
+#define PI 3.14159265
+
 extern Player *player;
 
 const std::string tilesFile = "data/textures/tiles.png";
