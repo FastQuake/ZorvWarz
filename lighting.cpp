@@ -40,11 +40,7 @@ void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 		//cout << "Drawing light " << i << endl;
 		vector<sf::FloatRect> targetBoxes;
 		//Get list of objects that collide with light
-		for(int j=0;j<ship->collisionBoxes.size();j++){
-			if(lightList[i]->hitBox.intersects(ship->collisionBoxes[j])){
-				targetBoxes.push_back(ship->collisionBoxes[j]);
-			}
-		}	
+		targetBoxes = whatIntersectsBox(lightList[i]->hitBox);
 
 		shadowSize = 0;
 		for(int j=0;j<targetBoxes.size();j++){

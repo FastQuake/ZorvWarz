@@ -59,6 +59,11 @@ AIManager::AIManager(){
 }
 
 void AIManager::init(ShipEntity *ship){
+	sf::Thread *thread1;
+	sf::Thread *thread2;
+	sf::Thread *thread3;
+	sf::Thread *thread4;
+
 	int **level = ship->map->data;
 	for(int y=0;y<dunYSize;y++){
 		for(int x=0;x<dunXSize;x++){
@@ -68,46 +73,89 @@ void AIManager::init(ShipEntity *ship){
 			}
 		}
 	}
+	bool first = true;
 	for(int i=0;i<this->nodeList.size();i){
-		vector<sf::FloatRect> targetColBoxes;
-		for(int j=0;j<ship->collisionBoxes.size();j++){
-			if(this->nodeList[i].hitBox.intersects(ship->collisionBoxes[j])){
-				//cout << "pushing back targetbox " << i << endl;
-				targetColBoxes.push_back(ship->collisionBoxes[j]);
+		Node::threadArgs thread1Args;
+		thread1Args.collisionBoxes = whatIntersectsBox(this->nodeList[i].hitBox);
+		Node::threadArgs thread2Args = thread1Args;
+		Node::threadArgs thread3Args = thread1Args;
+		Node::threadArgs thread4Args = thread1Args;
+		if(first){
+			thread1Args.thisNode = &this->nodeList[i];
+			thread1 = new sf::Thread(&Node::findNeighbors,thread1Args);
+			cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
+			thread1->launch();
+			i++;
+			if(i<this->nodeList.size()){
+				thread2Args.thisNode = &this->nodeList[i];
+				thread2Args.collisionBoxes = whatIntersectsBox(this->nodeList[i].hitBox);
+				thread2 = new sf::Thread(&Node::findNeighbors,thread2Args);
+				cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
+				thread2->launch();
+			}
+			i++;
+			if(i<this->nodeList.size()){
+				thread3Args.thisNode = &this->nodeList[i];
+				thread3Args.collisionBoxes = whatIntersectsBox(this->nodeList[i].hitBox);
+				thread3 = new sf::Thread(&Node::findNeighbors,thread3Args);		
+				cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
+				thread3->launch();
+			}
+			i++;
+			if(i<this->nodeList.size()){
+				thread4Args.thisNode = &this->nodeList[i];
+				thread4Args.collisionBoxes = whatIntersectsBox(this->nodeList[i].hitBox);
+				thread4 = new sf::Thread(&Node::findNeighbors,thread4Args);		
+				cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
+				thread4->launch();
 			}
 		}
+		first = false;
 
-		sf::Thread *thread1;
-		sf::Thread *thread2;
-		sf::Thread *thread3;
-
-		Node::threadArgs thread1Args;
-		thread1Args.collisionBoxes = targetColBoxes;
-		thread1Args.thisNode = &this->nodeList[i];
-		thread1 = new sf::Thread(&Node::findNeighbors,thread1Args);
-		cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
-		thread1->launch();
+		thread1->wait();
 		i++;
 		if(i<this->nodeList.size()){
-			Node::threadArgs thread2Args = thread1Args;
-			thread2Args.thisNode = &this->nodeList[i];
-			thread2 = new sf::Thread(&Node::findNeighbors,thread2Args);
+			thread1Args.thisNode = &this->nodeList[i];
+			thread1Args.collisionBoxes = whatIntersectsBox(this->nodeList[i].hitBox);
+			cout << "Thread 1 finished; starting again." << endl;
 			cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
+			delete thread1;
+			thread1 = new sf::Thread(&Node::findNeighbors,thread1Args);		
+			thread1->launch();
+		}
+		thread2->wait();
+		i++;
+		if(i<this->nodeList.size()){
+			thread2Args.thisNode = &this->nodeList[i];
+			thread2Args.collisionBoxes = whatIntersectsBox(this->nodeList[i].hitBox);
+			cout << "Thread 2 finished; starting again." << endl;
+			cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
+			delete thread2;
+			thread2 = new sf::Thread(&Node::findNeighbors,thread2Args);	
 			thread2->launch();
 		}
+		thread3->wait();
 		i++;
 		if(i<this->nodeList.size()){
-			Node::threadArgs thread3Args = thread1Args;
 			thread3Args.thisNode = &this->nodeList[i];
-			thread3 = new sf::Thread(&Node::findNeighbors,thread3Args);		
+			thread3Args.collisionBoxes = whatIntersectsBox(this->nodeList[i].hitBox);
+			cout << "Thread 3 finished; starting again." << endl;
 			cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
+			delete thread3;
+			thread3 = new sf::Thread(&Node::findNeighbors,thread3Args);	
 			thread3->launch();
 		}
+		thread4->wait();
 		i++;
-		thread1->wait();
-		thread2->wait();
-		thread3->wait();
-
+		if(i<this->nodeList.size()){
+			thread4Args.thisNode = &this->nodeList[i];
+			thread4Args.collisionBoxes = whatIntersectsBox(this->nodeList[i].hitBox);
+			cout << "Thread 4 finished; starting again." << endl;
+			cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
+			delete thread4;
+			thread4 = new sf::Thread(&Node::findNeighbors,thread4Args);	
+			thread4->launch();
+		}
 	}
 }
 

@@ -1,6 +1,5 @@
 #include <iostream>
 #include <sstream>
-#include <SFML/Graphics.hpp>
 #include <stdlib.h>
 #include <time.h>
 #include "ship.h"
@@ -369,4 +368,16 @@ void extractMap(string data){
 	}
 	ship->getColBoxes();
 	aim.init(ship);
+}
+
+vector<sf::FloatRect> whatIntersectsBox(sf::FloatRect hitBox){
+	vector<sf::FloatRect> intersectors;
+
+	for(int i=0;i<ship->collisionBoxes.size();i++){
+		if(hitBox.intersects(ship->collisionBoxes[i])){
+			//cout << "pushing back targetbox " << i << endl;
+			intersectors.push_back(ship->collisionBoxes[i]);
+		}
+	}
+	return intersectors;
 }

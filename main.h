@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include "entity.h"
+#include <SFML/Graphics.hpp>
 
 extern Player *player;
 
@@ -24,5 +25,6 @@ extern std::vector<std::string> packetList;
 
 void runClient(std::string selection);
 std::string intToStr(int num);
+std::vector<sf::FloatRect> whatIntersectsBox(sf::FloatRect hitBox);
 
 #endif
