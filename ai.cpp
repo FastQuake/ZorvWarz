@@ -78,7 +78,7 @@ void AIManager::init(ShipEntity *ship){ //This actually initializes the AI Manag
 					//threads will be restarted when they're finished.
 			thread1Args.thisNode = &this->nodeList[i];
 			thread1 = new sf::Thread(&Node::findNeighbors,thread1Args);
-			cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
+			cout << "finding neighbors1 " << i+1 << "/" << nodeList.size() << endl;
 			thread1->launch();
 			//i++ increments the node ID, so every thread works on a different node.
 			//The thread's argument obejct is modified with the new node each time.
@@ -87,7 +87,7 @@ void AIManager::init(ShipEntity *ship){ //This actually initializes the AI Manag
 				thread2Args.thisNode = &this->nodeList[i];
 				thread2Args.collisionBoxes = ship->collisionBoxes;
 				thread2 = new sf::Thread(&Node::findNeighbors,thread2Args);
-				cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
+				cout << "finding neighbors2 " << i+1 << "/" << nodeList.size() << endl;
 				thread2->launch();
 			}
 			i++;
@@ -95,7 +95,7 @@ void AIManager::init(ShipEntity *ship){ //This actually initializes the AI Manag
 				thread3Args.thisNode = &this->nodeList[i];
 				thread3Args.collisionBoxes = ship->collisionBoxes;
 				thread3 = new sf::Thread(&Node::findNeighbors,thread3Args);		
-				cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
+				cout << "finding neighbors3 " << i+1 << "/" << nodeList.size() << endl;
 				thread3->launch();
 			}
 			i++;
@@ -103,7 +103,7 @@ void AIManager::init(ShipEntity *ship){ //This actually initializes the AI Manag
 				thread4Args.thisNode = &this->nodeList[i];
 				thread4Args.collisionBoxes = ship->collisionBoxes;
 				thread4 = new sf::Thread(&Node::findNeighbors,thread4Args);		
-				cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
+				cout << "finding neighbors4 " << i+1 << "/" << nodeList.size() << endl;
 				thread4->launch();
 			}
 		}
@@ -116,7 +116,7 @@ void AIManager::init(ShipEntity *ship){ //This actually initializes the AI Manag
 			thread1Args.thisNode = &this->nodeList[i];
 			thread1Args.collisionBoxes = ship->collisionBoxes;
 			//cout << "Thread 1 finished; starting again." << endl;
-			cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
+			cout << "finding neighbors1 " << i+1 << "/" << nodeList.size() << endl;
 			delete thread1; //Delete it, because it's using an old argument object
 			thread1 = new sf::Thread(&Node::findNeighbors,thread1Args); //Recreate it with new arguments
 			thread1->launch();
@@ -127,7 +127,7 @@ void AIManager::init(ShipEntity *ship){ //This actually initializes the AI Manag
 			thread2Args.thisNode = &this->nodeList[i];
 			thread2Args.collisionBoxes = ship->collisionBoxes;
 			//cout << "Thread 2 finished; starting again." << endl;
-			cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
+			cout << "finding neighbors2 " << i+1 << "/" << nodeList.size() << endl;
 			delete thread2;
 			thread2 = new sf::Thread(&Node::findNeighbors,thread2Args);	
 			thread2->launch();
@@ -138,7 +138,7 @@ void AIManager::init(ShipEntity *ship){ //This actually initializes the AI Manag
 			thread3Args.thisNode = &this->nodeList[i];
 			thread3Args.collisionBoxes = ship->collisionBoxes;
 			//cout << "Thread 3 finished; starting again." << endl;
-			cout << "finding neighbors " << i << "/" << nodeList.size() << endl;
+			cout << "finding neighbors3 " << i+1 << "/" << nodeList.size() << endl;
 			delete thread3;
 			thread3 = new sf::Thread(&Node::findNeighbors,thread3Args);	
 			thread3->launch();
@@ -149,7 +149,7 @@ void AIManager::init(ShipEntity *ship){ //This actually initializes the AI Manag
 			thread4Args.thisNode = &this->nodeList[i];
 			thread4Args.collisionBoxes = ship->collisionBoxes;
 			//cout << "Thread 4 finished; starting again." << endl;
-			cout << "Finding neighbors " << i+1 << "/" << nodeList.size() << endl;
+			cout << "finding neighbors4 " << i+1 << "/" << nodeList.size() << endl;
 			delete thread4;
 			thread4 = new sf::Thread(&Node::findNeighbors,thread4Args);	
 			thread4->launch();
