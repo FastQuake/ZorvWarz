@@ -44,7 +44,7 @@ void serverLoop(){
 	stringstream ss;
 	ENetEvent event;
 	while(!doShutdown){
-		while (enet_host_service(server, &event, 1000) > 0)
+		while (enet_host_service(server, &event, 10) > 0)
 		{
 			//cout << "something happen" << endl;
 			switch (event.type)

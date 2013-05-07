@@ -23,8 +23,10 @@ void Light::update(){
 LightManager::LightManager(){
 	lightLayer.create(800,600);
 	lightMask.create(800,600);
+	allLights.create(800,600);
 	sLightsLayer.setTexture(lightLayer.getTexture());
 	sLightMask.setTexture(lightMask.getTexture());
+	sAllLights.setTexture(allLights.getTexture());
 
 	lightTexture.loadFromFile(lightFile);
 	lights.setTexture(lightTexture);
@@ -33,6 +35,7 @@ LightManager::LightManager(){
 void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 	lightLayer.clear();
 	lightMask.clear(sf::Color(255,255,255));
+	allLights.clear();
 	int shadowSize = 0;
 	for(int i=0;i<lightList.size();i++){
 		//cout << "Drawing light " << i << endl;
@@ -79,6 +82,9 @@ void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 			shadowSize++;
 		}
 
+		lightMask.clear(sf::Color::White);
+		lightLayer.clear();
+
 		for(int j=0;j<shadowSize;j++){
 			shadowList[j].move(-screenx,-screeny);
 			shadowList[j].setFillColor(sf::Color(10,10,10));
@@ -100,14 +106,24 @@ void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 				lightList[i]->y-screeny-lightList[i]->radius/2);
 		lights.setPosition(fakePos);
 		lightLayer.draw(lights);
+
+		lightMask.display();
+		lightLayer.draw(sLightMask,sf::RenderStates(sf::BlendMultiply));
+
+		lightLayer.display();
+		allLights.draw(sLightsLayer,sf::RenderStates(sf::BlendAdd));
 	}
 
-	lightMask.display();
-	lightLayer.draw(sLightMask,sf::RenderStates(sf::BlendMultiply));
+	//lightMask.display();
+	//lightLayer.draw(sLightMask,sf::RenderStates(sf::BlendMultiply));
 	//lightLayer.draw(sLightMask);
-	lightLayer.display();
+	//lightLayer.display();
+	allLights.display();
 
-	screen->draw(sLightsLayer,sf::RenderStates(sf::BlendMultiply));
+	screen->draw(sAllLights,sf::RenderStates(sf::BlendMultiply));
+
+	//screen->draw(sLightsLayer,sf::RenderStates(sf::BlendMultiply));
+	//screen->draw(sLightMask);
 	//screen->draw(sLightsLayer);
 }
 

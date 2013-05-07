@@ -23,8 +23,10 @@ class LightManager{
 	vector<Light*> lightList;
 	sf::RenderTexture lightLayer;
 	sf::RenderTexture lightMask;
+	sf::RenderTexture allLights;
 	sf::Sprite sLightsLayer;
 	sf::Sprite sLightMask;
+	sf::Sprite sAllLights;
 	sf::Sprite lights;
 	sf::Texture lightTexture;
 

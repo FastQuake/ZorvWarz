@@ -294,7 +294,7 @@ void runClient(string selection){
 		}
 		packetList.clear();
 		packetMutex.unlock();
-		while(enet_host_service(client,&event,1000) > 0){
+		while(enet_host_service(client,&event,10) > 0){
 			//cout << "something happen in da client" << endl;
 			switch(event.type){
 				case ENET_EVENT_TYPE_RECEIVE:
