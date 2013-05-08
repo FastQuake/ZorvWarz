@@ -14,9 +14,13 @@ Player::Player(std::string playerTexture){
 	y = 600/2;
 	speed = 200.0;
 
-	texture.loadFromFile(playerTexture);
-	playerSprite.setTexture(texture);
+	pTexture.loadFromFile(playerTexture);
+	gTexture.loadFromFile("data/textures/gun.png");
+	playerSprite.setTexture(pTexture);
 	playerSprite.setPosition(x,y);
+	gun.setTexture(gTexture);
+	//gun.setOrigin(15,5);
+	gun.setPosition(x+16,y+16);
 
 	collisionBoxes.push_back(sf::FloatRect(x,y,32,32));
 }
@@ -41,6 +45,13 @@ void Player::update(int framecount){
 	y += yVol;
 	collisionBoxes[0].left = x;
 	collisionBoxes[0].top = y;
+
+	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+
+	mousePos.x -= 400;
+	mousePos.y -= 300;
+
+	rot = atan2(mousePos.y,mousePos.x) * (180/3.14);
 }
 
 void Player::onCollision(Entity *object, sf::FloatRect otherBox){
@@ -50,7 +61,15 @@ void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 void Player::draw(sf::RenderWindow *screen, int screenx,int screeny){
 	xVol = 0;
 	yVol = 0;
+	gun.setRotation(rot);
+	std::cout << "rot : " << gun.getRotation() << std::endl;
+	if(gun.getRotation() > 90 && gun.getRotation() < 270){
+		gun.setScale(1,-1);
+	} else {
+		gun.setScale(1,1);
+	}
 	screen->draw(playerSprite);
+	screen->draw(gun);
 }
 
 Mob::Mob(){

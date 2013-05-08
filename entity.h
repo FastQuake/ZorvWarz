@@ -58,7 +58,9 @@ class Player : public Entity {
 	float yVol;
 	float speed;
 	sf::Sprite playerSprite;
-	sf::Texture texture;
+	sf::Sprite gun;
+	sf::Texture pTexture;
+	sf::Texture gTexture;
 	
 	Player(std::string playerTexture);
 	void update(int framecount);
