@@ -21,6 +21,8 @@ class Entity{
 		Entity();
 		//virtual ~Entity(){};
 
+		void collideWall(sf::FloatRect otherBox);
+
 		virtual void update(int framecount){};
 		virtual void onCollision(Entity *object, sf::FloatRect otherBox){};
 		virtual void draw(sf::RenderWindow *screen,int screenx,int screeny){};
@@ -59,6 +61,19 @@ class Player : public Entity {
 	sf::Texture texture;
 	
 	Player(std::string playerTexture);
+	void update(int framecount);
+	void onCollision(Entity *object, sf::FloatRect otherBox);
+	void draw(sf::RenderWindow *screen,int screenx,int screeny);
+};
+
+class Monster : public Entity {
+	public:
+	int xVol;
+	int yVol;
+	int speed;
+	sf::Sprite playerSprite;
+	sf::Texture texture;
+	
 	void update(int framecount);
 	void onCollision(Entity *object, sf::FloatRect otherBox);
 	void draw(sf::RenderWindow *screen,int screenx,int screeny);
