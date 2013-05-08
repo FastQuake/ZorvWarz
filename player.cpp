@@ -12,7 +12,7 @@ Player::Player(std::string playerTexture){
 	yVol = 0.0;
 	x = 800/2; //Hardcoded screen size for x,y cause fight the power
 	y = 600/2;
-	speed = 1000.0;
+	speed = 200.0;
 
 	texture.loadFromFile(playerTexture);
 	playerSprite.setTexture(texture);
@@ -22,7 +22,8 @@ Player::Player(std::string playerTexture){
 }
 
 void Player::update(int framecount){
-	float dTime = frameTime.getElapsedTime().asMilliseconds()/1000.0f;
+	//float dTime = frameTime.getElapsedTime().asMilliseconds()/1000.0f;
+	float dTime = 1.0f/FPS;
 	if(keyUp && sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
 		yVol = -speed*dTime;
 	} else if(keyDown && sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
@@ -34,7 +35,7 @@ void Player::update(int framecount){
 		xVol = speed*dTime;
 	}
 
-	std::cout << "Xvol: " << xVol << " YVol: " << yVol << std::endl;
+	//std::cout << dTime <<  " Xvol: " << xVol << " YVol: " << yVol << std::endl;
 
 	x += xVol;
 	y += yVol;

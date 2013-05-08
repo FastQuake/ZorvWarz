@@ -103,6 +103,9 @@ void Entity::collideWall(sf::FloatRect otherBox){
 	if(xMag == 26 && yMag == 28){
 		xMag = 29;
 	}
+	if(xMag == 27 && yMag == 30){
+		yMag = 26;
+	}
 
 	int xx = 0;
 	int yy = 0;

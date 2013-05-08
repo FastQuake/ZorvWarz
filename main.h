@@ -16,6 +16,8 @@ const std::string lightFile = "data/textures/light.png";
 extern sf::RenderWindow window;
 extern sf::Clock frameTime;
 
+extern int FPS;
+
 extern bool doShutdown;
 
 extern bool keyUp;

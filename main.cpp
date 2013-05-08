@@ -28,6 +28,7 @@ sf::Mutex packetMutex;
 sf::Mutex readyMutex;
 
 sf::Clock frameTime;
+int FPS = 60;
 
 vector<string> packetList;
 
@@ -156,6 +157,7 @@ int main(int argc, char *argv[]){
 		if(counter.getElapsedTime().asSeconds() > 1){
 			counter.restart();
 			fpsText.setString(intToStr(fps) + " " + intToStr(player->x) + " " + intToStr(player->y));
+			FPS = fps;
 			fps = 0;
 		} else {
 			fps++;
