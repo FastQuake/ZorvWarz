@@ -8,13 +8,13 @@ using namespace std;
 
 class Light{
 	public:
-	int x;
-	int y;
+	float x;
+	float y;
 	int radius;
 	sf::FloatRect hitBox;
 	sf::Color lightColour;
 
-	Light(int xx,int yy, int rad);
+	Light(float xx,float yy, int rad);
 	void update();
 };
 

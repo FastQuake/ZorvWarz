@@ -27,6 +27,8 @@ sf::Thread *clientThread;
 sf::Mutex packetMutex;
 sf::Mutex readyMutex;
 
+sf::Clock frameTime;
+
 vector<string> packetList;
 
 bool ready = false;
@@ -138,6 +140,7 @@ int main(int argc, char *argv[]){
 	int oldrot = 0;
 	
 	int fps = 0;
+
 	sf::Clock counter;
 	counter.restart();
 
@@ -148,6 +151,7 @@ int main(int argc, char *argv[]){
 	fpsText.setFont(font);
 
 	while(window.isOpen()){
+		frameTime.restart();
 		//Get current FPS
 		if(counter.getElapsedTime().asSeconds() > 1){
 			counter.restart();
@@ -210,8 +214,12 @@ int main(int argc, char *argv[]){
 			ss.str("");
 			ss.clear();
 		}
-
 		
+
+		//Update all the entities
+		entities.updateEntities(0);
+		entities.collideEntities();
+
 		p1Light->x = player->x+16;
 		p1Light->y = player->y+16;
 		p1Light->update();
@@ -220,10 +228,6 @@ int main(int argc, char *argv[]){
 		p2Light->y = player2->y+16;
 		p2Light->update();
 
-		//Update all the entities
-		entities.updateEntities(0);
-		entities.collideEntities();
-
 		//draw stuff
 		window.clear();
 		entities.drawEntities(&window,player->x-400,player->y-300); //Hardcoded screenx and screeny, may fix later
@@ -231,6 +235,7 @@ int main(int argc, char *argv[]){
 		aim.drawNet(&window,player->x-400,player->y-300);
 		window.draw(fpsText);
 		window.display();
+
 	}
 	cleanup();
 	return 0;

@@ -14,6 +14,8 @@ const std::string playerFile = "data/textures/player.png";
 const std::string lightFile = "data/textures/light.png";
 
 extern sf::RenderWindow window;
+extern sf::Clock frameTime;
+
 extern bool doShutdown;
 
 extern bool keyUp;

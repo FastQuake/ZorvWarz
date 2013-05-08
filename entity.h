@@ -14,8 +14,8 @@ class Entity{
 		bool drawable,collides,readyToUpdate;
 		bool alive;
 		std::vector<sf::FloatRect> collisionBoxes;
-		int x,y;
-		int rot;
+		float x,y;
+		float rot;
 		int ID;
 
 		Entity();
@@ -52,9 +52,9 @@ class Mob : public Entity {
 
 class Player : public Entity {
 	public:
-	int xVol;
-	int yVol;
-	int speed;
+	float xVol;
+	float yVol;
+	float speed;
 	sf::Sprite playerSprite;
 	sf::Texture texture;
 	

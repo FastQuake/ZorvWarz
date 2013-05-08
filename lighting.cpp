@@ -4,7 +4,7 @@
 
 sf::ConvexShape shadowList[512];
 
-Light::Light(int xx, int yy,int rad){
+Light::Light(float xx, float yy,int rad){
 	x = xx;
 	y = yy;
 	radius = rad;
