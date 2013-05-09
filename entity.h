@@ -44,9 +44,10 @@ class Mob : public Entity {
 	sf::Sprite mobSprite;
 	sf::Texture texture;
 	ENetPeer *peer;
-
-	Mob();
-	Mob(std::string textureFile);
+	bool connected;
+	
+	Mob(int id);
+	Mob(std::string textureFile, int id);
 	void update(int framecount);
 	void onCollision(Entity *object, sf::FloatRect otherBox){};
 	void draw(sf::RenderWindow *window, int screenx,int screeny);
@@ -71,9 +72,11 @@ class Monster : public Entity {
 	int xVol;
 	int yVol;
 	int speed;
-	sf::Sprite playerSprite;
+	sf::Sprite monsterSprite;
 	sf::Texture texture;
 	
+	Monster(std::string monsterTexture);
+	void buildPath();
 	void update(int framecount);
 	void onCollision(Entity *object, sf::FloatRect otherBox);
 	void draw(sf::RenderWindow *screen,int screenx,int screeny);

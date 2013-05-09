@@ -20,8 +20,6 @@ Light *p1Light;
 Light *p2Light;
 LightManager lm;
 
-AIManager aim;
-
 sf::Thread *serverThread;
 sf::Thread *clientThread;
 sf::Mutex packetMutex;
@@ -32,6 +30,7 @@ int FPS = 60;
 
 vector<string> packetList;
 
+bool twoPlayers = false;
 bool ready = false;
 bool doShutdown = false;
 
@@ -47,7 +46,7 @@ string intToStr(int num){
 	stringstream ss;
 	ss << num;
 	return ss.str();
-} 
+}
 
 int charToInt(char num){
 	int intnum;
@@ -60,11 +59,9 @@ int charToInt(char num){
 void addEntities(){
 	ship = new ShipEntity(tilesFile);
 	player = new Player(playerFile);
-	player2 = new Mob(playerFile);
-	player2->type = "player";
+
 	entities.entityList.push_back(ship);
 	entities.entityList.push_back(player);
-	entities.entityList.push_back(player2);
 
 	//Lights
 	p1Light = new Light(100,100,300);
@@ -136,9 +133,9 @@ int main(int argc, char *argv[]){
 	window.setFramerateLimit(60);
 	sf::Event event;
 
-	int oldx = 0;
-	int oldy = 0;
-	int oldrot = 0;
+	float oldx = 0;
+	float oldy = 0;
+	float oldrot = 0;
 	
 	int fps = 0;
 
@@ -208,7 +205,7 @@ int main(int argc, char *argv[]){
 			oldrot = player->rot;
 			stringstream ss;
 			ss << csMove << " " << player->x << " " << player->y << " " << player->rot;
-			//cout << "SENDING: " << ss.str() << endl;
+			cout << "SENDING: " << ss.str() << endl;
 			packetMutex.lock();
 			packetList.push_back(ss.str());
 			packetMutex.unlock();
@@ -226,9 +223,11 @@ int main(int argc, char *argv[]){
 		p1Light->y = player->y+16;
 		p1Light->update();
 
-		p2Light->x = player2->x+16;
-		p2Light->y = player2->y+16;
-		p2Light->update();
+		if(twoPlayers){
+			p2Light->x = player2->x+16;
+			p2Light->y = player2->y+16;
+			p2Light->update();
+		}
 
 		//draw stuff
 		window.clear();
@@ -318,14 +317,38 @@ void runClient(string selection){
 /** Function to handle all client packet types **/
 void clientHandlePacket(string packetData){
 	stringstream ss;
+	string type;
 	int packetType;
 	int id;
+
+	float x,y,rot;
 
 	ss << packetData;
 	ss >> packetType;
 
 	switch(packetType){
 		case scSpawn:
+			ss >> id;
+			ss >> type;
+			ss >> x;
+			ss >> y;
+			ss >> rot;
+			if(type == "player"){
+				player2 = new Mob(playerFile,id);
+				player2->x = x;
+				player2->y = y;
+				player2->rot = rot;
+				player2->type = "player";
+				entities.entityList.push_back(player2);
+				twoPlayers = true;
+			}else{
+				Mob *monster = new Mob(playerFile,id);
+				monster->x = x;
+				monster->y = y;
+				monster->rot = rot;
+				entities.entityList.back()->type = "monster";
+				entities.entityList.push_back(monster);
+			}
 			break;
 		case scJoinack:
 			//Get player id and assign it to player
@@ -336,7 +359,7 @@ void clientHandlePacket(string packetData){
 			break;
 		case scMove:
 			//Get player x y rot
-			int x,y,rot;
+			float x,y,rot;
 			ss >> id >> x >> y >> rot;
 			//If self then move self
 			if(id == 0){
@@ -344,7 +367,7 @@ void clientHandlePacket(string packetData){
 				player->x = x;
 				player->y = y;
 				player->rot = rot;
-			} else { // else move player2 to wherever
+			}else if(twoPlayers && id == player2->ID){ // else move player2 to wherever
 				//cout << "MOVING P2 TO " << x << " " << y << endl;
 				player2->x = x;
 				player2->y = y;
@@ -374,7 +397,6 @@ void extractMap(string data){
 		}
 	}
 	ship->getColBoxes();
-	aim.init(ship);
 }
 
 vector<sf::FloatRect> whatIntersectsBox(sf::FloatRect hitBox){

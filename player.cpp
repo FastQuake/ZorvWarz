@@ -53,25 +53,25 @@ void Player::draw(sf::RenderWindow *screen, int screenx,int screeny){
 	screen->draw(playerSprite);
 }
 
-Mob::Mob(){
-	type = "mob";
-	drawable = false;
-	collides = true;
-	readyToUpdate = true;
-	alive = true;
-
-	x = 0;
-	y = 0;
-
-	collisionBoxes.push_back(sf::FloatRect(x,y,32,32));
-}
-
-Mob::Mob(std::string textureFile){
+Mob::Mob(int id){
 	type = "mob";
 	drawable = true;
 	collides = true;
 	readyToUpdate = true;
 	alive = true;
+	connected = false;
+	this->ID = id;
+	
+	collisionBoxes.push_back(sf::FloatRect(x,y,32,32));
+}
+
+Mob::Mob(std::string textureFile, int id){
+	type = "mob";
+	drawable = true;
+	collides = true;
+	readyToUpdate = true;
+	alive = true;
+	this->ID = id;
 
 	x = 0;
 	y = 0;
