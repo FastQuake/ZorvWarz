@@ -85,7 +85,7 @@ void EntityManager::drawEntities(sf::RenderWindow *screen,int screenx,int screen
 void EntityManager::removeByID(int ID){
 	for(int i=0;i<entityList.size();i++){
 		if(entityList[i]->ID == ID){
-			//delete entityList[i];
+			delete entityList[i];
 			entityList.erase(entityList.begin() + i);
 			break;
 		}

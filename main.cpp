@@ -25,6 +25,8 @@ sf::Thread *clientThread;
 sf::Mutex packetMutex;
 sf::Mutex readyMutex;
 
+sf::Texture bTex;
+
 sf::Clock frameTime;
 int FPS = 60;
 
@@ -38,6 +40,7 @@ bool keyUp = false;
 bool keyDown = false;
 bool keyLeft = false;
 bool keyRight = false;
+bool mouseRight = false;
 
 void clientHandlePacket(string packetData);
 void extractMap(string data);
@@ -76,6 +79,8 @@ void setup(){
 	cout << "seed: " << seed << endl;
 	srand(seed);
 	addEntities();
+
+	bTex.loadFromFile(bulletFile);
 }
 
 void cleanup(){
@@ -194,6 +199,14 @@ int main(int argc, char *argv[]){
 				if(event.key.code == sf::Keyboard::Escape){
 					window.close();
 				}
+			}
+			if(event.type == sf::Event::MouseButtonPressed &&
+					event.mouseButton.button == sf::Mouse::Left){
+				mouseRight = true;
+			}
+			if(event.type == sf::Event::MouseButtonReleased &&
+					event.mouseButton.button == sf::Mouse::Left){
+				mouseRight = false;
 			}
 		}
 
