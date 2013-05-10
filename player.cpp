@@ -55,7 +55,7 @@ void Player::update(int framecount){
 	mousePos.x -= 400;
 	mousePos.y -= 300;
 
-	rot = atan2(mousePos.y,mousePos.x) * (180/3.14);
+	rot = atan2((float)mousePos.y,(float)mousePos.x) * (180/3.14);
 
 	if(bClock.getElapsedTime().asMilliseconds() > 100){
 		bClock.restart();
