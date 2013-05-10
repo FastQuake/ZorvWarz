@@ -1,6 +1,8 @@
 #include <cmath>
 #include "main.h"
 
+sf::Clock bClock;
+
 Player::Player(std::string playerTexture){
 	type = "player";
 	drawable = true;
@@ -19,10 +21,11 @@ Player::Player(std::string playerTexture){
 	playerSprite.setTexture(pTexture);
 	playerSprite.setPosition(x,y);
 	gun.setTexture(gTexture);
-	//gun.setOrigin(15,5);
+	gun.setOrigin(-8,5);
 	gun.setPosition(x+16,y+16);
 
-	collisionBoxes.push_back(sf::FloatRect(x,y,32,32));
+	collisionBoxes.push_back(sf::FloatRect(x,y,30,30));
+	bClock.restart();
 }
 
 void Player::update(int framecount){
@@ -46,15 +49,28 @@ void Player::update(int framecount){
 	collisionBoxes[0].left = x;
 	collisionBoxes[0].top = y;
 
+	//Get mouse rotation
 	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 
 	mousePos.x -= 400;
 	mousePos.y -= 300;
 
 	rot = atan2(mousePos.y,mousePos.x) * (180/3.14);
+
+	if(bClock.getElapsedTime().asMilliseconds() > 100){
+		bClock.restart();
+	}
+
+	//Shoot stuff
+	if(mouseRight && bClock.getElapsedTime().asMilliseconds() < 100){
+		entities.entityList.push_back(new Bullet(x+16,y+16,rot));
+	}
 }
 
 void Player::onCollision(Entity *object, sf::FloatRect otherBox){
+	if(object->type == "bullet"){
+		return;
+	}
 	collideWall(otherBox);
 }
 
@@ -62,7 +78,7 @@ void Player::draw(sf::RenderWindow *screen, int screenx,int screeny){
 	xVol = 0;
 	yVol = 0;
 	gun.setRotation(rot);
-	std::cout << "rot : " << gun.getRotation() << std::endl;
+	//std::cout << "rot : " << gun.getRotation() << std::endl;
 	if(gun.getRotation() > 90 && gun.getRotation() < 270){
 		gun.setScale(1,-1);
 	} else {
@@ -110,4 +126,48 @@ void Mob::update(int framecount){
 void Mob::draw(sf::RenderWindow *window,int screenx,int screeny){
 	mobSprite.setPosition(x-screenx,y-screeny);
 	window->draw(mobSprite);
+}
+
+
+Bullet::Bullet(float x, float y, float rot){
+	type = "bullet";
+	drawable = true;
+	collides = true;
+	readyToUpdate = true;
+	alive = true;
+
+	this->x = x;
+	this->y = y;
+	this->rot = rot;
+
+	sBullet.setTexture(bTex);	
+	sBullet.setOrigin(5,5);
+	sBullet.rotate(rot);
+
+	//Get velocity
+	vel.x = cos((rot*(3.14f/180.0f)))*500.0f;
+	vel.y = sin((rot*(3.14f/180.0f)))*500.0f;
+
+	collisionBoxes.push_back(sBullet.getGlobalBounds());
+
+}
+
+void Bullet::update(int framecount){
+	float dTime = 1.0f/FPS;
+	x += vel.x * dTime;
+	y += vel.y * dTime;
+
+	collisionBoxes[0].left = x;
+	collisionBoxes[0].top = y;
+}
+
+void Bullet::onCollision(Entity *object, sf::FloatRect otherBox){
+	if(object->type == "map"){
+		alive = false;
+	}
+}
+
+void Bullet::draw(sf::RenderWindow *screen, int screenx, int screeny){
+	sBullet.setPosition(x-screenx,y-screeny);
+	screen->draw(sBullet);
 }

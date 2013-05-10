@@ -16,7 +16,7 @@ class Entity{
 		std::vector<sf::FloatRect> collisionBoxes;
 		float x,y;
 		float rot;
-		int ID;
+		long ID;
 
 		Entity();
 		//virtual ~Entity(){};
@@ -37,6 +37,17 @@ class EntityManager{
 	void collideEntities();
 	void drawEntities(sf::RenderWindow *screen,int screenx,int screeny);
 	void removeByID(int ID);
+};
+
+class Bullet : public Entity {
+	public:
+	sf::Vector2f vel;
+	sf::Sprite sBullet;
+
+	Bullet(float x, float y, float rot);
+	void update(int framecount);
+	void onCollision(Entity *object, sf::FloatRect otherBox);
+	void draw(sf::RenderWindow *screen,int screenx,int screeny);
 };
 
 class Mob : public Entity {

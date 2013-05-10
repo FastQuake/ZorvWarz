@@ -12,6 +12,9 @@ extern Player *player;
 const std::string tilesFile = "data/textures/tiles.png";
 const std::string playerFile = "data/textures/player.png";
 const std::string lightFile = "data/textures/light.png";
+const std::string bulletFile = "data/textures/bullet.png";
+
+extern sf::Texture bTex;
 
 extern sf::RenderWindow window;
 extern sf::Clock frameTime;
@@ -24,7 +27,9 @@ extern bool keyUp;
 extern bool keyDown;
 extern bool keyLeft;
 extern bool keyRight;
+extern bool mouseRight;
 
+extern EntityManager entities;
 extern ShipEntity *ship;
 
 extern std::vector<std::string> packetList;
