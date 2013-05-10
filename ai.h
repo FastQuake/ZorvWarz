@@ -30,6 +30,7 @@ public:
 	void init(ShipEntity *ship);
 	void connectNodes(ShipEntity ship);
 	void drawNet(sf::RenderWindow *screen, int screenx, int screeny);
+	Node *findVisibleNode(sf::Vector2f relPoint, vector<sf::FloatRect> collisionBoxes);
 };
 
 extern AIManager aim;

@@ -8,6 +8,8 @@
 
 extern int idCounter;
 
+class Node;
+
 class Entity{
 	public:
 		std::string type;
@@ -72,14 +74,15 @@ class Monster : public Entity {
 	int xVol;
 	int yVol;
 	int speed;
-	sf::Sprite monsterSprite;
-	sf::Texture texture;
+	std::vector<Node*> currentPath;
 	
-	Monster(std::string monsterTexture);
-	void buildPath();
+	Monster();
+	void buildPath(int player);
+	void drawPath(sf::RenderWindow *screen, int screenx, int screeny);
+
 	void update(int framecount);
 	void onCollision(Entity *object, sf::FloatRect otherBox);
-	void draw(sf::RenderWindow *screen,int screenx,int screeny);
+	void draw(sf::RenderWindow *screen,int screenx,int screeny){};
 };
 
 class ShipEntity : public Entity{
@@ -95,5 +98,7 @@ class ShipEntity : public Entity{
 	sf::Vector2i getRandomFloorTile();
 
 };
+
+extern Monster *testMonster;
 
 #endif

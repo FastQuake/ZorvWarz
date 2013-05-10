@@ -205,7 +205,7 @@ int main(int argc, char *argv[]){
 			oldrot = player->rot;
 			stringstream ss;
 			ss << csMove << " " << player->x << " " << player->y << " " << player->rot;
-			cout << "SENDING: " << ss.str() << endl;
+			//cout << "SENDING: " << ss.str() << endl;
 			packetMutex.lock();
 			packetList.push_back(ss.str());
 			packetMutex.unlock();
@@ -234,6 +234,7 @@ int main(int argc, char *argv[]){
 		entities.drawEntities(&window,player->x-400,player->y-300); //Hardcoded screenx and screeny, may fix later
 		lm.drawLights(&window,player->x-400,player->y-300);
 		aim.drawNet(&window,player->x-400,player->y-300);
+		testMonster->drawPath(&window,player->x-400,player->y-300);
 		window.draw(fpsText);
 		window.display();
 

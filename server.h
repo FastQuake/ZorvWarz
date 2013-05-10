@@ -31,4 +31,7 @@ void handlePacket(string packetData, ENetPeer *peer);
 int p1Orp2(ENetPeer *peer);
 ENetPacket *createPacket(int packetType, string packetData, int packetFlag);
 
+extern Mob *p1;
+extern Mob *p2;
+
 #endif

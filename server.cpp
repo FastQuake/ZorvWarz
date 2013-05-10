@@ -10,9 +10,10 @@ ShipEntity *serverShip;
 ENetHost *server;
 EntityManager serverEntities;
 AIManager aim;
+
 Mob *p1;
 Mob *p2;
-Mob *testMonster;
+Monster *testMonster;
 
 bool isp1 = true;
 bool twoP = false;
@@ -37,7 +38,7 @@ void initServer(){
 
 	p1 = new Mob(1);
 	p2 = new Mob(2);
-	testMonster = new Mob(3);
+	testMonster = new Monster();
 
 	//Attach the entites to the server's entity manager
 	serverEntities.entityList.push_back(serverShip);
@@ -150,6 +151,7 @@ void handlePacket(string packetData, ENetPeer *peer){
 					enet_peer_send(p2->peer,0,packet);
 					enet_host_flush(server);
 				}
+				testMonster->buildPath(1);
 				break;
 			case 2:
 				//Send acknowledge join from client and give client their ID
