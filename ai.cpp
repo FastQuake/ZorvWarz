@@ -14,9 +14,17 @@ Node::Node(sf::FloatRect nodeBox){
 void Node::findNeighbors(threadArgs args){
 	Node *thisNode = args.thisNode;
 	vector<sf::FloatRect> targetColBoxes = args.collisionBoxes;
+	vector<float> usedAngles;
 
 	for(int i=0;i<aim.nodeList.size();i++){
 		float angle = atan2(aim.nodeList[i].middle.y-thisNode->middle.y,aim.nodeList[i].middle.x-thisNode->middle.x)*180/PI;
+		//We don't want to have multiple neighbors on the same line
+		bool angled = false;
+		for(int j=0;j<usedAngles.size();j++)
+			if(fabs(angle - usedAngles[j]) < 0.1)
+				angled = true;
+		if(angled)
+			continue;
 		//cout << "angle: " << angle << endl;
 		bool hit = false;
 		for(int j=16;;j+=16){
@@ -38,6 +46,7 @@ void Node::findNeighbors(threadArgs args){
 					aim.nodeList[i].nodeBox.top+(aim.nodeList[i].nodeBox.height/2));	
 				cout << "pushing back node " << middle2.x << "," << middle2.y << "-" << thisNode->middle.x << "," << thisNode->middle.y << endl;*/
 				thisNode->neighbors.push_back(&aim.nodeList[i]);
+				usedAngles.push_back(angle);
 				break;
 			}
 		}
