@@ -19,7 +19,13 @@ extern sf::Texture bTex;
 extern sf::RenderWindow window;
 extern sf::Clock frameTime;
 
+extern sf::Thread *serverThread;
+extern sf::Thread *clientThread;
+extern sf::Mutex readyMutex;
+
+extern std::string IPad;
 extern int FPS;
+extern int state;
 
 extern bool doShutdown;
 

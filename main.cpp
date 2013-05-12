@@ -7,6 +7,7 @@
 #include "lighting.h"
 #include "server.h"
 #include "ai.h"
+#include "menu.h"
 
 using namespace std;
 
@@ -27,6 +28,8 @@ sf::Mutex readyMutex;
 
 sf::Texture bTex;
 
+string IPad;
+
 sf::Clock frameTime;
 int FPS = 60;
 
@@ -41,6 +44,8 @@ bool keyDown = false;
 bool keyLeft = false;
 bool keyRight = false;
 bool mouseRight = false;
+
+int state = 0; //0 = main menu 1=game
 
 void clientHandlePacket(string packetData);
 void extractMap(string data);
@@ -76,12 +81,14 @@ void addEntities(){
 void setup(){
 	//Set seed based on time
 	int seed = time(NULL);
-	seed = 1368200963;
+	//seed = 1368200963;
 	cout << "seed: " << seed << endl;
 	srand(seed);
 	addEntities();
 
 	bTex.loadFromFile(bulletFile);
+
+	initMenu();
 }
 
 void cleanup(){
@@ -109,7 +116,10 @@ int main(int argc, char *argv[]){
 	}
     atexit (enet_deinitialize);
 
-	while(true){
+	clientThread = new sf::Thread(&runClient,selection);
+	serverThread = new sf::Thread(&serverLoop);
+
+	/*while(true){
 		string ipAddress;
 
 		cout << "1. Join game" << endl << "2. Host game" << endl << "Enter your selection: ";
@@ -130,10 +140,11 @@ int main(int argc, char *argv[]){
 			cout << "Invalid selection, please try again." << endl << endl;
 			continue;
 		}
-	}
+	}*/
+	selection = 2;
 
-	sf::sleep(sf::milliseconds(500));
-	readyMutex.lock();
+	//sf::sleep(sf::milliseconds(500));
+	//readyMutex.lock();
 
 	window.create(sf::VideoMode(800,600),"Test");
 	window.setFramerateLimit(60);
@@ -211,49 +222,61 @@ int main(int argc, char *argv[]){
 			}
 		}
 
-		//Check if player has moved, if they did move send create packet with
-		//new player location and rotation
-		if(player->x != oldx || player->y != oldy ||player->rot != oldrot){
-			oldx = player->x;
-			oldy = player->y;
-			oldrot = player->rot;
-			stringstream ss;
-			ss << csMove << " " << player->x << " " << player->y << " " << player->rot;
-			//cout << "SENDING: " << ss.str() << endl;
-			packetMutex.lock();
-			packetList.push_back(ss.str());
-			packetMutex.unlock();
 
-			ss.str("");
-			ss.clear();
-		}
-		
-
-		//Update all the entities
-		entities.updateEntities(0);
-		entities.collideEntities();
-
-		p1Light->x = player->x+16;
-		p1Light->y = player->y+16;
-		p1Light->update();
-
-		if(twoPlayers){
-			p2Light->x = player2->x+16;
-			p2Light->y = player2->y+16;
-			p2Light->update();
+		//If main menu state
+		if(state == 0){
+			updateMenu();
+			window.clear();
+			drawMenu(&window);
+			window.display();
 		}
 
-		//draw stuff
-		window.clear();
-		entities.drawEntities(&window,player->x-400,player->y-300); //Hardcoded screenx and screeny, may fix later
-		lm.drawLights(&window,player->x-400,player->y-300);
-		//aim.drawNet(&window,player->x-400,player->y-300);
-		pathMutex.lock();
-		testMonster->drawPath(&window,player->x-400,player->y-300);
-		pathMutex.unlock();
+		//If in game state
+		if(state == 1){
+			//Check if player has moved, if they did move send create packet with
+			//new player location and rotation
+			if(player->x != oldx || player->y != oldy ||player->rot != oldrot){
+				oldx = player->x;
+				oldy = player->y;
+				oldrot = player->rot;
+				stringstream ss;
+				ss << csMove << " " << player->x << " " << player->y << " " << player->rot;
+				//cout << "SENDING: " << ss.str() << endl;
+				packetMutex.lock();
+				packetList.push_back(ss.str());
+				packetMutex.unlock();
 
-		window.draw(fpsText);
-		window.display();
+				ss.str("");
+				ss.clear();
+			}
+			
+
+			//Update all the entities
+			entities.updateEntities(0);
+			entities.collideEntities();
+
+			p1Light->x = player->x+16;
+			p1Light->y = player->y+16;
+			p1Light->update();
+
+			if(twoPlayers){
+				p2Light->x = player2->x+16;
+				p2Light->y = player2->y+16;
+				p2Light->update();
+			}
+
+			//draw stuff
+			window.clear();
+			entities.drawEntities(&window,player->x-400,player->y-300); //Hardcoded screenx and screeny, may fix later
+			lm.drawLights(&window,player->x-400,player->y-300);
+			//aim.drawNet(&window,player->x-400,player->y-300);
+			pathMutex.lock();
+			testMonster->drawPath(&window,player->x-400,player->y-300);
+			pathMutex.unlock();
+
+			window.draw(fpsText);
+			window.display();
+		}
 
 	}
 	cleanup();
@@ -272,16 +295,19 @@ void runClient(string selection){
 	string packetData;
 	stringstream ss;
 
-	if(selection == "1"){
+	/*if(selection == "1"){
 		cout << "Enter the IP address: ";
 		//cin >> ipAddress;
 		ipAddress = "127.0.0.1";
 		enet_address_set_host(&address,ipAddress.c_str());
 	}
 	else if(selection == "2"){
+		cout << "DOIN 2" << endl;
 		ipAddress = "127.0.0.1";
 		enet_address_set_host(&address,ipAddress.c_str());
-	}
+	}*/
+
+	enet_address_set_host(&address,IPad.c_str());
 
 	address.port = 1255;
 	client = enet_host_create(NULL,1,2,0,0);
