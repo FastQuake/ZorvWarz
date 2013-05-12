@@ -16,6 +16,8 @@ Player::Player(std::string playerTexture){
 	y = 600/2;
 	speed = 400.0;
 
+	bullets = 30;
+
 	pTexture.loadFromFile(playerTexture);
 	gTexture.loadFromFile("data/textures/gun.png");
 	playerSprite.setTexture(pTexture);
@@ -30,7 +32,8 @@ Player::Player(std::string playerTexture){
 
 void Player::update(int framecount){
 	//float dTime = frameTime.getElapsedTime().asMilliseconds()/1000.0f;
-	float dTime = 1.0f/FPS;
+	//float dTime = 1.0f/FPS;
+	float dTime = dt.asSeconds();
 	if(keyUp && sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
 		yVel = -speed*dTime;
 	} else if(keyDown && sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
@@ -57,21 +60,28 @@ void Player::update(int framecount){
 
 	rot = atan2((float)mousePos.y,(float)mousePos.x) * (180/3.14);
 
-	if(bClock.getElapsedTime().asMilliseconds() > 100){
-		bClock.restart();
-	}
-
 	//Shoot stuff
-	if(mouseRight && bClock.getElapsedTime().asMilliseconds() < 100){
+	if(mouseRight && bClock.getElapsedTime().asMilliseconds() > 100 &&
+			bullets > 0){
+		bClock.restart();
 		entities.entityList.push_back(new Bullet(x+16,y+16,rot));
+		bullets--;
+		packetMutex.lock();
+		packetList.push_back("2");
+		packetMutex.unlock();
 	}
 }
 
 void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 	if(object->type == "bullet"){
 		return;
+	}else if(object->type == "box"){
+		bullets += 30;
+		object->alive = false;
+		object->collides = false;
+	}else {
+		collideWall(otherBox);
 	}
-	collideWall(otherBox);
 }
 
 void Player::draw(sf::RenderWindow *screen, int screenx,int screeny){
@@ -128,6 +138,31 @@ void Mob::draw(sf::RenderWindow *window,int screenx,int screeny){
 	window->draw(mobSprite);
 }
 
+PMob::PMob(std::string textureFile, int id)
+	:Mob(textureFile, id)
+{
+	type = "player";
+
+	gTex.loadFromFile("data/textures/gun.png");
+	gSprite.setTexture(gTex);
+	gSprite.setOrigin(-8,5);
+	gSprite.setPosition(x+16,y+16);
+}
+
+void PMob::draw(sf::RenderWindow *window, int screenx, int screeny){
+	mobSprite.setPosition(x-screenx,y-screeny);
+	gSprite.setPosition(x-screenx+16,y-screeny+16);
+	gSprite.setRotation(rot);
+	//std::cout << "rot : " << gun.getRotation() << std::endl;
+	if(gSprite.getRotation() > 90 && gSprite.getRotation() < 270){
+		gSprite.setScale(1,-1);
+	} else {
+		gSprite.setScale(1,1);
+	}
+	window->draw(mobSprite);
+	window->draw(gSprite);
+}
+
 
 Bullet::Bullet(float x, float y, float rot){
 	type = "bullet";
@@ -148,14 +183,20 @@ Bullet::Bullet(float x, float y, float rot){
 	vel.x = cos((rot*(3.14f/180.0f)))*500.0f;
 	vel.y = sin((rot*(3.14f/180.0f)))*500.0f;
 
+	//std::cout << "MOVING AT " << vel.x/20 << " " << vel.y/20 << std::endl;
+
+	this->x += (vel.x/20.0);
+	this->y += (vel.y/20.0);
+
 	collisionBoxes.push_back(sBullet.getGlobalBounds());
 
 }
 
 void Bullet::update(int framecount){
-	float dTime = 1.0f/FPS;
-	x += vel.x * dTime;
-	y += vel.y * dTime;
+	//float dTime = 1.0f/FPS;
+	float dTime = dt.asSeconds();
+	x += (vel.x * dTime);
+	y += (vel.y * dTime);
 
 	collisionBoxes[0].left = x;
 	collisionBoxes[0].top = y;

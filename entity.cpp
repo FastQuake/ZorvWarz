@@ -28,10 +28,10 @@ void EntityManager::updateEntities(int framecount){
 		//Call entities update funciton only if it is ready to update
 		if(entityList[i]->readyToUpdate){
 			entityList[i]->update(framecount);
-			//if entity is dead kill it! possibly with fire
-			if(entityList[i]->alive == false){
-				removeByID(entityList[i]->ID);
-			}
+		}
+		//if entity is dead kill it! possibly with fire
+		if(entityList[i]->alive == false){
+			removeByID(entityList[i]->ID);
 		}
 	}
 }

@@ -63,7 +63,18 @@ class Mob : public Entity {
 	Mob(std::string textureFile, int id);
 	void update(int framecount);
 	void onCollision(Entity *object, sf::FloatRect otherBox){};
-	void draw(sf::RenderWindow *window, int screenx,int screeny);
+	virtual void draw(sf::RenderWindow *window, int screenx,int screeny);
+};
+
+class PMob : public Mob {
+	public:
+	sf::Texture gTex;
+	sf::Sprite gSprite;
+	
+	PMob(std::string textureFile, int id);
+	//void update(int framecount);
+	//void onCollision(Entity *object, sf::FloatRect otherBox);
+	void draw(sf::RenderWindow *window, int screenx, int screeny);
 };
 
 class Player : public Entity {
@@ -71,6 +82,7 @@ class Player : public Entity {
 	float xVel;
 	float yVel;
 	float speed;
+	int bullets;
 	sf::Sprite playerSprite;
 	sf::Sprite gun;
 	sf::Texture pTexture;
@@ -112,6 +124,17 @@ class ShipEntity : public Entity{
 	void getColBoxes();
 	sf::Vector2i getRandomFloorTile();
 
+};
+
+class AmmoBox : public Entity {
+	public:
+	sf::Texture ammoTex;
+	sf::Sprite box;
+	
+	AmmoBox(float x, float y);
+
+	void onCollision(Entity *object, sf::FloatRect otherBox);
+	void draw(sf::RenderWindow *screen, int screenx, int screeny);
 };
 
 extern Monster *testMonster;

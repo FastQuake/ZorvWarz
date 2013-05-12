@@ -133,37 +133,70 @@ Ship::Ship(string tileFile){
 			if(data[x][y] == FLOOR || data[x][y] == NODE){
 				//Left
 				if(data[x-1][y] == EMPTY){
-					data[x-1][y] = WALL;
+					data[x-1][y] = LWALL;
 				}
 				//Right
 				if(data[x+1][y] == EMPTY){
-					data[x+1][y] = WALL;
+					data[x+1][y] = RWALL;
 				}
 				//Up
 				if(data[x][y-1] == EMPTY){
-					data[x][y-1] = WALL;
+					data[x][y-1] = TWALL;
 				}
 				//Down
 				if(data[x][y+1] == EMPTY){
 					data[x][y+1] = WALL;
 				}
-				//Left-Down
+				/*//Left-Down
 				if(data[x-1][y-1] == EMPTY){
-					data[x-1][y-1] = WALL;
+					data[x-1][y-1] = LTCORNWALL;
 				}
 				//Left-Up
-				if(data[x-1][y+1] == EMPTY){
-					data[x-1][y+1] = WALL;
+				else if(data[x-1][y+1] == EMPTY){
+					data[x-1][y+1] = LBCORNWALL;
 				}
 				//Right-Down
-				if(data[x+1][y-1] == EMPTY){
-					data[x+1][y-1] = WALL;
+				else if(data[x+1][y-1] == EMPTY){
+					data[x+1][y-1] = RTCORNWALL;
 				}
 				//Right-Up
-				if(data[x+1][y+1] == EMPTY){
-					data[x+1][y+1] = WALL;
+				else if(data[x+1][y+1] == EMPTY){
+					data[x+1][y+1] = RBCORNWALL;
+				}*/
+			}
+		}
+	}
+	//Make walls
+	for(int y=0;y<dunYSize;y++){
+		for(int x=0;x<dunXSize;x++){
+			if(data[x][y] == FLOOR || data[x][y] == NODE){
+				//Left-Down
+				if(data[x-1][y-1] == EMPTY){
+					data[x-1][y-1] = LTCORNWALL;
+				}
+				//Left-Up
+				else if(data[x-1][y+1] == EMPTY){
+					data[x-1][y+1] = LBCORNWALL;
+				}
+				//Right-Down
+				else if(data[x+1][y-1] == EMPTY){
+					data[x+1][y-1] = RTCORNWALL;
+				}
+				//Right-Up
+				else if(data[x+1][y+1] == EMPTY){
+					data[x+1][y+1] = RBCORNWALL;
 				}
 			}
+		}
+	}
+
+	//Try to make 100 random bloody tiles
+	for(int i=0;i<500;i++){
+		sf::Vector2i pos;
+		pos.x = rand()%dunXSize;
+		pos.y = rand()%dunYSize;
+		if(data[pos.x][pos.y] % 2 != 0 && data[pos.x][pos.y] != NODE && data[pos.x][pos.y] != WALL){
+			data[pos.x][pos.y]++;
 		}
 	}
 
@@ -202,6 +235,10 @@ void Ship::drawMap(sf::RenderWindow *window,int screenx, int screeny){
 					 (y*32+32) >= (screeny) && (y*32) <= (screeny+600)){
 				 int xx = (data[x][y] % 4) * 32;
 				 int yy = (data[x][y] / 4) * 32; 
+				 if(data[x][y] == NODE){
+					 xx = 32;
+					 yy = 0;
+				 }
 				 mapTile.setTextureRect(sf::IntRect(xx,yy,32,32));
 				 mapTile.setPosition(x*32,y*32);
 				 mapTile.move(-screenx,-screeny);
@@ -257,7 +294,7 @@ void ShipEntity::getColBoxes(){
 	//Get all collision boxes
 	for(int x=0;x<dunXSize;x++){
 		for(int y=0;y<dunYSize;y++){
-			if(map->data[x][y] == WALL){
+			if(map->data[x][y] > 2 && map->data[x][y] < 20){
 				//cout << "pushing back collisionBoxes " << x << "," << y << endl;
 				collisionBoxes.push_back(sf::FloatRect(x*32,y*32,32,32));
 			}

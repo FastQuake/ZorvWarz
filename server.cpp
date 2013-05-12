@@ -24,6 +24,7 @@ void sendSpawnPackets(ENetPeer *peer);
 
 void initServer(){
 	serverShip = new ShipEntity(tilesFile);
+	serverShip->map->drawRoom();
 	aim.init(serverShip);
 	ENetAddress address;
 	
@@ -47,6 +48,12 @@ void initServer(){
 	serverEntities.entityList.push_back(p1);
 	serverEntities.entityList.push_back(p2);
 	serverEntities.entityList.push_back(testMonster);
+
+	for(int i=0;i<5;i++){
+		sf::Vector2i pos = serverShip->getRandomFloorTile();
+		serverEntities.entityList.push_back(new AmmoBox(pos.x*32+6
+					,pos.y*32+12));
+	}
 
 	p1->type = "player";
 	p2->type = "player";
@@ -187,6 +194,15 @@ void handlePacket(string packetData, ENetPeer *peer){
 					enet_peer_send(p1->peer,0,packet);
 					enet_host_flush(server);
 				}
+				//Also send p1 spawn to p2
+				if(p2->connected){
+					ss.str("");
+					ss.clear();
+					ss << p1->ID << " " << p1->type << " " << p1->x << " " << p1->y << " " << p1->rot;
+					packet = createPacket(scSpawn,ss.str(),ENET_PACKET_FLAG_RELIABLE);
+					enet_peer_send(p2->peer,0,packet);
+					enet_host_flush(server);
+				}
 				break;
 		}
 		break;
@@ -224,6 +240,25 @@ void handlePacket(string packetData, ENetPeer *peer){
 		}
 		break;
 
+	case csAttack:
+		ss.str("");
+		ss.clear();
+		if(peer == p1->peer){
+			serverEntities.entityList.push_back(new Bullet(
+						p1->x+16,p1->y+16,p1->rot));
+			ss << p1->ID;
+			packet = createPacket(scAttack,ss.str(),ENET_PACKET_FLAG_RELIABLE);
+			if(p2->connected)
+				enet_peer_send(p2->peer,0,packet);
+		} else {
+			serverEntities.entityList.push_back(new Bullet(
+						p2->x+16,p2->y+16,p2->rot));
+			ss << p2->ID;
+			packet = createPacket(scAttack,ss.str(),ENET_PACKET_FLAG_RELIABLE);
+			if(p1->connected)
+				enet_peer_send(p1->peer,0,packet);
+		}
+		break;
 	default:
 		break;
 
@@ -235,7 +270,7 @@ string getMapData(bool newlines){
 	stringstream ss;
 	for(int y=0;y<dunYSize;y++){
 		for(int x=0;x<dunXSize;x++){
-			ss << serverShip->map->data[x][y];
+			ss << serverShip->map->data[x][y] << ",";
 			if(newlines)
 				if(x == dunXSize-1)
 					ss << endl;

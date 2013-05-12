@@ -7,6 +7,7 @@
 #include "lighting.h"
 #include "server.h"
 #include "ai.h"
+#include "menu.h"
 
 using namespace std;
 
@@ -14,7 +15,7 @@ EntityManager entities;
 sf::RenderWindow window;
 ShipEntity *ship;
 Player *player;
-Mob *player2;
+PMob *player2;
 
 Light *p1Light;
 Light *p2Light;
@@ -26,9 +27,14 @@ sf::Mutex packetMutex;
 sf::Mutex readyMutex;
 
 sf::Texture bTex;
+sf::Font font;
+
+string IPad;
 
 sf::Clock frameTime;
 int FPS = 60;
+
+sf::Time dt;
 
 vector<string> packetList;
 
@@ -42,6 +48,8 @@ bool keyLeft = false;
 bool keyRight = false;
 bool mouseRight = false;
 
+int state = 0; //0 = main menu 1=game
+
 void clientHandlePacket(string packetData);
 void extractMap(string data);
 
@@ -49,6 +57,14 @@ string intToStr(int num){
 	stringstream ss;
 	ss << num;
 	return ss.str();
+}
+
+void replaceChar(string *str,char a, char b){
+	for(int i=0;i<str->length();i++){
+		if(str->at(i) == a){
+			str->at(i) = b;
+		}
+	}
 }
 
 int charToInt(char num){
@@ -82,6 +98,8 @@ void setup(){
 	addEntities();
 
 	bTex.loadFromFile(bulletFile);
+
+	initMenu();
 }
 
 void cleanup(){
@@ -109,46 +127,30 @@ int main(int argc, char *argv[]){
 	}
     atexit (enet_deinitialize);
 
-	while(true){
-		string ipAddress;
-
-		cout << "1. Join game" << endl << "2. Host game" << endl << "Enter your selection: ";
-		cin >> selection;
-		clientThread = new sf::Thread(&runClient,selection);
-		serverThread = new sf::Thread(&serverLoop);
-		//mapMutex.lock();
-		if(selection == "1"){
-			clientThread->launch();
-			break;
-		}
-		else if(selection == "2"){
-			initServer();
-			serverThread->launch();
-			clientThread->launch();
-			break;
-		}else{
-			cout << "Invalid selection, please try again." << endl << endl;
-			continue;
-		}
-	}
-
-	sf::sleep(sf::milliseconds(500));
-	readyMutex.lock();
+	//Threads for client and server networking
+	clientThread = new sf::Thread(&runClient,selection);
+	serverThread = new sf::Thread(&serverLoop);
 
 	window.create(sf::VideoMode(800,600),"Test");
 	window.setFramerateLimit(60);
 	sf::Event event;
 
+	//Points to check if the player has moved
 	float oldx = 0;
 	float oldy = 0;
 	float oldrot = 0;
 	
+	//Games current fps
 	int fps = 0;
 
+	//Frame time counter
 	sf::Clock counter;
 	counter.restart();
 
-	sf::Font font;
+	sf::Clock dtClock;
+	dtClock.restart();
+
+	//Game's default font
 	font.loadFromFile("data/PressStart2P.ttf");
 
 	sf::Text fpsText;
@@ -159,12 +161,13 @@ int main(int argc, char *argv[]){
 		//Get current FPS
 		if(counter.getElapsedTime().asSeconds() > 1){
 			counter.restart();
-			fpsText.setString(intToStr(fps) + " " + intToStr(player->x) + " " + intToStr(player->y));
+			//fpsText.setString("FPS: "+intToStr(fps)+" BULLETS: "+intToStr(player->bullets));
 			FPS = fps;
 			fps = 0;
 		} else {
 			fps++;
 		}
+		fpsText.setString("FPS: "+intToStr(FPS)+" BULLETS: "+intToStr(player->bullets));
 		//Get input
 		while(window.pollEvent(event)){
 			if(event.type == sf::Event::Closed){
@@ -209,52 +212,73 @@ int main(int argc, char *argv[]){
 					event.mouseButton.button == sf::Mouse::Left){
 				mouseRight = false;
 			}
+			if(event.type == sf::Event::TextEntered && inputIP){
+				if(event.text.unicode == '\b'){
+					if(ipText.size() > 0)
+						ipText.erase(ipText.size()-1);
+				}else if(event.text.unicode != '\r'){
+					ipText += event.text.unicode;
+				}
+			}
 		}
 
-		//Check if player has moved, if they did move send create packet with
-		//new player location and rotation
-		if(player->x != oldx || player->y != oldy ||player->rot != oldrot){
-			oldx = player->x;
-			oldy = player->y;
-			oldrot = player->rot;
-			stringstream ss;
-			ss << csMove << " " << player->x << " " << player->y << " " << player->rot;
-			//cout << "SENDING: " << ss.str() << endl;
-			packetMutex.lock();
-			packetList.push_back(ss.str());
-			packetMutex.unlock();
 
-			ss.str("");
-			ss.clear();
-		}
-		
-
-		//Update all the entities
-		entities.updateEntities(0);
-		entities.collideEntities();
-
-		p1Light->x = player->x+16;
-		p1Light->y = player->y+16;
-		p1Light->update();
-
-		if(twoPlayers){
-			p2Light->x = player2->x+16;
-			p2Light->y = player2->y+16;
-			p2Light->update();
+		//If main menu state
+		if(state == 0){
+			updateMenu();
+			window.clear();
+			drawMenu(&window);
+			window.display();
 		}
 
-		//draw stuff
-		window.clear();
-		entities.drawEntities(&window,player->x-400,player->y-300); //Hardcoded screenx and screeny, may fix later
-		lm.drawLights(&window,player->x-400,player->y-300);
-		//aim.drawNet(&window,player->x-400,player->y-300);
-		pathMutex.lock();
-		testMonster->drawPath(&window,player->x-400,player->y-300);
-		pathMutex.unlock();
+		//If in game state
+		if(state == 1){
+			//Check if player has moved, if they did move send create packet with
+			//new player location and rotation
+			if(player->x != oldx || player->y != oldy ||player->rot != oldrot){
+				oldx = player->x;
+				oldy = player->y;
+				oldrot = player->rot;
+				stringstream ss;
+				ss << csMove << " " << player->x << " " << player->y << " " << player->rot;
+				//cout << "SENDING: " << ss.str() << endl;
+				packetMutex.lock();
+				packetList.push_back(ss.str());
+				packetMutex.unlock();
 
-		window.draw(fpsText);
-		window.display();
+				ss.str("");
+				ss.clear();
+			}
+			
 
+			//Update all the entities
+			entities.updateEntities(0);
+			entities.collideEntities();
+
+			p1Light->x = player->x+16;
+			p1Light->y = player->y+16;
+			p1Light->update();
+
+			if(twoPlayers){
+				p2Light->x = player2->x+16;
+				p2Light->y = player2->y+16;
+				p2Light->update();
+			}
+
+			//draw stuff
+			window.clear();
+			entities.drawEntities(&window,player->x-400,player->y-300); //Hardcoded screenx and screeny, may fix later
+			lm.drawLights(&window,player->x-400,player->y-300);
+			//aim.drawNet(&window,player->x-400,player->y-300);
+			pathMutex.lock();
+			//testMonster->drawPath(&window,player->x-400,player->y-300);
+			pathMutex.unlock();
+
+			window.draw(fpsText);
+			window.display();
+		}
+
+		dt = dtClock.restart();
 	}
 	cleanup();
 	return 0;
@@ -268,20 +292,10 @@ void runClient(string selection){
 	ENetAddress address;
 	ENetEvent event;
 
-	string ipAddress;
 	string packetData;
 	stringstream ss;
 
-	if(selection == "1"){
-		cout << "Enter the IP address: ";
-		//cin >> ipAddress;
-		ipAddress = "127.0.0.1";
-		enet_address_set_host(&address,ipAddress.c_str());
-	}
-	else if(selection == "2"){
-		ipAddress = "127.0.0.1";
-		enet_address_set_host(&address,ipAddress.c_str());
-	}
+	enet_address_set_host(&address,IPad.c_str());
 
 	address.port = 1255;
 	client = enet_host_create(NULL,1,2,0,0);
@@ -295,14 +309,16 @@ void runClient(string selection){
 		/* Wait up to 10 seconds for the connection attempt to succeed. */
 	if (enet_host_service (client, &event, 10000) > 0 &&
 		event.type == ENET_EVENT_TYPE_CONNECT){
-		cout << "Connection to some.server.net:1234 succeeded." << endl;
+		//cout << "Connection to some.server.net:1234 succeeded." << endl;
+		cout << "Connection to " << IPad << " suceeded";
 	}
 	else{
 		/* Either the 5 seconds are up or a disconnect event was */
 		/* received. Reset the peer in the event the 5 seconds   */
 		/* had run out without any significant event.            */
 		enet_peer_reset (peer);
-		cout << "Connection to some.server.net:1234 failed." << endl;
+		//cout << "Connection to some.server.net:1234 failed." << endl;
+		cout << "Connection to " << IPad << " failed";
 	}
 
 	while(!doShutdown){
@@ -353,7 +369,8 @@ void clientHandlePacket(string packetData){
 			ss >> rot;
 			if(type == "player"){
 				cout << "GOT P2 SPAWN" << endl;
-				player2 = new Mob(playerFile,id);
+				//player2 = new Mob(playerFile,id);
+				player2 = new PMob(playerFile, id);
 				player2->x = x;
 				player2->y = y;
 				player2->rot = rot;
@@ -361,6 +378,8 @@ void clientHandlePacket(string packetData){
 				twoPlayers = true;
 				entities.entityList.push_back(player2);
 				lm.lightList.push_back(p2Light);
+			}else if(type == "box"){
+				entities.entityList.push_back(new AmmoBox(x,y));
 			}else{
 				Mob *monster = new Mob(playerFile,id);
 				monster->x = x;
@@ -377,6 +396,8 @@ void clientHandlePacket(string packetData){
 			player->ID = id;
 			break;
 		case scAttack:
+			entities.entityList.push_back(new Bullet(
+						player2->x+16,player2->y+16,player2->rot));
 			break;
 		case scMove:
 			//Get player x y rot
@@ -416,14 +437,15 @@ void clientHandlePacket(string packetData){
 
 /** Function to extract map data and assign it to the game map**/
 void extractMap(string data){
+	replaceChar(&data,',',' ');
 	stringstream ss;
-	char bleh;
+	int bleh;
 	ss << data;
 
 	for(int y=0;y<dunYSize;y++){
 		for(int x=0;x<dunXSize;x++){
 			ss >> bleh;
-			ship->map->data[x][y] = charToInt(bleh);
+			ship->map->data[x][y] = bleh;//charToInt(bleh);
 		}
 	}
 	ship->getColBoxes();

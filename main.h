@@ -18,8 +18,16 @@ extern sf::Texture bTex;
 
 extern sf::RenderWindow window;
 extern sf::Clock frameTime;
+extern sf::Time dt;
 
+extern sf::Thread *serverThread;
+extern sf::Thread *clientThread;
+extern sf::Mutex readyMutex;
+extern sf::Mutex packetMutex;
+
+extern std::string IPad;
 extern int FPS;
+extern int state;
 
 extern bool doShutdown;
 
@@ -33,6 +41,11 @@ extern EntityManager entities;
 extern ShipEntity *ship;
 
 extern std::vector<std::string> packetList;
+
+extern bool inputIP;
+extern std::string ipText;
+
+extern sf::Font font;
 
 void runClient(std::string selection);
 std::string intToStr(int num);
