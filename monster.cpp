@@ -35,7 +35,7 @@ void Monster::update(int framecount){
 	stepPath(currentPath[targetNodeNum]);
 	stringstream ss;
 	ss << this->ID << " " << this->x << " " << this->y << " 0";
-	cout << ss.str() << endl;
+	//cout << ss.str() << endl;
 	ENetPacket *movePacket = createPacket(scMove,ss.str(),ENET_PACKET_FLAG_UNSEQUENCED);
 	if(p1->connected)
 		enet_peer_send(p1->peer,0,movePacket);
@@ -101,8 +101,6 @@ void Monster::buildPath(int player){
 }
 	
 void Monster::stepPath(Node* currentNode){
-	if(targetNodeNum+1 >= currentPath.size())
-		return;
 	float dTime = 1.0f/FPS;
 	float ysign = 0.0f;
 	float xsign = 0.0f;
@@ -123,12 +121,15 @@ void Monster::stepPath(Node* currentNode){
 	else
 		xsign = 0.0f;
 
-	xVel = xsign*((speed*dTime));
+	//cout << xsign << " " << ysign << endl;
+	xVel = xsign*(speed*dTime);
 	yVel = ysign*(speed*dTime);
 		
 	this->x += xVel;
 	this->y += yVel;
 
+	if(targetNodeNum+1 >= currentPath.size())
+		return;
 	if(currentNode->nodeBox.contains(this->x+16.0f,this->y+16.0f))
 		this->targetNodeNum++;
 }

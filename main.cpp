@@ -271,7 +271,7 @@ int main(int argc, char *argv[]){
 			lm.drawLights(&window,player->x-400,player->y-300);
 			//aim.drawNet(&window,player->x-400,player->y-300);
 			pathMutex.lock();
-			//testMonster->drawPath(&window,player->x-400,player->y-300);
+			testMonster->drawPath(&window,player->x-400,player->y-300);
 			pathMutex.unlock();
 
 			window.draw(fpsText);
