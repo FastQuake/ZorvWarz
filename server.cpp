@@ -229,6 +229,25 @@ void handlePacket(string packetData, ENetPeer *peer){
 		}
 		break;
 
+	case csAttack:
+		ss.str("");
+		ss.clear();
+		if(peer == p1->peer){
+			serverEntities.entityList.push_back(new Bullet(
+						p1->x+16,p1->y+16,p1->rot));
+			ss << p1->ID;
+			packet = createPacket(scAttack,ss.str(),ENET_PACKET_FLAG_RELIABLE);
+			if(p2->connected)
+				enet_peer_send(p2->peer,0,packet);
+		} else {
+			serverEntities.entityList.push_back(new Bullet(
+						p2->x+16,p2->y+16,p2->rot));
+			ss << p2->ID;
+			packet = createPacket(scAttack,ss.str(),ENET_PACKET_FLAG_RELIABLE);
+			if(p1->connected)
+				enet_peer_send(p1->peer,0,packet);
+		}
+		break;
 	default:
 		break;
 

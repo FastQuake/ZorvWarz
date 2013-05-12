@@ -57,13 +57,13 @@ void Player::update(int framecount){
 
 	rot = atan2((float)mousePos.y,(float)mousePos.x) * (180/3.14);
 
-	if(bClock.getElapsedTime().asMilliseconds() > 100){
-		bClock.restart();
-	}
-
 	//Shoot stuff
-	if(mouseRight && bClock.getElapsedTime().asMilliseconds() < 100){
+	if(mouseRight && bClock.getElapsedTime().asMilliseconds() > 100){
+		bClock.restart();
 		entities.entityList.push_back(new Bullet(x+16,y+16,rot));
+		packetMutex.lock();
+		packetList.push_back("2");
+		packetMutex.unlock();
 	}
 }
 

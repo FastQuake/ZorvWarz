@@ -22,6 +22,7 @@ extern sf::Clock frameTime;
 extern sf::Thread *serverThread;
 extern sf::Thread *clientThread;
 extern sf::Mutex readyMutex;
+extern sf::Mutex packetMutex;
 
 extern std::string IPad;
 extern int FPS;
