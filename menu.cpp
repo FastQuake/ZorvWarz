@@ -10,6 +10,9 @@ sf::Sprite pButSprite;
 sf::Texture jButTex;
 sf::Sprite jButSprite;
 
+sf::Texture bButTex;
+sf::Sprite bButSprite;
+
 sf::Texture bgTexture;
 sf::Sprite bgSprite;
 
@@ -28,6 +31,11 @@ void initMenu(){
 
 	jButTex.loadFromFile("data/textures/join.png");
 	jButSprite.setTexture(jButTex);
+
+	bButTex.loadFromFile("data/textures/back.png");
+	bButSprite.setTexture(bButTex);
+
+	bButSprite.setPosition(10,450);
 
 	jButSprite.setPosition(300,450);
 
@@ -62,6 +70,9 @@ void updateMenu(){
 	} else {
 		if(mouseRight && bTimer.getElapsedTime().asMilliseconds() > 200){
 			bTimer.restart();
+			if(bButSprite.getGlobalBounds().contains(mPos)){
+				inputIP = false;
+			}
 			if(jButSprite.getGlobalBounds().contains(mPos)){
 				state = 1;
 				inputIP = false;
@@ -86,5 +97,6 @@ void drawMenu(sf::RenderWindow *screen){
 	} else {
 		screen->draw(ipSprite);
 		screen->draw(jButSprite);
+		screen->draw(bButSprite);
 	}
 }
