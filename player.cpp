@@ -128,6 +128,31 @@ void Mob::draw(sf::RenderWindow *window,int screenx,int screeny){
 	window->draw(mobSprite);
 }
 
+PMob::PMob(std::string textureFile, int id)
+	:Mob(textureFile, id)
+{
+	type = "player";
+
+	gTex.loadFromFile("data/textures/gun.png");
+	gSprite.setTexture(gTex);
+	gSprite.setOrigin(-8,5);
+	gSprite.setPosition(x+16,y+16);
+}
+
+void PMob::draw(sf::RenderWindow *window, int screenx, int screeny){
+	mobSprite.setPosition(x-screenx,y-screeny);
+	gSprite.setPosition(x-screenx+16,y-screeny+16);
+	gSprite.setRotation(rot);
+	//std::cout << "rot : " << gun.getRotation() << std::endl;
+	if(gSprite.getRotation() > 90 && gSprite.getRotation() < 270){
+		gSprite.setScale(1,-1);
+	} else {
+		gSprite.setScale(1,1);
+	}
+	window->draw(mobSprite);
+	window->draw(gSprite);
+}
+
 
 Bullet::Bullet(float x, float y, float rot){
 	type = "bullet";

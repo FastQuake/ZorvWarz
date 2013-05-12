@@ -63,7 +63,18 @@ class Mob : public Entity {
 	Mob(std::string textureFile, int id);
 	void update(int framecount);
 	void onCollision(Entity *object, sf::FloatRect otherBox){};
-	void draw(sf::RenderWindow *window, int screenx,int screeny);
+	virtual void draw(sf::RenderWindow *window, int screenx,int screeny);
+};
+
+class PMob : public Mob {
+	public:
+	sf::Texture gTex;
+	sf::Sprite gSprite;
+	
+	PMob(std::string textureFile, int id);
+	//void update(int framecount);
+	//void onCollision(Entity *object, sf::FloatRect otherBox);
+	void draw(sf::RenderWindow *window, int screenx, int screeny);
 };
 
 class Player : public Entity {

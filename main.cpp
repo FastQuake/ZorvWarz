@@ -15,7 +15,7 @@ EntityManager entities;
 sf::RenderWindow window;
 ShipEntity *ship;
 Player *player;
-Mob *player2;
+PMob *player2;
 
 Light *p1Light;
 Light *p2Light;
@@ -354,7 +354,8 @@ void clientHandlePacket(string packetData){
 			ss >> rot;
 			if(type == "player"){
 				cout << "GOT P2 SPAWN" << endl;
-				player2 = new Mob(playerFile,id);
+				//player2 = new Mob(playerFile,id);
+				player2 = new PMob(playerFile, id);
 				player2->x = x;
 				player2->y = y;
 				player2->rot = rot;
