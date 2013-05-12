@@ -23,6 +23,7 @@ void sendSpawnPackets(ENetPeer *peer);
 
 void initServer(){
 	serverShip = new ShipEntity(tilesFile);
+	serverShip->map->drawRoom();
 	aim.init(serverShip);
 	ENetAddress address;
 	

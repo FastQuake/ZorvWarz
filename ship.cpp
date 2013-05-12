@@ -133,15 +133,15 @@ Ship::Ship(string tileFile){
 			if(data[x][y] == FLOOR || data[x][y] == NODE){
 				//Left
 				if(data[x-1][y] == EMPTY){
-					data[x-1][y] = WALL;
+					data[x-1][y] = LWALL;
 				}
 				//Right
 				if(data[x+1][y] == EMPTY){
-					data[x+1][y] = WALL;
+					data[x+1][y] = RWALL;
 				}
 				//Up
 				if(data[x][y-1] == EMPTY){
-					data[x][y-1] = WALL;
+					data[x][y-1] = TWALL;
 				}
 				//Down
 				if(data[x][y+1] == EMPTY){
@@ -149,19 +149,19 @@ Ship::Ship(string tileFile){
 				}
 				//Left-Down
 				if(data[x-1][y-1] == EMPTY){
-					data[x-1][y-1] = WALL;
+					data[x-1][y-1] = LTCORNWALL;
 				}
 				//Left-Up
 				if(data[x-1][y+1] == EMPTY){
-					data[x-1][y+1] = WALL;
+					data[x-1][y+1] = LBCORNWALL;
 				}
 				//Right-Down
 				if(data[x+1][y-1] == EMPTY){
-					data[x+1][y-1] = WALL;
+					data[x+1][y-1] = RTCORNWALL;
 				}
 				//Right-Up
 				if(data[x+1][y+1] == EMPTY){
-					data[x+1][y+1] = WALL;
+					data[x+1][y+1] = RBCORNWALL;
 				}
 			}
 		}
@@ -202,6 +202,10 @@ void Ship::drawMap(sf::RenderWindow *window,int screenx, int screeny){
 					 (y*32+32) >= (screeny) && (y*32) <= (screeny+600)){
 				 int xx = (data[x][y] % 4) * 32;
 				 int yy = (data[x][y] / 4) * 32; 
+				 if(data[x][y] == NODE){
+					 xx = 32;
+					 yy = 0;
+				 }
 				 mapTile.setTextureRect(sf::IntRect(xx,yy,32,32));
 				 mapTile.setPosition(x*32,y*32);
 				 mapTile.move(-screenx,-screeny);
