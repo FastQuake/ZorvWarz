@@ -19,7 +19,8 @@ void Node::findNeighbors(threadArgs args){
 		float angle = atan2(aim.nodeList[i].middle.y-thisNode->middle.y,aim.nodeList[i].middle.x-thisNode->middle.x)*180/PI;
 		//cout << "angle: " << angle << endl;
 		bool hit = false;
-		for(int j=16;;j+=16){
+		bool hitNode = false;
+		for(int j=16;;j+=8){
 			//cout << "radius: " << j << endl;
 			for(int k=0;k<targetColBoxes.size();k++){	//Loop through all the collision objects
 														//and check if they're in the path of the ray
@@ -33,13 +34,20 @@ void Node::findNeighbors(threadArgs args){
 				break;
 			}
 			//Confirm that the node was actually reached
-			if(aim.nodeList[i].nodeBox.contains(LightManager::getCirclePoint(j,angle,thisNode->middle))){
-				/*sf::Vector2f middle2(aim.nodeList[i].nodeBox.left+(aim.nodeList[i].nodeBox.width/2),
-					aim.nodeList[i].nodeBox.top+(aim.nodeList[i].nodeBox.height/2));	
-				cout << "pushing back node " << middle2.x << "," << middle2.y << "-" << thisNode->middle.x << "," << thisNode->middle.y << endl;*/
-				thisNode->neighbors.push_back(&aim.nodeList[i]);
-				break;
+			for(int k=0;k<aim.nodeList.size();k++){
+				if(&aim.nodeList[k] == thisNode)
+					continue;
+				if(aim.nodeList[k].nodeBox.contains(LightManager::getCirclePoint(j,angle,thisNode->middle))){
+					/*sf::Vector2f middle2(aim.nodeList[i].nodeBox.left+(aim.nodeList[i].nodeBox.width/2),
+						aim.nodeList[i].nodeBox.top+(aim.nodeList[i].nodeBox.height/2));	
+					cout << "pushing back node " << middle2.x << "," << middle2.y << "-" << thisNode->middle.x << "," << thisNode->middle.y << endl;*/
+					thisNode->neighbors.push_back(&aim.nodeList[k]);
+					hitNode = true;
+					break;
+				}
 			}
+			if(hitNode)
+				break;
 		}
 	}
 }
