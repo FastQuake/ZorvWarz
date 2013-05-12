@@ -1,7 +1,7 @@
 #include "entity.h"
 #include "ai.h"
 #include "server.h"
-#include <math.h>
+#include <cmath>
 
 using namespace std;
 
