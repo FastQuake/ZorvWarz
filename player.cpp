@@ -32,7 +32,8 @@ Player::Player(std::string playerTexture){
 
 void Player::update(int framecount){
 	//float dTime = frameTime.getElapsedTime().asMilliseconds()/1000.0f;
-	float dTime = 1.0f/FPS;
+	//float dTime = 1.0f/FPS;
+	float dTime = dt.asSeconds();
 	if(keyUp && sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
 		yVol = -speed*dTime;
 	} else if(keyDown && sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
@@ -192,7 +193,8 @@ Bullet::Bullet(float x, float y, float rot){
 }
 
 void Bullet::update(int framecount){
-	float dTime = 1.0f/FPS;
+	//float dTime = 1.0f/FPS;
+	float dTime = dt.asSeconds();
 	x += (vel.x * dTime);
 	y += (vel.y * dTime);
 

@@ -34,6 +34,8 @@ string IPad;
 sf::Clock frameTime;
 int FPS = 60;
 
+sf::Time dt;
+
 vector<string> packetList;
 
 bool twoPlayers = false;
@@ -136,6 +138,9 @@ int main(int argc, char *argv[]){
 	//Frame time counter
 	sf::Clock counter;
 	counter.restart();
+
+	sf::Clock dtClock;
+	dtClock.restart();
 
 	//Game's default font
 	font.loadFromFile("data/PressStart2P.ttf");
@@ -265,6 +270,7 @@ int main(int argc, char *argv[]){
 			window.display();
 		}
 
+		dt = dtClock.restart();
 	}
 	cleanup();
 	return 0;
