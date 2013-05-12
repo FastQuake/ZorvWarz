@@ -4,7 +4,7 @@
 
 sf::ConvexShape shadowList[512];
 
-Light::Light(float xx, float yy,int rad){
+Light::Light(float xx, float yy,int rad, sf::Color col){
 	x = xx;
 	y = yy;
 	radius = rad;
@@ -13,6 +13,8 @@ Light::Light(float xx, float yy,int rad){
 	hitBox.top = y-(radius);
 	hitBox.width = radius*2;
 	hitBox.height = radius*2;
+
+	lightColour = col;
 }
 
 void Light::update(){
@@ -105,6 +107,7 @@ void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 		sf::Vector2f fakePos(lightList[i]->x-screenx-lightList[i]->radius/2,
 				lightList[i]->y-screeny-lightList[i]->radius/2);
 		lights.setPosition(fakePos);
+		lights.setColor(lightList[i]->lightColour);
 		lightLayer.draw(lights);
 
 		lightMask.display();

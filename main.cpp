@@ -83,8 +83,8 @@ void addEntities(){
 	entities.entityList.push_back(player);
 
 	//Lights
-	p1Light = new Light(100,100,300);
-	p2Light = new Light(100,100,300);
+	p1Light = new Light(100,100,300,sf::Color::White);
+	p2Light = new Light(100,100,300,sf::Color::White);
 	lm.lightList.push_back(p1Light);
 	//lm.lightList.push_back(p2Light);
 }

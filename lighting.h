@@ -14,7 +14,7 @@ class Light{
 	sf::FloatRect hitBox;
 	sf::Color lightColour;
 
-	Light(float xx,float yy, int rad);
+	Light(float xx,float yy, int rad,sf::Color col);
 	void update();
 };
 
