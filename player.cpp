@@ -14,7 +14,7 @@ Player::Player(std::string playerTexture){
 	yVel = 0.0;
 	x = 800/2; //Hardcoded screen size for x,y cause fight the power
 	y = 600/2;
-	speed = 400.0;
+	speed = 200.0;
 
 	bullets = 30;
 
