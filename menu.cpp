@@ -15,6 +15,8 @@ sf::Sprite bgSprite;
 
 sf::Text ipSprite;
 
+sf::Clock bTimer;
+
 void initMenu(){
 	bgTexture.loadFromFile("data/textures/bg.png");
 	bgSprite.setTexture(bgTexture);
@@ -31,6 +33,8 @@ void initMenu(){
 
 	ipSprite.setFont(font);
 	ipSprite.setPosition(400,300);
+
+	bTimer.restart();
 }
 
 void updateMenu(){
@@ -38,7 +42,8 @@ void updateMenu(){
 	mPos.x = sf::Mouse::getPosition(window).x;
 	mPos.y = sf::Mouse::getPosition(window).y;
 	if(!inputIP){
-		if(mouseRight){
+		if(mouseRight && bTimer.getElapsedTime().asMilliseconds() > 200){
+			bTimer.restart();
 			if(pButSprite.getGlobalBounds().contains(mPos)){
 				cout << "HIT PLAY BUTTON" << endl;
 				state = 1;
@@ -55,7 +60,8 @@ void updateMenu(){
 			}
 		}
 	} else {
-		if(mouseRight){
+		if(mouseRight && bTimer.getElapsedTime().asMilliseconds() > 200){
+			bTimer.restart();
 			if(jButSprite.getGlobalBounds().contains(mPos)){
 				state = 1;
 				inputIP = false;
