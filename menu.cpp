@@ -58,6 +58,7 @@ void updateMenu(){
 			//If user presses play button
 			if(pButSprite.getGlobalBounds().contains(mPos)){
 				cout << "HIT PLAY BUTTON" << endl;
+				mouseRight = false;
 				state = 1;
 				IPad = "localhost";
 				initServer();
@@ -82,6 +83,7 @@ void updateMenu(){
 			//If user presses join button
 			if(jButSprite.getGlobalBounds().contains(mPos)){
 				state = 1;
+				mouseRight = false;
 				inputIP = false;
 				IPad = ipText;
 				clientThread->launch();

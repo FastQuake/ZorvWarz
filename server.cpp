@@ -47,6 +47,12 @@ void initServer(){
 	serverEntities.entityList.push_back(p2);
 	serverEntities.entityList.push_back(testMonster);
 
+	for(int i=0;i<5;i++){
+		sf::Vector2i pos = serverShip->getRandomFloorTile();
+		serverEntities.entityList.push_back(new AmmoBox(pos.x*32+6
+					,pos.y*32+12));
+	}
+
 	p1->type = "player";
 	p2->type = "player";
 	testMonster->type = "monster";

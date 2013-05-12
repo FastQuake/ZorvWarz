@@ -16,6 +16,8 @@ Player::Player(std::string playerTexture){
 	y = 600/2;
 	speed = 200.0;
 
+	bullets = 30;
+
 	pTexture.loadFromFile(playerTexture);
 	gTexture.loadFromFile("data/textures/gun.png");
 	playerSprite.setTexture(pTexture);
@@ -58,9 +60,11 @@ void Player::update(int framecount){
 	rot = atan2((float)mousePos.y,(float)mousePos.x) * (180/3.14);
 
 	//Shoot stuff
-	if(mouseRight && bClock.getElapsedTime().asMilliseconds() > 100){
+	if(mouseRight && bClock.getElapsedTime().asMilliseconds() > 100 &&
+			bullets > 0){
 		bClock.restart();
 		entities.entityList.push_back(new Bullet(x+16,y+16,rot));
+		bullets--;
 		packetMutex.lock();
 		packetList.push_back("2");
 		packetMutex.unlock();
@@ -70,8 +74,13 @@ void Player::update(int framecount){
 void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 	if(object->type == "bullet"){
 		return;
+	}else if(object->type == "box"){
+		bullets += 30;
+		object->alive = false;
+		object->collides = false;
+	}else {
+		collideWall(otherBox);
 	}
-	collideWall(otherBox);
 }
 
 void Player::draw(sf::RenderWindow *screen, int screenx,int screeny){
@@ -173,7 +182,7 @@ Bullet::Bullet(float x, float y, float rot){
 	vel.x = cos((rot*(3.14f/180.0f)))*500.0f;
 	vel.y = sin((rot*(3.14f/180.0f)))*500.0f;
 
-	std::cout << "MOVING AT " << vel.x/20 << " " << vel.y/20 << std::endl;
+	//std::cout << "MOVING AT " << vel.x/20 << " " << vel.y/20 << std::endl;
 
 	this->x += (vel.x/20.0);
 	this->y += (vel.y/20.0);

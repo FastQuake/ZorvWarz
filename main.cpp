@@ -148,12 +148,13 @@ int main(int argc, char *argv[]){
 		//Get current FPS
 		if(counter.getElapsedTime().asSeconds() > 1){
 			counter.restart();
-			fpsText.setString(intToStr(fps) + " " + intToStr(player->x) + " " + intToStr(player->y));
+			//fpsText.setString("FPS: "+intToStr(fps)+" BULLETS: "+intToStr(player->bullets));
 			FPS = fps;
 			fps = 0;
 		} else {
 			fps++;
 		}
+		fpsText.setString("FPS: "+intToStr(FPS)+" BULLETS: "+intToStr(player->bullets));
 		//Get input
 		while(window.pollEvent(event)){
 			if(event.type == sf::Event::Closed){
@@ -363,6 +364,8 @@ void clientHandlePacket(string packetData){
 				twoPlayers = true;
 				entities.entityList.push_back(player2);
 				lm.lightList.push_back(p2Light);
+			}else if(type == "box"){
+				entities.entityList.push_back(new AmmoBox(x,y));
 			}else{
 				Mob *monster = new Mob(playerFile,id);
 				monster->x = x;

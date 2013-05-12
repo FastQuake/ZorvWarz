@@ -82,6 +82,7 @@ class Player : public Entity {
 	float xVol;
 	float yVol;
 	float speed;
+	int bullets;
 	sf::Sprite playerSprite;
 	sf::Sprite gun;
 	sf::Texture pTexture;
@@ -121,6 +122,17 @@ class ShipEntity : public Entity{
 	void getColBoxes();
 	sf::Vector2i getRandomFloorTile();
 
+};
+
+class AmmoBox : public Entity {
+	public:
+	sf::Texture ammoTex;
+	sf::Sprite box;
+	
+	AmmoBox(float x, float y);
+
+	void onCollision(Entity *object, sf::FloatRect otherBox);
+	void draw(sf::RenderWindow *screen, int screenx, int screeny);
 };
 
 extern Monster *testMonster;
