@@ -183,6 +183,15 @@ void handlePacket(string packetData, ENetPeer *peer){
 					enet_peer_send(p1->peer,0,packet);
 					enet_host_flush(server);
 				}
+				//Also send p1 spawn to p2
+				if(p2->connected){
+					ss.str("");
+					ss.clear();
+					ss << p1->ID << " " << p1->type << " " << p1->x << " " << p1->y << " " << p1->rot;
+					packet = createPacket(scSpawn,ss.str(),ENET_PACKET_FLAG_RELIABLE);
+					enet_peer_send(p2->peer,0,packet);
+					enet_host_flush(server);
+				}
 				break;
 		}
 		break;
