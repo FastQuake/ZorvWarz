@@ -76,7 +76,7 @@ void addEntities(){
 void setup(){
 	//Set seed based on time
 	int seed = time(NULL);
-	seed = 1368200963;
+	//seed = 1368200963;
 	cout << "seed: " << seed << endl;
 	srand(seed);
 	addEntities();
@@ -393,6 +393,15 @@ void clientHandlePacket(string packetData){
 				player2->x = x;
 				player2->y = y;
 				player2->rot = rot;
+			}else{
+				for(int i=0;i<entities.entityList.size();i++){
+					if(id == entities.entityList[i]->ID){
+						entities.entityList[i]->x = x;
+						entities.entityList[i]->y = y;
+						entities.entityList[i]->rot = rot;
+						break;
+					}
+				}
 			}
 			break;
 		case scMap:

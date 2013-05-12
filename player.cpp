@@ -10,11 +10,11 @@ Player::Player(std::string playerTexture){
 	readyToUpdate = true;
 	alive = true;
 
-	xVol = 0.0;
-	yVol = 0.0;
+	xVel = 0.0;
+	yVel = 0.0;
 	x = 800/2; //Hardcoded screen size for x,y cause fight the power
 	y = 600/2;
-	speed = 200.0;
+	speed = 400.0;
 
 	pTexture.loadFromFile(playerTexture);
 	gTexture.loadFromFile("data/textures/gun.png");
@@ -32,20 +32,20 @@ void Player::update(int framecount){
 	//float dTime = frameTime.getElapsedTime().asMilliseconds()/1000.0f;
 	float dTime = 1.0f/FPS;
 	if(keyUp && sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
-		yVol = -speed*dTime;
+		yVel = -speed*dTime;
 	} else if(keyDown && sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
-		yVol = speed*dTime;
+		yVel = speed*dTime;
 	}
 	if(keyLeft && sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
-		xVol = -speed*dTime;
+		xVel = -speed*dTime;
 	} else if(keyRight && sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
-		xVol = speed*dTime;
+		xVel = speed*dTime;
 	}
 
-	//std::cout << dTime <<  " Xvol: " << xVol << " YVol: " << yVol << std::endl;
+	//std::cout << dTime <<  " xVel: " << xVel << " yVel: " << yVel << std::endl;
 
-	x += xVol;
-	y += yVol;
+	x += xVel;
+	y += yVel;
 	collisionBoxes[0].left = x;
 	collisionBoxes[0].top = y;
 
@@ -75,8 +75,8 @@ void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 }
 
 void Player::draw(sf::RenderWindow *screen, int screenx,int screeny){
-	xVol = 0;
-	yVol = 0;
+	xVel = 0;
+	yVel = 0;
 	gun.setRotation(rot);
 	//std::cout << "rot : " << gun.getRotation() << std::endl;
 	if(gun.getRotation() > 90 && gun.getRotation() < 270){

@@ -68,8 +68,8 @@ class Mob : public Entity {
 
 class Player : public Entity {
 	public:
-	float xVol;
-	float yVol;
+	float xVel;
+	float yVel;
 	float speed;
 	sf::Sprite playerSprite;
 	sf::Sprite gun;
@@ -84,13 +84,15 @@ class Player : public Entity {
 
 class Monster : public Entity {
 	public:
-	int xVol;
-	int yVol;
-	int speed;
+	float xVel;
+	float yVel;
+	float speed;
+	int targetNodeNum;
 	std::vector<Node*> currentPath;
 	
 	Monster();
 	void buildPath(int player);
+	void stepPath(Node* currentNode);
 	void drawPath(sf::RenderWindow *screen, int screenx, int screeny);
 
 	void update(int framecount);

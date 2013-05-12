@@ -116,7 +116,7 @@ void Entity::collideWall(sf::FloatRect otherBox){
 		yy = yMag/abs(yMag);
 	}
 	//std::cout << xx << " " << yy << std::endl;
-	//std::cout << "VOLS: " << xVol << " " << yVol << std::endl;
+	//std::cout << "VOLS: " << xVel << " " << yVel << std::endl;
 	//std::cout << "MAGS: " << xMag << " " << yMag << std::endl;
 	while(collisionBoxes[0].intersects(otherBox)){
 		if(abs(xMag) > abs(yMag)){

@@ -18,6 +18,7 @@ Monster *testMonster;
 
 bool isp1 = true;
 bool twoP = false;
+bool anyoneOn = false;
 
 void sendSpawnPackets(ENetPeer *peer);
 
@@ -94,7 +95,8 @@ void serverLoop(){
 		}
 
 		//Handle entities
-		serverEntities.updateEntities(0);
+		if(anyoneOn)
+			serverEntities.updateEntities(0);
 		serverEntities.collideEntities();
 	}
 	delete p1;
@@ -136,6 +138,7 @@ void handlePacket(string packetData, ENetPeer *peer){
 				ss.clear();
 				//Give client a random position on map that is a floor tile
 				ss << 0 << " " << vec.x*32 << " " << vec.y*32 << " 0";
+				//ss << 0 << " " << testMonster->x+64 << " " << testMonster->y+64 << " 0";
 				packet = createPacket(scMove,ss.str(),ENET_PACKET_FLAG_RELIABLE);
 				enet_peer_send(peer,0,packet);
 				//Set player's position and other info in server data
@@ -155,6 +158,7 @@ void handlePacket(string packetData, ENetPeer *peer){
 				}
 				pathMutex.lock();
 				testMonster->buildPath(1);
+				anyoneOn = true;
 				pathMutex.unlock();
 				break;
 			case 2:

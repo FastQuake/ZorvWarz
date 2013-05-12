@@ -1,7 +1,9 @@
 #include "entity.h"
 #include "ai.h"
 #include "server.h"
+#include "main.h"
 #include <cmath>
+#include <sstream>
 
 using namespace std;
 
@@ -12,11 +14,12 @@ Monster::Monster(){
 	readyToUpdate = true;
 	alive = true;
 
-	xVol = 0.0;
-	yVol = 0.0;
+	xVel = 0.0;
+	yVel = 0.0;
 	x = 800/2; //Hardcoded screen size for x,y cause fight the power
 	y = 600/2;
-	speed = 200.0;
+	speed = 128.0;
+	targetNodeNum = 0;
 
 	collisionBoxes.push_back(sf::FloatRect(x,y,32,32));
 }
@@ -29,6 +32,16 @@ void Monster::update(int framecount){
 	/*currentPath.clear();
 	currentPath.resize(0);
 	this->buildPath(1);*/
+	stepPath(currentPath[targetNodeNum]);
+	stringstream ss;
+	ss << this->ID << " " << this->x << " " << this->y << " 0";
+	cout << ss.str() << endl;
+	ENetPacket *movePacket = createPacket(scMove,ss.str(),ENET_PACKET_FLAG_UNSEQUENCED);
+	if(p1->connected)
+		enet_peer_send(p1->peer,0,movePacket);
+	if(p2->connected)
+		enet_peer_send(p2->peer,0,movePacket);
+	enet_host_flush(server);
 }
 
 void Monster::buildPath(int player){
@@ -87,6 +100,39 @@ void Monster::buildPath(int player){
 	cout << currentPath.size();
 }
 	
+void Monster::stepPath(Node* currentNode){
+	if(targetNodeNum+1 >= currentPath.size())
+		return;
+	float dTime = 1.0f/FPS;
+	float ysign = 0.0f;
+	float xsign = 0.0f;
+	/*float ratio = fabs((y+16.0f)-currentNode->middle.y)/fabs((x+16.0f)-currentNode->middle.x);
+	if(fabs((x+16.0f)-currentNode->middle.x) == 0)
+		ratio = 1;*/
+	if(((y+16.0f)-currentNode->middle.y) < -0.1)
+		ysign = 1.0f;
+	else if(((y+16.0f)-currentNode->middle.y) > 0.1)
+		ysign = -1.0f;
+	else
+		ysign = 0.0f;
+		
+	if(((x+16.0f)-currentNode->middle.x) < -0.1)
+		xsign = 1.0f;
+	else if(((x+16.0f)-currentNode->middle.x) > 0.1)
+		xsign = -1.0f;
+	else
+		xsign = 0.0f;
+
+	xVel = xsign*((speed*dTime));
+	yVel = ysign*(speed*dTime);
+		
+	this->x += xVel;
+	this->y += yVel;
+
+	if(currentNode->nodeBox.contains(this->x+16.0f,this->y+16.0f))
+		this->targetNodeNum++;
+}
+
 void Monster::drawPath(sf::RenderWindow *screen, int screenx, int screeny){
 	sf::Vector2f p1;
 	sf::Vector2f p2;
