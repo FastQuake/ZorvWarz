@@ -59,6 +59,14 @@ string intToStr(int num){
 	return ss.str();
 }
 
+void replaceChar(string *str,char a, char b){
+	for(int i=0;i<str->length();i++){
+		if(str->at(i) == a){
+			str->at(i) = b;
+		}
+	}
+}
+
 int charToInt(char num){
 	int intnum;
 	stringstream ss;
@@ -420,14 +428,15 @@ void clientHandlePacket(string packetData){
 
 /** Function to extract map data and assign it to the game map**/
 void extractMap(string data){
+	replaceChar(&data,',',' ');
 	stringstream ss;
-	char bleh;
+	int bleh;
 	ss << data;
 
 	for(int y=0;y<dunYSize;y++){
 		for(int x=0;x<dunXSize;x++){
 			ss >> bleh;
-			ship->map->data[x][y] = charToInt(bleh);
+			ship->map->data[x][y] = bleh;//charToInt(bleh);
 		}
 	}
 	ship->getColBoxes();

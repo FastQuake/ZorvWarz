@@ -266,7 +266,7 @@ string getMapData(bool newlines){
 	stringstream ss;
 	for(int y=0;y<dunYSize;y++){
 		for(int x=0;x<dunXSize;x++){
-			ss << serverShip->map->data[x][y];
+			ss << serverShip->map->data[x][y] << ",";
 			if(newlines)
 				if(x == dunXSize-1)
 					ss << endl;
