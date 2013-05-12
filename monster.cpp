@@ -34,6 +34,7 @@ void Monster::update(int framecount){
 void Monster::buildPath(int player){
 	//We have AIManager aim, Mob *p1 and Mob *p2 available for use
 	sf::Vector2f targetPos;
+	vector<Node*> ignoreList;
 
 	if(player == 1)
 		targetPos = sf::Vector2f(p1->x,p1->y);
@@ -43,6 +44,7 @@ void Monster::buildPath(int player){
 	Node *firstNode = aim.findVisibleNode(sf::Vector2f(x,y),serverShip->collisionBoxes);
 	Node *destinationNode = aim.findVisibleNode(targetPos,serverShip->collisionBoxes);
 	currentPath.push_back(firstNode);
+	ignoreList.push_back(firstNode);
 
 	bool pathComplete = false;
 	while(!pathComplete){
@@ -50,8 +52,23 @@ void Monster::buildPath(int player){
 		float xdiff = 0;
 		float ydiff = 0;
 		float distance;
+		bool ignored = false;
+
 		vector<Node*> neighbors = currentPath.back()->neighbors;
-		for(int i=0,min=9999;i<neighbors.size();i++){
+		for(int i=0,min=9999,dead=0;i<neighbors.size();i++){
+			ignored = false;
+			if(std::find(ignoreList.begin(),ignoreList.end(),neighbors[i]) != ignoreList.end())
+				ignored = true;
+			if(ignored){
+				dead++;
+				if(dead == neighbors.size()){
+					ignoreList.push_back(currentPath.back());
+					currentPath.pop_back();
+					break;
+				}
+				continue;
+			}
+
 			xdiff = abs(neighbors[i]->middle.x-destinationNode->middle.x);
 			ydiff = abs(neighbors[i]->middle.y-destinationNode->middle.y);
 			distance = sqrt(pow(xdiff,2.0f)+pow(ydiff,2.0f));
@@ -60,7 +77,10 @@ void Monster::buildPath(int player){
 				closestNode = neighbors[i];
 			}
 		}
-		currentPath.push_back(closestNode);
+		if(std::find(ignoreList.begin(),ignoreList.end(),closestNode) == ignoreList.end()){
+			currentPath.push_back(closestNode);
+			ignoreList.push_back(currentPath.back());
+		}
 		if(currentPath.back() == destinationNode)
 			pathComplete = true;
 	}
@@ -70,6 +90,10 @@ void Monster::buildPath(int player){
 void Monster::drawPath(sf::RenderWindow *screen, int screenx, int screeny){
 	sf::Vector2f p1;
 	sf::Vector2f p2;
+	sf::RectangleShape rectangle;
+	rectangle.setSize(sf::Vector2f(32.0f,32.0f));
+	rectangle.setPosition(currentPath[0]->nodeBox.left-screenx,currentPath[0]->nodeBox.top-screeny);
+	screen->draw(rectangle);
 
 	for(int i=0;i<currentPath.size();i){
 		p1 = currentPath[i]->middle;
@@ -82,7 +106,7 @@ void Monster::drawPath(sf::RenderWindow *screen, int screenx, int screeny){
 			p2.x -= screenx;
 			p2.y -= screeny;
 			sf::Vertex line[] = {p1,p2};
-			line[0].color = sf::Color::Red;
+			line[0].color = sf::Color::Green;
 			line[1].color = sf::Color::Red;
 			screen->draw(line,2,sf::Lines);
 		}

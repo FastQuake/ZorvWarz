@@ -10,6 +10,7 @@ ShipEntity *serverShip;
 ENetHost *server;
 EntityManager serverEntities;
 AIManager aim;
+sf::Mutex pathMutex;
 
 Mob *p1;
 Mob *p2;
@@ -151,7 +152,9 @@ void handlePacket(string packetData, ENetPeer *peer){
 					enet_peer_send(p2->peer,0,packet);
 					enet_host_flush(server);
 				}
+				pathMutex.lock();
 				testMonster->buildPath(1);
+				pathMutex.unlock();
 				break;
 			case 2:
 				//Send acknowledge join from client and give client their ID
