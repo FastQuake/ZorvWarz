@@ -27,6 +27,7 @@ sf::Mutex packetMutex;
 sf::Mutex readyMutex;
 
 sf::Texture bTex;
+sf::Font font;
 
 string IPad;
 
@@ -141,7 +142,6 @@ int main(int argc, char *argv[]){
 			continue;
 		}
 	}*/
-	selection = 2;
 
 	//sf::sleep(sf::milliseconds(500));
 	//readyMutex.lock();
@@ -159,7 +159,6 @@ int main(int argc, char *argv[]){
 	sf::Clock counter;
 	counter.restart();
 
-	sf::Font font;
 	font.loadFromFile("data/PressStart2P.ttf");
 
 	sf::Text fpsText;
@@ -220,6 +219,14 @@ int main(int argc, char *argv[]){
 					event.mouseButton.button == sf::Mouse::Left){
 				mouseRight = false;
 			}
+			if(event.type == sf::Event::TextEntered && inputIP){
+				if(event.text.unicode == '\b'){
+					if(ipText.size() > 0)
+						ipText.erase(ipText.size()-1);
+				}else if(event.text.unicode != '\r'){
+					ipText += event.text.unicode;
+				}
+			}
 		}
 
 
@@ -271,7 +278,7 @@ int main(int argc, char *argv[]){
 			lm.drawLights(&window,player->x-400,player->y-300);
 			//aim.drawNet(&window,player->x-400,player->y-300);
 			pathMutex.lock();
-			testMonster->drawPath(&window,player->x-400,player->y-300);
+			//testMonster->drawPath(&window,player->x-400,player->y-300);
 			pathMutex.unlock();
 
 			window.draw(fpsText);
@@ -321,14 +328,16 @@ void runClient(string selection){
 		/* Wait up to 10 seconds for the connection attempt to succeed. */
 	if (enet_host_service (client, &event, 10000) > 0 &&
 		event.type == ENET_EVENT_TYPE_CONNECT){
-		cout << "Connection to some.server.net:1234 succeeded." << endl;
+		//cout << "Connection to some.server.net:1234 succeeded." << endl;
+		cout << "Connection to " << IPad << " suceeded";
 	}
 	else{
 		/* Either the 5 seconds are up or a disconnect event was */
 		/* received. Reset the peer in the event the 5 seconds   */
 		/* had run out without any significant event.            */
 		enet_peer_reset (peer);
-		cout << "Connection to some.server.net:1234 failed." << endl;
+		//cout << "Connection to some.server.net:1234 failed." << endl;
+		cout << "Connection to " << IPad << " failed";
 	}
 
 	while(!doShutdown){

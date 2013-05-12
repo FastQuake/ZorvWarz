@@ -40,6 +40,11 @@ extern ShipEntity *ship;
 
 extern std::vector<std::string> packetList;
 
+extern bool inputIP;
+extern std::string ipText;
+
+extern sf::Font font;
+
 void runClient(std::string selection);
 std::string intToStr(int num);
 std::vector<sf::FloatRect> whatIntersectsBox(sf::FloatRect hitBox);
