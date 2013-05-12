@@ -173,14 +173,19 @@ Bullet::Bullet(float x, float y, float rot){
 	vel.x = cos((rot*(3.14f/180.0f)))*500.0f;
 	vel.y = sin((rot*(3.14f/180.0f)))*500.0f;
 
+	std::cout << "MOVING AT " << vel.x/20 << " " << vel.y/20 << std::endl;
+
+	this->x += (vel.x/20.0);
+	this->y += (vel.y/20.0);
+
 	collisionBoxes.push_back(sBullet.getGlobalBounds());
 
 }
 
 void Bullet::update(int framecount){
 	float dTime = 1.0f/FPS;
-	x += vel.x * dTime;
-	y += vel.y * dTime;
+	x += (vel.x * dTime);
+	y += (vel.y * dTime);
 
 	collisionBoxes[0].left = x;
 	collisionBoxes[0].top = y;
