@@ -128,6 +128,7 @@ void handlePacket(string packetData, ENetPeer *peer){
 		vec = serverShip->getRandomFloorTile();
 		switch(p1Orp2(peer)){
 			case 1:
+				cout << "SPAWNING P1" << endl;
 				//Send acknowledge join from client and give client their ID
 				packet = createPacket(scJoinack,intToStr(p1->ID),ENET_PACKET_FLAG_RELIABLE);
 				enet_peer_send(peer,0,packet);
@@ -157,6 +158,7 @@ void handlePacket(string packetData, ENetPeer *peer){
 				pathMutex.unlock();
 				break;
 			case 2:
+				cout << "SPAWING P2" << endl;
 				//Send acknowledge join from client and give client their ID
 				packet = createPacket(scJoinack,intToStr(p2->ID),ENET_PACKET_FLAG_RELIABLE);
 				enet_peer_send(peer,0,packet);
@@ -267,7 +269,8 @@ void sendSpawnPackets(ENetPeer *peer){
 		ss.str("");
 		ss.clear();
 		thisEntity = serverEntities.entityList[i];
-		if((p1Orp2(peer) == 1 && thisEntity == p1) || (p1Orp2(peer) == 2 && thisEntity == p2))
+		//if((p1Orp2(peer) == 1 && thisEntity == p1) || (p1Orp2(peer) == 2 && thisEntity == p2))
+		if(thisEntity == p1 || thisEntity == p2)
 			continue;
 		ss << thisEntity->ID << " " << thisEntity->type << " " << thisEntity->x << " " << thisEntity->y << " " << thisEntity->rot;
 		cout << ss.str() << endl;

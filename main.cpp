@@ -70,7 +70,7 @@ void addEntities(){
 	p1Light = new Light(100,100,300);
 	p2Light = new Light(100,100,300);
 	lm.lightList.push_back(p1Light);
-	lm.lightList.push_back(p2Light);
+	//lm.lightList.push_back(p2Light);
 }
 
 void setup(){
@@ -352,13 +352,15 @@ void clientHandlePacket(string packetData){
 			ss >> y;
 			ss >> rot;
 			if(type == "player"){
+				cout << "GOT P2 SPAWN" << endl;
 				player2 = new Mob(playerFile,id);
 				player2->x = x;
 				player2->y = y;
 				player2->rot = rot;
 				player2->type = "player";
-				entities.entityList.push_back(player2);
 				twoPlayers = true;
+				entities.entityList.push_back(player2);
+				lm.lightList.push_back(p2Light);
 			}else{
 				Mob *monster = new Mob(playerFile,id);
 				monster->x = x;
@@ -370,6 +372,7 @@ void clientHandlePacket(string packetData){
 			break;
 		case scJoinack:
 			//Get player id and assign it to player
+			cout << "I AM NOW JOINED!" << endl;
 			ss >> id;
 			player->ID = id;
 			break;
