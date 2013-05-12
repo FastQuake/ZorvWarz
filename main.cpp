@@ -117,48 +117,27 @@ int main(int argc, char *argv[]){
 	}
     atexit (enet_deinitialize);
 
+	//Threads for client and server networking
 	clientThread = new sf::Thread(&runClient,selection);
 	serverThread = new sf::Thread(&serverLoop);
-
-	/*while(true){
-		string ipAddress;
-
-		cout << "1. Join game" << endl << "2. Host game" << endl << "Enter your selection: ";
-		cin >> selection;
-		clientThread = new sf::Thread(&runClient,selection);
-		serverThread = new sf::Thread(&serverLoop);
-		//mapMutex.lock();
-		if(selection == "1"){
-			clientThread->launch();
-			break;
-		}
-		else if(selection == "2"){
-			initServer();
-			serverThread->launch();
-			clientThread->launch();
-			break;
-		}else{
-			cout << "Invalid selection, please try again." << endl << endl;
-			continue;
-		}
-	}*/
-
-	//sf::sleep(sf::milliseconds(500));
-	//readyMutex.lock();
 
 	window.create(sf::VideoMode(800,600),"Test");
 	window.setFramerateLimit(60);
 	sf::Event event;
 
+	//Points to check if the player has moved
 	float oldx = 0;
 	float oldy = 0;
 	float oldrot = 0;
 	
+	//Games current fps
 	int fps = 0;
 
+	//Frame time counter
 	sf::Clock counter;
 	counter.restart();
 
+	//Game's default font
 	font.loadFromFile("data/PressStart2P.ttf");
 
 	sf::Text fpsText;
@@ -298,21 +277,8 @@ void runClient(string selection){
 	ENetAddress address;
 	ENetEvent event;
 
-	string ipAddress;
 	string packetData;
 	stringstream ss;
-
-	/*if(selection == "1"){
-		cout << "Enter the IP address: ";
-		//cin >> ipAddress;
-		ipAddress = "127.0.0.1";
-		enet_address_set_host(&address,ipAddress.c_str());
-	}
-	else if(selection == "2"){
-		cout << "DOIN 2" << endl;
-		ipAddress = "127.0.0.1";
-		enet_address_set_host(&address,ipAddress.c_str());
-	}*/
 
 	enet_address_set_host(&address,IPad.c_str());
 
