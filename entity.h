@@ -19,6 +19,7 @@ class Entity{
 		float x,y;
 		float rot;
 		long ID;
+		int health;
 
 		Entity();
 		//virtual ~Entity(){};

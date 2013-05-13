@@ -75,6 +75,8 @@ void Player::update(int framecount){
 void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 	if(object->type == "bullet"){
 		return;
+	}else if(object->type == "monster"){
+		return;
 	}else if(object->type == "box"){
 		bullets += 30;
 		object->alive = false;
@@ -195,6 +197,7 @@ Bullet::Bullet(float x, float y, float rot){
 
 void Bullet::update(int framecount){
 	//float dTime = 1.0f/FPS;
+	//std::cout << "FRAME: " << framecount << " X: " << x << " Y: " << y << std::endl;
 	float dTime = dt.asSeconds();
 	x += (vel.x * dTime);
 	y += (vel.y * dTime);
@@ -205,6 +208,8 @@ void Bullet::update(int framecount){
 
 void Bullet::onCollision(Entity *object, sf::FloatRect otherBox){
 	if(object->type == "map"){
+		alive = false;
+	} if(object->type == "monster"){
 		alive = false;
 	}
 }

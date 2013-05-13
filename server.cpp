@@ -24,7 +24,8 @@ void sendSpawnPackets(ENetPeer *peer);
 
 void initServer(){
 	serverShip = new ShipEntity(tilesFile);
-	serverShip->map->drawRoom();
+	//serverShip->map->drawRoom();
+	serverShip->getColBoxes();
 	aim.init(serverShip);
 	ENetAddress address;
 	
@@ -103,7 +104,7 @@ void serverLoop(){
 
 		//Handle entities
 		if(anyoneOn)
-			serverEntities.updateEntities(0);
+			serverEntities.updateEntities(10);
 		serverEntities.collideEntities();
 	}
 	delete p1;

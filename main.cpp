@@ -59,6 +59,12 @@ string intToStr(int num){
 	return ss.str();
 }
 
+string floatToStr(float num){
+	stringstream ss;
+	ss << num;
+	return ss.str();
+}
+
 void replaceChar(string *str,char a, char b){
 	for(int i=0;i<str->length();i++){
 		if(str->at(i) == a){
@@ -169,7 +175,8 @@ int main(int argc, char *argv[]){
 		} else {
 			fps++;
 		}
-		fpsText.setString("FPS: "+intToStr(FPS)+" BULLETS: "+intToStr(player->bullets));
+		fpsText.setString("FPS: "+intToStr(FPS)+" BULLETS: "+intToStr(player->bullets)+"\nXY: "+floatToStr(player->x) + " " + 
+			floatToStr(player->y));
 		//Get input
 		while(window.pollEvent(event)){
 			if(event.type == sf::Event::Closed){
@@ -389,7 +396,7 @@ void clientHandlePacket(string packetData){
 				monster->x = x;
 				monster->y = y;
 				monster->rot = rot;
-				entities.entityList.back()->type = "monster";
+				monster->type = "monster";
 				entities.entityList.push_back(monster);
 			}
 			break;

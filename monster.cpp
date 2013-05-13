@@ -19,13 +19,21 @@ Monster::Monster(){
 	x = 800/2; //Hardcoded screen size for x,y cause fight the power
 	y = 600/2;
 	speed = 128.0;
+	health = 10;
 	targetNodeNum = 0;
 
 	collisionBoxes.push_back(sf::FloatRect(x,y,32,32));
 }
 
 void Monster::onCollision(Entity *object, sf::FloatRect otherBox){
-	collideWall(otherBox);
+	cout << "I GOT BOOM BOOM" << endl;
+	if(object->type == "bullet"){
+		health--;
+		cout << "health down: " << health << endl;
+		object->alive = false;
+	} else{
+		collideWall(otherBox);
+	}
 }
 
 void Monster::update(int framecount){
@@ -35,13 +43,18 @@ void Monster::update(int framecount){
 	stepPath(currentPath[targetNodeNum]);
 	stringstream ss;
 	ss << this->ID << " " << this->x << " " << this->y << " 0";
-	//cout << ss.str() << endl;
+	cout << ss.str() << endl;
 	ENetPacket *movePacket = createPacket(scMove,ss.str(),ENET_PACKET_FLAG_UNSEQUENCED);
 	if(p1->connected)
 		enet_peer_send(p1->peer,0,movePacket);
 	if(p2->connected)
 		enet_peer_send(p2->peer,0,movePacket);
 	enet_host_flush(server);
+	if(health <= 0)
+		this->alive = false;
+
+	collisionBoxes[0].left = x;
+	collisionBoxes[0].top = y;
 }
 
 void Monster::buildPath(int player){
@@ -101,9 +114,12 @@ void Monster::buildPath(int player){
 }
 	
 void Monster::stepPath(Node* currentNode){
-	float dTime = 1.0f/FPS;
+	//float dTime = 1.0f/FPS;
+	float dTime = dt.asSeconds();
 	float ysign = 0.0f;
 	float xsign = 0.0f;
+	//currentNode->middle.y = p1->y;
+	//currentNode->middle.x = p1->x;
 	/*float ratio = fabs((y+16.0f)-currentNode->middle.y)/fabs((x+16.0f)-currentNode->middle.x);
 	if(fabs((x+16.0f)-currentNode->middle.x) == 0)
 		ratio = 1;*/
