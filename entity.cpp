@@ -93,6 +93,15 @@ void EntityManager::removeByID(int ID){
 	}
 }
 
+Entity* EntityManager::getByID(int ID){
+	for(int i=0;i<entityList.size();i++){
+		if(entityList[i]->ID == ID){
+			return entityList[i];
+		}
+	}
+	return NULL;
+}
+
 void Entity::collideWall(sf::FloatRect otherBox){
 	int xMag = (collisionBoxes[0].left+collisionBoxes[0].width) - (otherBox.left+otherBox.width);
 	int yMag = (collisionBoxes[0].top+collisionBoxes[0].height) - (otherBox.top+otherBox.height);

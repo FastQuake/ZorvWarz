@@ -41,6 +41,7 @@ class EntityManager{
 	void collideEntities();
 	void drawEntities(sf::RenderWindow *screen,int screenx,int screeny);
 	void removeByID(int ID);
+	Entity* getByID(int ID);
 };
 
 class Bullet : public Entity {

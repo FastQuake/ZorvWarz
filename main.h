@@ -23,7 +23,9 @@ extern sf::Time dt;
 
 extern sf::Thread *serverThread;
 extern sf::Thread *clientThread;
-extern sf::Mutex readyMutex;
+//extern sf::Mutex readyMutex;
+extern bool ready;
+extern bool serverReady;
 extern sf::Mutex packetMutex;
 
 extern std::string IPad;
@@ -31,6 +33,8 @@ extern int FPS;
 extern int state;
 
 extern bool doShutdown;
+
+extern sf::Vector2i mousePos;
 
 extern bool keyUp;
 extern bool keyDown;
