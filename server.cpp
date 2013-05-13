@@ -51,7 +51,7 @@ void initServer(){
 	serverEntities.entityList.push_back(testMonster);
 
 	for(int i=0;i<5;i++){
-		sf::Vector2i pos = serverShip->getRandomFloorTile();
+		sf::Vector2f pos = serverShip->getRandomFloorTile();
 		serverEntities.entityList.push_back(new AmmoBox(pos.x*32+6
 					,pos.y*32+12));
 	}
@@ -59,9 +59,10 @@ void initServer(){
 	p1->type = "player";
 	p2->type = "player";
 	testMonster->type = "monster";
-	sf::Vector2i floorTile = serverShip->getRandomFloorTile();
-	testMonster->x = floorTile.x*32;
-	testMonster->y = floorTile.y*32;
+	sf::Vector2f floorTile = serverShip->getRandomFloorTile();
+	testMonster->x = floorTile.x*32.0f;
+	testMonster->y = floorTile.y*32.0f;
+	cout << "vec: " << testMonster->x << " " << testMonster->y << endl;
 }
 
 void serverLoop(){
@@ -104,7 +105,7 @@ void serverLoop(){
 
 		//Handle entities
 		if(anyoneOn)
-			serverEntities.updateEntities(10);
+			serverEntities.updateEntities(0);
 		serverEntities.collideEntities();
 	}
 	delete p1;
@@ -120,7 +121,7 @@ void handlePacket(string packetData, ENetPeer *peer){
 	string map;
 
 	//Vector to store random tile position
-	sf::Vector2i vec;
+	sf::Vector2f vec;
 
 	ss << packetData;
 	ss >> packetType;

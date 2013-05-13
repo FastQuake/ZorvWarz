@@ -128,7 +128,7 @@ class ShipEntity : public Entity{
 	void onCollision(Entity *object, sf::FloatRect otherBox){};
 	void draw(sf::RenderWindow *screen, int screenx, int screeny);
 	void getColBoxes();
-	sf::Vector2i getRandomFloorTile();
+	sf::Vector2f getRandomFloorTile();
 
 };
 

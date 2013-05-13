@@ -26,7 +26,7 @@ Monster::Monster(){
 }
 
 void Monster::onCollision(Entity *object, sf::FloatRect otherBox){
-	cout << "I GOT BOOM BOOM" << endl;
+	//cout << "I GOT BOOM BOOM" << endl;
 	if(object->type == "bullet"){
 		health--;
 		cout << "health down: " << health << endl;
@@ -43,13 +43,12 @@ void Monster::update(int framecount){
 	stepPath(currentPath[targetNodeNum]);
 	stringstream ss;
 	ss << this->ID << " " << this->x << " " << this->y << " 0";
-	cout << ss.str() << endl;
+	//cout << ss.str() << endl;
 	ENetPacket *movePacket = createPacket(scMove,ss.str(),ENET_PACKET_FLAG_UNSEQUENCED);
 	if(p1->connected)
 		enet_peer_send(p1->peer,0,movePacket);
 	if(p2->connected)
 		enet_peer_send(p2->peer,0,movePacket);
-	enet_host_flush(server);
 	if(health <= 0){
 		this->alive = false;
 		ENetPacket *despawnPacket = createPacket(scDespawn,intToStr(this->ID),ENET_PACKET_FLAG_RELIABLE);
@@ -124,11 +123,7 @@ void Monster::stepPath(Node* currentNode){
 	float dTime = dt.asSeconds();
 	float ysign = 0.0f;
 	float xsign = 0.0f;
-	//currentNode->middle.y = p1->y;
-	//currentNode->middle.x = p1->x;
-	/*float ratio = fabs((y+16.0f)-currentNode->middle.y)/fabs((x+16.0f)-currentNode->middle.x);
-	if(fabs((x+16.0f)-currentNode->middle.x) == 0)
-		ratio = 1;*/
+
 	if(((y+16.0f)-currentNode->middle.y) < -0.1)
 		ysign = 1.0f;
 	else if(((y+16.0f)-currentNode->middle.y) > 0.1)

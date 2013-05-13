@@ -306,8 +306,8 @@ void ShipEntity::draw(sf::RenderWindow *screen, int screenx, int screeny){
 	map->drawMap(screen,screenx,screeny);
 }
 
-sf::Vector2i ShipEntity::getRandomFloorTile(){
-	sf::Vector2i vec;
+sf::Vector2f ShipEntity::getRandomFloorTile(){
+	sf::Vector2f vec;
 	int x;
 	int y;
 	while(true){
