@@ -19,7 +19,8 @@ enum{
 	scJoinack,
 	scAttack,
 	scMove,
-	scMap
+	scMap,
+	scDespawn
 };
 
 extern ShipEntity *serverShip;

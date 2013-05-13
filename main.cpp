@@ -400,6 +400,10 @@ void clientHandlePacket(string packetData){
 				entities.entityList.push_back(monster);
 			}
 			break;
+		case scDespawn:
+			ss >> id;
+			entities.removeByID(id);
+			break;
 		case scJoinack:
 			//Get player id and assign it to player
 			cout << "I AM NOW JOINED!" << endl;

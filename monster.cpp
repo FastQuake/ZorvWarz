@@ -50,8 +50,14 @@ void Monster::update(int framecount){
 	if(p2->connected)
 		enet_peer_send(p2->peer,0,movePacket);
 	enet_host_flush(server);
-	if(health <= 0)
+	if(health <= 0){
 		this->alive = false;
+		ENetPacket *despawnPacket = createPacket(scDespawn,intToStr(this->ID),ENET_PACKET_FLAG_RELIABLE);
+		if(p1->connected)
+			enet_peer_send(p1->peer,0,despawnPacket);
+		if(p2->connected)
+			enet_peer_send(p2->peer,0,despawnPacket);
+	}
 
 	collisionBoxes[0].left = x;
 	collisionBoxes[0].top = y;
