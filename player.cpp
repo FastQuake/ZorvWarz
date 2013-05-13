@@ -143,6 +143,7 @@ Mob::Mob(std::string textureFile, int id){
 	readyToUpdate = true;
 	alive = true;
 	this->ID = id;
+	health = 0;
 
 	x = 0;
 	y = 0;
@@ -160,8 +161,19 @@ Mob::Mob(std::string textureFile, int id){
 }
 
 void Mob::update(int framecount){
-	if(animTimer.getElapsedTime().asMilliseconds() < 100){
+
+	//If zombie id dead, prep for death animation
+	if(health == -1){
+		health = 1;
+		frame = 0;
+		state = 1;
+	}
+	if(animTimer.getElapsedTime().asMilliseconds() < 100 || health == 1){
 		if(framecount % 5 == 0){
+			//If zombie is dead kill it after death animation
+			if(frame == 2 && health == 1){
+				alive = false;
+			}
 			if(frame < 2){
 				frame++;
 			} else {

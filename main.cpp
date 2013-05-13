@@ -366,6 +366,8 @@ void clientHandlePacket(string packetData){
 	int packetType;
 	int id;
 
+	Entity *guy;
+
 	float x,y,rot;
 
 	ss << packetData;
@@ -402,7 +404,12 @@ void clientHandlePacket(string packetData){
 			break;
 		case scDespawn:
 			ss >> id;
-			entities.removeByID(id);
+			guy = entities.getByID(id);
+			if(guy->type == "monster"){
+				guy->health = -1;
+			} else {
+				entities.removeByID(id);
+			}
 			break;
 		case scJoinack:
 			//Get player id and assign it to player
