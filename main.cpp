@@ -103,7 +103,6 @@ void addEntities(){
 void setup(){
 	//Set seed based on time
 	int seed = time(NULL);
-	//seed = 1368481140;
 	cout << "seed: " << seed << endl;
 	srand(seed);
 	addEntities();

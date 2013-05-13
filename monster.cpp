@@ -60,6 +60,7 @@ void Monster::update(int framecount){
 			enet_peer_send(p2->peer,0,despawnPacket);
 	}
 
+
 	collisionBoxes[0].left = x;
 	collisionBoxes[0].top = y;
 }
@@ -143,6 +144,13 @@ void Monster::stepPath(Node* currentNode){
 	//cout << xsign << " " << ysign << endl;
 	xVel = xsign*(speed*dTime);
 	yVel = ysign*(speed*dTime);
+
+	if(abs(xVel) > 3){
+		xVel = (xVel/abs(xVel)) * 3; 
+	}
+	if(abs(yVel) > 3){
+		yVel = (yVel/abs(yVel))*3;
+	}
 		
 	this->x += xVel;
 	this->y += yVel;
