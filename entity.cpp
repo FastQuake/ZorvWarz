@@ -48,16 +48,17 @@ void EntityManager::collideEntities(){
 			if(j == i){
 				continue;
 			}
-			if(entityList[i]->type == "player" &&
+			/*if(entityList[i]->type == "player" &&
 					entityList[j]->type == "player"){
 				continue;
-			}
+			}*/
 			if(entityList[i]->collides && entityList[j]->collides){
 				for(int k=0;k<entityList[i]->collisionBoxes.size();k++){
 					for(int l=0;l<entityList[j]->collisionBoxes.size();l++){
 						if(entityList[i]->collisionBoxes[k].intersects(
 									entityList[j]->collisionBoxes[l])){
-							//std::cout << "COLLISON on " << entityList[i]->type << std::endl;
+							//std::cout << "COLLISON on " << entityList[i]->type  << 
+							//	" WITH " << entityList[j]->type << std::endl;
 							entityList[i]->onCollision(entityList[j],entityList[j]->collisionBoxes[l]);
 							entityList[j]->onCollision(entityList[i],entityList[i]->collisionBoxes[k]);
 						}

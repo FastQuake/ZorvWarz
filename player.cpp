@@ -242,6 +242,7 @@ Bullet::Bullet(float x, float y, float rot){
 
 void Bullet::update(int framecount){
 	//float dTime = 1.0f/FPS;
+	//std::cout << "FRAME: " << framecount << " X: " << x << " Y: " << y << std::endl;
 	float dTime = dt.asSeconds();
 	x += (vel.x * dTime);
 	y += (vel.y * dTime);
@@ -252,6 +253,8 @@ void Bullet::update(int framecount){
 
 void Bullet::onCollision(Entity *object, sf::FloatRect otherBox){
 	if(object->type == "map"){
+		alive = false;
+	} if(object->type == "monster"){
 		alive = false;
 	}
 }
