@@ -29,6 +29,9 @@ sf::Mutex readyMutex;
 sf::Texture bTex;
 sf::Font font;
 
+sf::Sprite bulletSprite;
+sf::Text bulletText;
+
 string IPad;
 
 sf::Vector2i mousePos;
@@ -109,6 +112,14 @@ void setup(){
 
 	bTex.loadFromFile(bulletFile);
 
+	bulletText.setFont(font);
+	bulletText.setPosition(650,600-50);
+
+	bulletSprite.setTexture(bTex);
+	bulletSprite.setScale(10,10);
+	bulletSprite.rotate(270);
+	bulletSprite.setPosition(600,600-30);
+
 	initMenu();
 }
 
@@ -177,7 +188,7 @@ int main(int argc, char *argv[]){
 		} else {
 			fps++;
 		}
-		fpsText.setString("FPS: "+intToStr(FPS)+" BULLETS: "+intToStr(player->bullets)+"\nXY: "+floatToStr(player->x) + " " + 
+		fpsText.setString("FPS: "+intToStr(FPS)+ "\nXY: "+floatToStr(player->x) + " " + 
 			floatToStr(player->y));
 		//Get input
 		while(window.pollEvent(event)){
@@ -280,6 +291,8 @@ int main(int argc, char *argv[]){
 				p2Light->update();
 			}
 
+			bulletText.setString("x"+intToStr(player->bullets));
+
 			//draw stuff
 			window.clear();
 			entities.drawEntities(&window,player->x-400,player->y-300); //Hardcoded screenx and screeny, may fix later
@@ -290,6 +303,8 @@ int main(int argc, char *argv[]){
 			pathMutex.unlock();
 
 			window.draw(fpsText);
+			window.draw(bulletSprite);
+			window.draw(bulletText);
 			window.display();
 		}
 
