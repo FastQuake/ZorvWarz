@@ -91,6 +91,8 @@ void Player::update(int framecount){
 void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 	if(object->type == "bullet"){
 		return;
+	}else if(object->type == "player"){
+		return;
 	}else if(object->type == "box"){
 		bullets += 30;
 		object->alive = false;
@@ -143,20 +145,37 @@ Mob::Mob(std::string textureFile, int id){
 	x = 0;
 	y = 0;
 
+	frame = 0;
+	state = 0;
+
 	texture.loadFromFile(textureFile);
 	mobSprite.setTexture(texture);
 	mobSprite.setPosition(0,0); //Hardcoded screen size, may fix later
+	mobSprite.setTextureRect(sf::IntRect(frame*32,state*32,32,32));
 
 	collisionBoxes.push_back(sf::FloatRect(x,y,32,32));
+	animTimer.restart();
 }
 
 void Mob::update(int framecount){
+	if(animTimer.getElapsedTime().asMilliseconds() < 100){
+		if(framecount % 5 == 0){
+			if(frame < 2){
+				frame++;
+			} else {
+				frame = 0;
+			}
+		}
+	} else {
+		frame = 0;
+	}
 	collisionBoxes[0].left = x;
 	collisionBoxes[0].top = y;
 }
 
 void Mob::draw(sf::RenderWindow *window,int screenx,int screeny){
 	mobSprite.setPosition(x-screenx,y-screeny);
+	mobSprite.setTextureRect(sf::IntRect(frame*32,state*32,32,32));
 	window->draw(mobSprite);
 }
 
@@ -173,13 +192,17 @@ PMob::PMob(std::string textureFile, int id)
 
 void PMob::draw(sf::RenderWindow *window, int screenx, int screeny){
 	mobSprite.setPosition(x-screenx,y-screeny);
+	mobSprite.setTextureRect(sf::IntRect(frame*32,state*32,32,32));
 	gSprite.setPosition(x-screenx+16,y-screeny+16);
 	gSprite.setRotation(rot);
 	//std::cout << "rot : " << gun.getRotation() << std::endl;
 	if(gSprite.getRotation() > 90 && gSprite.getRotation() < 270){
 		gSprite.setScale(1,-1);
+		mobSprite.setScale(-1,1);
+		mobSprite.move(32,0);
 	} else {
 		gSprite.setScale(1,1);
+		mobSprite.setScale(1,1);
 	}
 	window->draw(mobSprite);
 	window->draw(gSprite);

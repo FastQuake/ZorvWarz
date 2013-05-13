@@ -19,6 +19,7 @@ class Entity{
 		float x,y;
 		float rot;
 		long ID;
+		sf::Clock animTimer;
 
 		Entity();
 		//virtual ~Entity(){};
@@ -54,6 +55,8 @@ class Bullet : public Entity {
 
 class Mob : public Entity {
 	public:
+	int frame;
+	int state;
 	sf::Sprite mobSprite;
 	sf::Texture texture;
 	ENetPeer *peer;

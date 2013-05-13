@@ -275,7 +275,7 @@ int main(int argc, char *argv[]){
 			lm.drawLights(&window,player->x-400,player->y-300);
 			//aim.drawNet(&window,player->x-400,player->y-300);
 			pathMutex.lock();
-			testMonster->drawPath(&window,player->x-400,player->y-300);
+			//testMonster->drawPath(&window,player->x-400,player->y-300);
 			pathMutex.unlock();
 
 			window.draw(fpsText);
@@ -385,7 +385,7 @@ void clientHandlePacket(string packetData){
 			}else if(type == "box"){
 				entities.entityList.push_back(new AmmoBox(x,y));
 			}else{
-				Mob *monster = new Mob(playerFile,id);
+				Mob *monster = new Mob(alienFile,id);
 				monster->x = x;
 				monster->y = y;
 				monster->rot = rot;
@@ -415,12 +415,19 @@ void clientHandlePacket(string packetData){
 				player->rot = rot;
 			}else if(twoPlayers && id == player2->ID){ // else move player2 to wherever
 				//cout << "MOVING P2 TO " << x << " " << y << endl;
+				if(player2->x != x || player2->y != y){
+					player2->animTimer.restart();
+				}
 				player2->x = x;
 				player2->y = y;
 				player2->rot = rot;
 			}else{
 				for(int i=0;i<entities.entityList.size();i++){
 					if(id == entities.entityList[i]->ID){
+						if(entities.entityList[i]->x != x ||
+								entities.entityList[i]->y != y){
+							entities.entityList[i]->animTimer.restart();
+						}
 						entities.entityList[i]->x = x;
 						entities.entityList[i]->y = y;
 						entities.entityList[i]->rot = rot;
