@@ -71,8 +71,8 @@ void Player::update(int framecount){
 	//Get mouse rotation
 	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 
-	mousePos.x -= 400;
-	mousePos.y -= 300;
+	mousePos.x -= 400+16;
+	mousePos.y -= 300+16;
 
 	rot = atan2((float)mousePos.y,(float)mousePos.x) * (180/3.14);
 
