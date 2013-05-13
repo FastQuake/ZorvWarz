@@ -93,6 +93,8 @@ void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 		return;
 	}else if(object->type == "player"){
 		return;
+	}else if(object->type == "moster"){
+		return;
 	}else if(object->type == "box"){
 		bullets += 30;
 		object->alive = false;
