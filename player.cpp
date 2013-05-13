@@ -221,8 +221,9 @@ Bullet::Bullet(float x, float y, float rot){
 	this->rot = rot;
 
 	sBullet.setTexture(bTex);	
-	sBullet.setOrigin(5,5);
+	sBullet.setOrigin(9/2,2/2);
 	sBullet.rotate(rot);
+	sBullet.scale(2,2);
 
 	//Get velocity
 	vel.x = cos((rot*(3.14f/180.0f)))*500.0f;
