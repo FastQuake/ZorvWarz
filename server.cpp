@@ -25,8 +25,7 @@ void sendSpawnPackets(ENetPeer *peer);
 void initServer(){
 	serverShip = new ShipEntity(tilesFile);
 	//serverShip->map->drawRoom();
-	serverShip->getColBoxes();
-	aim.init(serverShip);
+	//aim.init(serverShip);
 	ENetAddress address;
 	
 	address.host = ENET_HOST_ANY;
@@ -62,9 +61,13 @@ void initServer(){
 	sf::Vector2i floorTile = serverShip->getRandomFloorTile();
 	testMonster->x = floorTile.x*32;
 	testMonster->y = floorTile.y*32;
+
 }
 
 void serverLoop(){
+	serverReady = false;
+	aim.init(serverShip);
+	serverReady = true;
 	stringstream ss;
 	ENetEvent event;
 	while(!doShutdown){

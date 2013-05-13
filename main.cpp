@@ -31,6 +31,8 @@ sf::Font font;
 
 string IPad;
 
+sf::Vector2i mousePos;
+
 sf::Clock frameTime;
 int FPS = 60;
 
@@ -40,6 +42,7 @@ vector<string> packetList;
 
 bool twoPlayers = false;
 bool ready = false;
+bool serverReady = true;
 bool doShutdown = false;
 
 bool keyUp = false;
@@ -229,6 +232,8 @@ int main(int argc, char *argv[]){
 					ipText += event.text.unicode;
 				}
 			}
+			mousePos.x = event.mouseButton.x;
+			mousePos.y = event.mouseButton.y;
 		}
 
 
@@ -297,7 +302,8 @@ int main(int argc, char *argv[]){
 
 /** Thread to handle all client networking **/
 void runClient(string selection){
-	readyMutex.lock();
+	while(!serverReady){}
+	cout << "STARTING CLIENT" << endl;
 	ENetHost *client;
 	ENetPeer *peer;
 	ENetAddress address;
@@ -382,7 +388,6 @@ void clientHandlePacket(string packetData){
 			ss >> rot;
 			if(type == "player"){
 				cout << "GOT P2 SPAWN" << endl;
-				//player2 = new Mob(playerFile,id);
 				player2 = new PMob(playerFile, id);
 				player2->x = x;
 				player2->y = y;
@@ -459,7 +464,7 @@ void clientHandlePacket(string packetData){
 			string mapData;
 			ss >> mapData;
 			extractMap(mapData);
-			readyMutex.unlock();
+			ready = true;
 			break;
 	}
 }
