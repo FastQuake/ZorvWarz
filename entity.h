@@ -83,6 +83,8 @@ class Player : public Entity {
 	float yVel;
 	float speed;
 	int bullets;
+	int frame;
+	int state;
 	sf::Sprite playerSprite;
 	sf::Sprite gun;
 	sf::Texture pTexture;

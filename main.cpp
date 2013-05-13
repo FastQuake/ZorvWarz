@@ -254,7 +254,7 @@ int main(int argc, char *argv[]){
 			
 
 			//Update all the entities
-			entities.updateEntities(0);
+			entities.updateEntities(fps);
 			entities.collideEntities();
 
 			p1Light->x = player->x+16;

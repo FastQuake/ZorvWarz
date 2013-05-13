@@ -18,10 +18,14 @@ Player::Player(std::string playerTexture){
 
 	bullets = 30;
 
+	frame = 0;
+	state = 0;
+
 	pTexture.loadFromFile(playerTexture);
 	gTexture.loadFromFile("data/textures/gun.png");
 	playerSprite.setTexture(pTexture);
 	playerSprite.setPosition(x,y);
+	playerSprite.setTextureRect(sf::IntRect(frame*32,state*32,32,32));
 	gun.setTexture(gTexture);
 	gun.setOrigin(-8,5);
 	gun.setPosition(x+16,y+16);
@@ -46,6 +50,18 @@ void Player::update(int framecount){
 	}
 
 	//std::cout << dTime <<  " xVel: " << xVel << " yVel: " << yVel << std::endl;
+
+	if(xVel !=0 || yVel !=0){
+		if(framecount % 5 == 0){
+			if(frame < 2){
+				frame++;
+			} else {
+				frame = 0;
+			}
+		}
+	}else{
+		frame = 0;
+	}
 
 	x += xVel;
 	y += yVel;
@@ -87,13 +103,18 @@ void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 void Player::draw(sf::RenderWindow *screen, int screenx,int screeny){
 	xVel = 0;
 	yVel = 0;
+	playerSprite.setTextureRect(sf::IntRect(frame*32,state*32,32,32));
 	gun.setRotation(rot);
 	rot = gun.getRotation();
 	//std::cout << "rot : " << gun.getRotation() << std::endl;
 	if(gun.getRotation() > 90 && gun.getRotation() < 270){
 		gun.setScale(1,-1);
+		playerSprite.setScale(-1,1);
+		playerSprite.setPosition(400+32,300);
 	} else {
 		gun.setScale(1,1);
+		playerSprite.setScale(1,1);
+		playerSprite.setPosition(400,300);
 	}
 	screen->draw(playerSprite);
 	screen->draw(gun);
