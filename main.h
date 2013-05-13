@@ -11,6 +11,7 @@ extern Player *player;
 
 const std::string tilesFile = "data/textures/tiles.png";
 const std::string playerFile = "data/textures/player.png";
+const std::string alienFile = "data/textures/alien.png";
 const std::string lightFile = "data/textures/light.png";
 const std::string bulletFile = "data/textures/bullet.png";
 
