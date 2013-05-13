@@ -8,8 +8,10 @@ using namespace std;
 
 class Light{
 	public:
+	string type;
 	float x;
 	float y;
+	float rot;
 	int radius;
 	sf::FloatRect hitBox;
 	sf::Color lightColour;

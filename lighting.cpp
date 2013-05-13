@@ -5,6 +5,7 @@
 sf::ConvexShape shadowList[512];
 
 Light::Light(float xx, float yy,int rad, sf::Color col){
+	type = "point";
 	x = xx;
 	y = yy;
 	radius = rad;
@@ -102,7 +103,7 @@ void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 			rect.setFillColor(sf::Color(100,100,100));
 			lightMask.draw(rect);
 		}
-		
+
 		lights.setScale(lightList[i]->radius/32,lightList[i]->radius/32);
 		sf::Vector2f fakePos(lightList[i]->x-screenx-lightList[i]->radius/2,
 				lightList[i]->y-screeny-lightList[i]->radius/2);
@@ -112,6 +113,33 @@ void LightManager::drawLights(sf::RenderWindow *screen,int screenx,int screeny){
 
 		lightMask.display();
 		lightLayer.draw(sLightMask,sf::RenderStates(sf::BlendMultiply));
+
+		if(lightList[i]->type == "spot"){
+			sf::Vector2f me(lightList[i]->x,lightList[i]->y);
+			sf::Vector2f p1 = me;
+			sf::Vector2f p2 = getCirclePoint(lightList[i]->radius,lightList[i]->rot-35,me);
+			sf::Vector2f p3 = getCirclePoint(lightList[i]->radius,lightList[i]->rot+35,me);
+
+			sf::CircleShape rect(16);
+			rect.setFillColor(sf::Color(200,200,200));
+			rect.setPosition((me.x-16)-screenx,(me.y-16)-screeny);
+
+			sf::ConvexShape shadow;
+			shadow.setPointCount(3);
+			shadow.setPoint(0,p1);
+			shadow.setPoint(1,p2);
+			shadow.setPoint(2,p3);
+			shadow.setFillColor(sf::Color::White);
+			shadow.setOutlineThickness(5);
+			shadow.setOutlineColor(sf::Color::White);
+			shadow.move(-screenx,-screeny);
+			lightMask.clear();
+			lightMask.draw(shadow);
+			lightMask.draw(rect);
+			lightMask.display();
+
+			lightLayer.draw(sLightMask,sf::RenderStates(sf::BlendMultiply));
+		}
 
 		lightLayer.display();
 		allLights.draw(sLightsLayer,sf::RenderStates(sf::BlendAdd));

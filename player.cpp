@@ -88,6 +88,7 @@ void Player::draw(sf::RenderWindow *screen, int screenx,int screeny){
 	xVel = 0;
 	yVel = 0;
 	gun.setRotation(rot);
+	rot = gun.getRotation();
 	//std::cout << "rot : " << gun.getRotation() << std::endl;
 	if(gun.getRotation() > 90 && gun.getRotation() < 270){
 		gun.setScale(1,-1);

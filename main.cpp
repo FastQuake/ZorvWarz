@@ -83,8 +83,10 @@ void addEntities(){
 	entities.entityList.push_back(player);
 
 	//Lights
-	p1Light = new Light(100,100,300,sf::Color::White);
-	p2Light = new Light(100,100,300,sf::Color::White);
+	p1Light = new Light(100,100,350,sf::Color::White);
+	p1Light->type = "spot";
+	p2Light = new Light(100,100,350,sf::Color::White);
+	p2Light->type = "spot";
 	lm.lightList.push_back(p1Light);
 	//lm.lightList.push_back(p2Light);
 }
@@ -257,11 +259,13 @@ int main(int argc, char *argv[]){
 
 			p1Light->x = player->x+16;
 			p1Light->y = player->y+16;
+			p1Light->rot = player->rot;
 			p1Light->update();
 
 			if(twoPlayers){
 				p2Light->x = player2->x+16;
 				p2Light->y = player2->y+16;
+				p2Light->rot = player2->rot;
 				p2Light->update();
 			}
 
