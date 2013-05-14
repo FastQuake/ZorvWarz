@@ -194,6 +194,7 @@ Node *AIManager::findVisibleNode(sf::Vector2f relPoint, vector<sf::FloatRect> ta
 		if(isVisible(relPoint,aim.nodeList[i].nodeBox,targetColBoxes))
 			return &aim.nodeList[i];
 	}
+	return &aim.nodeList[0];
 }
 
 void AIManager::spawnMonsters(vector<Entity*> *entityList, int numMonsters){
