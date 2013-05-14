@@ -462,6 +462,7 @@ void clientHandlePacket(string packetData){
 			player->ID = id;
 			break;
 		case scAttack:
+			bulletSound.play();
 			entities.entityList.push_back(new Bullet(
 						player2->x+16,player2->y+16,player2->rot));
 			break;

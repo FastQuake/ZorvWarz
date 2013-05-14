@@ -19,6 +19,7 @@ sf::Sprite bgSprite;
 
 sf::Text ipSprite;
 sf::Text loadText;
+sf::Text enterIP;
 
 sf::Clock bTimer;
 
@@ -48,11 +49,15 @@ void initMenu(){
 	loadText.setFont(font);
 	loadText.setPosition(400,300);
 
+	enterIP.setFont(font);
+	enterIP.setPosition(100,200);
+
 	bTimer.restart();
 }
 
 void updateMenu(){
 	//get mouse position
+	enterIP.setString("Enter IP of server: ");
 	sf::Vector2f mPos;
 	mPos.x = mousePos.x;
 	mPos.y = mousePos.y;
@@ -133,6 +138,7 @@ void drawMenu(sf::RenderWindow *screen){
 			screen->draw(jButSprite);
 		} else { //Draw the join menu
 			screen->draw(ipSprite);
+			screen->draw(enterIP);
 			screen->draw(jButSprite);
 			screen->draw(bButSprite);
 		}
