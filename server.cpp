@@ -65,9 +65,12 @@ void initServer(){
 }
 
 void serverLoop(){
+	readyMutex.lock();
 	serverReady = false;
 	aim.init(serverShip);
+	cout << "done asdf" << endl;
 	serverReady = true;
+	readyMutex.unlock();
 	stringstream ss;
 	ENetEvent event;
 	while(!doShutdown){
@@ -181,6 +184,7 @@ void handlePacket(string packetData, ENetPeer *peer){
 				ss.clear();
 				//Give client a random position on map that is a floor tile
 				ss << 0 << " " << vec.x*32 << " " << vec.y*32 << " 0";
+
 				packet = createPacket(scMove,ss.str(),ENET_PACKET_FLAG_RELIABLE);
 				enet_peer_send(peer,0,packet);
 				//Set player's position and other info in server data

@@ -24,11 +24,12 @@ extern sf::Time dt;
 
 extern sf::Thread *serverThread;
 extern sf::Thread *clientThread;
-//extern sf::Mutex readyMutex;
+extern sf::Mutex readyMutex;
 extern bool ready;
 extern bool serverReady;
 extern bool twoPlayers;
 extern bool connecting;
+extern bool singleplayer;
 extern sf::Mutex packetMutex;
 
 extern std::string IPad;

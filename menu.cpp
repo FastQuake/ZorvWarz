@@ -99,7 +99,9 @@ void updateMenu(){
 					sf::sleep(sf::milliseconds(500));
 					loading = true;
 					connecting = true;
+					singleplayer = true;
 				}
+				//If user presses Multi-Player button
 				if(mButSprite.getGlobalBounds().contains(mPos)){
 					mouseRight = false;
 					IPad = "localhost";
@@ -109,6 +111,7 @@ void updateMenu(){
 					sf::sleep(sf::milliseconds(500));
 					loading = true;
 					connecting = true;
+					singleplayer = false;
 				}
 				//If user presses join button
 				if(jButSprite.getGlobalBounds().contains(mPos)){

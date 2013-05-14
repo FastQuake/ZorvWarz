@@ -53,6 +53,7 @@ sf::Time dt;
 vector<string> packetList;
 
 bool twoPlayers = false;
+bool singleplayer = false;
 bool ready = false;
 bool serverReady = true;
 bool connecting = false;
@@ -362,7 +363,13 @@ int main(int argc, char *argv[]){
 
 /** Thread to handle all client networking **/
 void runClient(string selection){
-	while(!serverReady){}
+	while(true){
+		readyMutex.lock();
+		if(serverReady)
+			break;
+		readyMutex.unlock();
+
+	}
 	connecting = true;
 	cout << "STARTING CLIENT" << endl;
 	ENetHost *client;
