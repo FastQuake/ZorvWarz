@@ -32,6 +32,8 @@ sf::Font font;
 sf::Sprite bulletSprite;
 sf::Text bulletText;
 
+sf::RectangleShape p1Health;
+
 string IPad;
 
 sf::Vector2i mousePos;
@@ -114,6 +116,13 @@ void setup(){
 
 	bulletText.setFont(font);
 	bulletText.setPosition(650,600-50);
+
+	p1Health.setSize(sf::Vector2f(100,10));
+	p1Health.setPosition(10,10);
+	p1Health.setFillColor(sf::Color::Red);
+	p1Health.setOutlineThickness(1);
+	p1Health.setOutlineColor(sf::Color(50,50,50));
+	p1Health.setScale(2,2);
 
 	bulletSprite.setTexture(bTex);
 	bulletSprite.setScale(10,10);
@@ -292,6 +301,7 @@ int main(int argc, char *argv[]){
 			}
 
 			bulletText.setString("x"+intToStr(player->bullets));
+			p1Health.setSize(sf::Vector2f(player->health*10,10));
 
 			//draw stuff
 			window.clear();
@@ -302,9 +312,10 @@ int main(int argc, char *argv[]){
 			//testMonster->drawPath(&window,player->x-400,player->y-300);
 			pathMutex.unlock();
 
-			window.draw(fpsText);
+			//window.draw(fpsText);
 			window.draw(bulletSprite);
 			window.draw(bulletText);
+			window.draw(p1Health);
 			window.display();
 		}
 

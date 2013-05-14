@@ -16,6 +16,7 @@ Player::Player(std::string playerTexture){
 	y = 600/2;
 	speed = 200.0;
 
+	health = 10;
 	bullets = 30;
 
 	frame = 0;
@@ -32,6 +33,7 @@ Player::Player(std::string playerTexture){
 
 	collisionBoxes.push_back(sf::FloatRect(x,y,30,30));
 	bClock.restart();
+	dTimer.restart();
 }
 
 void Player::update(int framecount){
@@ -86,6 +88,11 @@ void Player::update(int framecount){
 		packetList.push_back("2");
 		packetMutex.unlock();
 	}
+
+	if(health < 0){
+		health = 0;
+		std::cout << "YOU ARE DEAD" << std::endl;
+	}
 }
 
 void Player::onCollision(Entity *object, sf::FloatRect otherBox){
@@ -94,6 +101,10 @@ void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 	}else if(object->type == "player"){
 		return;
 	}else if(object->type == "monster"){
+		if(dTimer.getElapsedTime().asMilliseconds() > 1000){
+			dTimer.restart();
+			health--;
+		}
 		return;
 	}else if(object->type == "box"){
 		bullets += 30;
@@ -164,14 +175,14 @@ void Mob::update(int framecount){
 
 	//If zombie id dead, prep for death animation
 	if(health == -1){
-		health = 1;
+		health = -2;
 		frame = 0;
 		state = 1;
 	}
-	if(animTimer.getElapsedTime().asMilliseconds() < 100 || health == 1){
+	if(animTimer.getElapsedTime().asMilliseconds() < 100 || health == -2){
 		if(framecount % 5 == 0){
 			//If zombie is dead kill it after death animation
-			if(frame == 2 && health == 1){
+			if(frame == 2 && health == -2){
 				alive = false;
 			}
 			if(frame < 2){

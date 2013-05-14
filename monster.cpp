@@ -31,7 +31,9 @@ void Monster::onCollision(Entity *object, sf::FloatRect otherBox){
 		health--;
 		cout << "health down: " << health << endl;
 		object->alive = false;
-	} else if(object->type == "box"){
+	} else if(object->type == "plauer"){
+		return;
+	}else if(object->type == "box"){
 		return;
 	}else{
 		collideWall(otherBox);
