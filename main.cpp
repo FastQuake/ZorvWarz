@@ -354,6 +354,7 @@ void runClient(string selection){
 	if (enet_host_service (client, &event, 5000) > 0 &&
 		event.type == ENET_EVENT_TYPE_CONNECT){
 		cout << "Connection to " << IPad << " suceeded" << endl;
+		connecting = true;
 	}
 	else{
 		/* Either the 5 seconds are up or a disconnect event was */

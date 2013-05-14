@@ -85,6 +85,7 @@ void updateMenu(){
 					clientThread->launch();
 					sf::sleep(sf::milliseconds(500));
 					loading = true;
+					connecting = true;
 				}
 				//If user presses join button
 				if(jButSprite.getGlobalBounds().contains(mPos)){
