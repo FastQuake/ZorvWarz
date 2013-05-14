@@ -11,6 +11,9 @@ sf::Sprite pButSprite;
 sf::Texture jButTex;
 sf::Sprite jButSprite;
 
+sf::Texture mButTex;
+sf::Sprite mButSprite;
+
 sf::Texture bButTex;
 sf::Sprite bButSprite;
 
@@ -31,13 +34,18 @@ void initMenu(){
 	pButTex.loadFromFile("data/textures/play.png");
 	pButSprite.setTexture(pButTex);
 
-	pButSprite.setPosition(300,300);
+	pButSprite.setPosition(200,300);
 
 	jButTex.loadFromFile("data/textures/join.png");
 	jButSprite.setTexture(jButTex);
 
 	bButTex.loadFromFile("data/textures/back.png");
 	bButSprite.setTexture(bButTex);
+
+	mButTex.loadFromFile("data/textures/multiplayer.png");
+	mButSprite.setTexture(mButTex);
+	
+	mButSprite.setPosition(410, 300);
 
 	bButSprite.setPosition(10,450);
 
@@ -92,6 +100,16 @@ void updateMenu(){
 					loading = true;
 					connecting = true;
 				}
+				if(mButSprite.getGlobalBounds().contains(mPos)){
+					mouseRight = false;
+					IPad = "localhost";
+					initServer();
+					serverThread->launch();
+					clientThread->launch();
+					sf::sleep(sf::milliseconds(500));
+					loading = true;
+					connecting = true;
+				}
 				//If user presses join button
 				if(jButSprite.getGlobalBounds().contains(mPos)){
 					cout << "HIT JOIB BUTTON" << endl;
@@ -136,6 +154,7 @@ void drawMenu(sf::RenderWindow *screen){
 		if(!inputIP){
 			screen->draw(pButSprite);
 			screen->draw(jButSprite);
+			screen->draw(mButSprite);
 		} else { //Draw the join menu
 			screen->draw(ipSprite);
 			screen->draw(enterIP);
