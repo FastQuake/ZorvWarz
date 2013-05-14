@@ -103,11 +103,12 @@ class Player : public Entity {
 };
 
 class Monster : public Entity {
-	public:
+public:
 	float xVel;
 	float yVel;
 	float speed;
 	int targetNodeNum;
+	int targetPlayer;
 	std::vector<Node*> currentPath;
 	sf::Clock pathTimer;
 	
@@ -119,6 +120,8 @@ class Monster : public Entity {
 	void update(int framecount);
 	void onCollision(Entity *object, sf::FloatRect otherBox);
 	void draw(sf::RenderWindow *screen,int screenx,int screeny){};
+private:
+	void stepTowards(sf::Vector2f targetPos);
 };
 
 class ShipEntity : public Entity{

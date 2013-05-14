@@ -31,6 +31,7 @@ public:
 	void connectNodes(ShipEntity ship);
 	void drawNet(sf::RenderWindow *screen, int screenx, int screeny);
 	static void spawnMonsters(vector<Entity*> *entityList, int numMonsters);
+	static bool isVisible(sf::Vector2f startPoint, sf::FloatRect targetBox, vector<sf::FloatRect> targetColBoxes);
 	Node *findVisibleNode(sf::Vector2f relPoint, vector<sf::FloatRect> collisionBoxes);
 };
 

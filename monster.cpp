@@ -7,6 +7,8 @@
 
 using namespace std;
 
+bool atEnd = false;
+
 Monster::Monster(){
 	type = "monster";
 	drawable = false;
@@ -23,6 +25,11 @@ Monster::Monster(){
 	targetNodeNum = 0;
 
 	collisionBoxes.push_back(sf::FloatRect(x,y,32,32));
+
+	if(singleplayer)
+		targetPlayer = 1;
+	else
+		targetPlayer = rand() % 2+1;
 }
 
 void Monster::onCollision(Entity *object, sf::FloatRect otherBox){
@@ -41,10 +48,21 @@ void Monster::onCollision(Entity *object, sf::FloatRect otherBox){
 }
 
 void Monster::update(int framecount){
-	/*currentPath.clear();
-	currentPath.resize(0);
-	this->buildPath(1);*/
-	stepPath(currentPath[targetNodeNum]);
+	if(!atEnd){	
+		if(pathTimer.getElapsedTime().asSeconds() == 5)
+			buildPath();
+		stepPath(currentPath[targetNodeNum]);
+	}else{
+		sf::FloatRect targetBox;
+		if(targetPlayer == 1)
+			targetBox = p1->collisionBoxes[0];
+		else
+			targetBox = p2->collisionBoxes[0];
+		sf::Vector2f targetPos = sf::Vector2f(targetBox.left+targetBox.width/2,targetBox.top+targetBox.height/2);
+		stepTowards(targetPos);
+		if(!AIManager::isVisible(sf::Vector2f(this->x,this->y),targetBox,serverShip->collisionBoxes))
+			buildPath();
+	}
 	stringstream ss;
 	ss << this->ID << " " << this->x << " " << this->y << " 0";
 	//cout << ss.str() << endl;
@@ -62,23 +80,18 @@ void Monster::update(int framecount){
 			enet_peer_send(p2->peer,0,despawnPacket);
 	}
 
-
 	collisionBoxes[0].left = x;
 	collisionBoxes[0].top = y;
 }
 
 void Monster::buildPath(){
+	currentPath.clear();
+	atEnd = false;
 	//We have AIManager aim, Mob *p1 and Mob *p2 available for use
 	sf::Vector2f targetPos;
 	vector<Node*> ignoreList;
-	int player = 0;
 
-	if(singleplayer)
-		player = 1;
-	else
-		player = rand() % 2+1;
-
-	if(player == 1)
+	if(targetPlayer == 1)
 		targetPos = sf::Vector2f(p1->x,p1->y);
 	else
 		targetPos = sf::Vector2f(p2->x,p2->y);
@@ -127,44 +140,17 @@ void Monster::buildPath(){
 			pathComplete = true;
 	}
 	cout << currentPath.size();
+	pathTimer.restart();
 }
 	
 void Monster::stepPath(Node* currentNode){
 	//float dTime = 1.0f/FPS;
-	float dTime = dt.asSeconds();
-	float ysign = 0.0f;
-	float xsign = 0.0f;
+	stepTowards(currentNode->middle);
 
-	if(((y+16.0f)-currentNode->middle.y) < -0.1)
-		ysign = 1.0f;
-	else if(((y+16.0f)-currentNode->middle.y) > 0.1)
-		ysign = -1.0f;
-	else
-		ysign = 0.0f;
-		
-	if(((x+16.0f)-currentNode->middle.x) < -0.1)
-		xsign = 1.0f;
-	else if(((x+16.0f)-currentNode->middle.x) > 0.1)
-		xsign = -1.0f;
-	else
-		xsign = 0.0f;
-
-	//cout << xsign << " " << ysign << endl;
-	xVel = xsign*(speed*dTime);
-	yVel = ysign*(speed*dTime);
-
-	if(abs(xVel) > 3){
-		xVel = (xVel/abs(xVel)) * 3; 
-	}
-	if(abs(yVel) > 3){
-		yVel = (yVel/abs(yVel))*3;
-	}
-		
-	this->x += xVel;
-	this->y += yVel;
-
-	if(targetNodeNum+1 >= currentPath.size())
+	if(targetNodeNum+1 >= currentPath.size()){
+		atEnd = true;
 		return;
+	}
 	if(currentNode->nodeBox.contains(this->x+16.0f,this->y+16.0f))
 		this->targetNodeNum++;
 }
@@ -193,4 +179,38 @@ void Monster::drawPath(sf::RenderWindow *screen, int screenx, int screeny){
 			screen->draw(line,2,sf::Lines);
 		}
 	}
+}
+
+void Monster::stepTowards(sf::Vector2f targetPos){
+	float dTime = dt.asSeconds();
+	float ysign = 0.0f;
+	float xsign = 0.0f;
+
+	if(((y+16.0f)-targetPos.y) < -0.1)
+		ysign = 1.0f;
+	else if(((y+16.0f)-targetPos.y) > 0.1)
+		ysign = -1.0f;
+	else
+		ysign = 0.0f;
+		
+	if(((x+16.0f)-targetPos.x) < -0.1)
+		xsign = 1.0f;
+	else if(((x+16.0f)-targetPos.x) > 0.1)
+		xsign = -1.0f;
+	else
+		xsign = 0.0f;
+
+	//cout << xsign << " " << ysign << endl;
+	xVel = xsign*(speed*dTime);
+	yVel = ysign*(speed*dTime);
+
+	if(abs(xVel) > 3){
+		xVel = (xVel/abs(xVel)) * 3; 
+	}
+	if(abs(yVel) > 3){
+		yVel = (yVel/abs(yVel))*3;
+	}
+		
+	this->x += xVel;
+	this->y += yVel;
 }

@@ -191,30 +191,8 @@ void AIManager::drawNet(sf::RenderWindow *screen, int screenx, int screeny){
 
 Node *AIManager::findVisibleNode(sf::Vector2f relPoint, vector<sf::FloatRect> targetColBoxes){	
 	for(int i=0;i<aim.nodeList.size();i++){
-		float angle = atan2(aim.nodeList[i].middle.y-relPoint.y,aim.nodeList[i].middle.x-relPoint.x)*180/PI;
-		//cout << "angle: " << angle << endl;
-		bool hit = false;
-		for(int j=16;;j+=16){
-			//cout << "radius: " << j << endl;
-			for(int k=0;k<targetColBoxes.size();k++){	//Loop through all the collision objects
-														//and check if they're in the path of the ray
-				if(targetColBoxes[k].contains(LightManager::getCirclePoint(j,angle,relPoint))){
-					hit = true;
-					break;
-				}
-			}
-			if(hit){ //If there was an object blocking the "ray"
-				//cout << "hitbreak" << endl;
-				break;
-			}
-			//Confirm that the node was actually reached
-			if(aim.nodeList[i].nodeBox.contains(LightManager::getCirclePoint(j,angle,relPoint))){
-				/*sf::Vector2f middle2(aim.nodeList[i].nodeBox.left+(aim.nodeList[i].nodeBox.width/2),
-					aim.nodeList[i].nodeBox.top+(aim.nodeList[i].nodeBox.height/2));	
-				cout << "pushing back node " << middle2.x << "," << middle2.y << "-" << thisNode->middle.x << "," << thisNode->middle.y << endl;*/
-				return &aim.nodeList[i];
-			}
-		}
+		if(isVisible(relPoint,aim.nodeList[i].nodeBox,targetColBoxes))
+			return &aim.nodeList[i];
 	}
 }
 
@@ -236,5 +214,28 @@ void AIManager::spawnMonsters(vector<Entity*> *entityList, int numMonsters){
 		newMonster->buildPath();
 		newMonster->pathTimer.restart();
 		entityList->push_back(newMonster);
+	}
+}
+
+bool AIManager::isVisible(sf::Vector2f startPoint, sf::FloatRect targetBox, vector<sf::FloatRect> targetColBoxes){
+	sf::Vector2f targetMiddle = sf::Vector2f(targetBox.left+targetBox.width/2,targetBox.top+targetBox.height/2);
+	float angle = atan2(targetMiddle.y-startPoint.y,targetMiddle.x-startPoint.x)*180/PI;
+	//cout << "angle: " << angle << endl;
+	bool hit = false;
+	for(int j=16;;j+=16){
+		//cout << "radius: " << j << endl;
+		for(int k=0;k<targetColBoxes.size();k++){	//Loop through all the collision objects
+													//and check if they're in the path of the ray
+			if(targetColBoxes[k].contains(LightManager::getCirclePoint(j,angle,startPoint))){
+				return false;
+			}
+		}
+		//Confirm that the node was actually reached
+		if(targetBox.contains(LightManager::getCirclePoint(j,angle,startPoint))){
+			/*sf::Vector2f middle2(aim.nodeList[i].nodeBox.left+(aim.nodeList[i].nodeBox.width/2),
+				aim.nodeList[i].nodeBox.top+(aim.nodeList[i].nodeBox.height/2));	
+			cout << "pushing back node " << middle2.x << "," << middle2.y << "-" << thisNode->middle.x << "," << thisNode->middle.y << endl;*/
+			return true;
+		}
 	}
 }
