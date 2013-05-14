@@ -48,6 +48,7 @@ vector<string> packetList;
 bool twoPlayers = false;
 bool ready = false;
 bool serverReady = true;
+bool connecting = false;
 bool doShutdown = false;
 
 bool keyUp = false;
@@ -328,6 +329,7 @@ int main(int argc, char *argv[]){
 /** Thread to handle all client networking **/
 void runClient(string selection){
 	while(!serverReady){}
+	connecting = true;
 	cout << "STARTING CLIENT" << endl;
 	ENetHost *client;
 	ENetPeer *peer;
@@ -349,18 +351,18 @@ void runClient(string selection){
 	}
 
 		/* Wait up to 10 seconds for the connection attempt to succeed. */
-	if (enet_host_service (client, &event, 10000) > 0 &&
+	if (enet_host_service (client, &event, 5000) > 0 &&
 		event.type == ENET_EVENT_TYPE_CONNECT){
-		//cout << "Connection to some.server.net:1234 succeeded." << endl;
-		cout << "Connection to " << IPad << " suceeded";
+		cout << "Connection to " << IPad << " suceeded" << endl;
 	}
 	else{
 		/* Either the 5 seconds are up or a disconnect event was */
 		/* received. Reset the peer in the event the 5 seconds   */
 		/* had run out without any significant event.            */
-		enet_peer_reset (peer);
-		//cout << "Connection to some.server.net:1234 failed." << endl;
-		cout << "Connection to " << IPad << " failed";
+		connecting = false;
+		enet_peer_reset(peer);
+		cout << "Connection to " << IPad << " failed" << endl;
+		return;
 	}
 
 	while(!doShutdown){

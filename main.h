@@ -26,6 +26,7 @@ extern sf::Thread *clientThread;
 //extern sf::Mutex readyMutex;
 extern bool ready;
 extern bool serverReady;
+extern bool connecting;
 extern sf::Mutex packetMutex;
 
 extern std::string IPad;

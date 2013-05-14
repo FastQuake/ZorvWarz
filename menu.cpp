@@ -58,6 +58,11 @@ void updateMenu(){
 	mPos.y = mousePos.y;
 	//If we are the main part of the menu
 	if(loading){
+		if(!connecting){
+			loading = false;
+			inputIP = true;
+			ipText = "Bad IP";
+		}
 		loadText.setString("Loading...");
 		loadText.setOrigin(loadText.getGlobalBounds().width/2,
 				loadText.getGlobalBounds().height/2);
@@ -74,14 +79,12 @@ void updateMenu(){
 				//If user presses play button
 				if(pButSprite.getGlobalBounds().contains(mPos)){
 					mouseRight = false;
-					//state = 1;
 					IPad = "localhost";
 					initServer();
 					serverThread->launch();
 					clientThread->launch();
 					sf::sleep(sf::milliseconds(500));
 					loading = true;
-					//readyMutex.lock();
 				}
 				//If user presses join button
 				if(jButSprite.getGlobalBounds().contains(mPos)){
@@ -98,14 +101,12 @@ void updateMenu(){
 				}
 				//If user presses join button
 				if(jButSprite.getGlobalBounds().contains(mPos)){
-					//state = 1;
 					mouseRight = false;
 					inputIP = false;
 					IPad = ipText;
 					clientThread->launch();
 					sf::sleep(sf::milliseconds(500));
 					loading = true;
-					//readyMutex.lock();
 				}
 			}
 			//Set the text for the string showing input
