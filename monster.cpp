@@ -27,11 +27,14 @@ Monster::Monster(){
 
 void Monster::onCollision(Entity *object, sf::FloatRect otherBox){
 	//cout << "I GOT BOOM BOOM" << endl;
-	if(object->type == "bullet"){
+	if(object->type == "bullet" && object->alive){
 		health--;
 		cout << "health down: " << health << endl;
 		object->alive = false;
-	} else if(object->type == "player"){
+		return;
+	} else if(object->type == "monster"){
+		return;
+	}else if(object->type == "player"){
 		return;
 	}else if(object->type == "box"){
 		return;
@@ -40,11 +43,11 @@ void Monster::onCollision(Entity *object, sf::FloatRect otherBox){
 	}
 }
 
-void Monster::update(int framecount){
+void Monster::update(int framecount,float dTime){
 	/*currentPath.clear();
 	currentPath.resize(0);
 	this->buildPath(1);*/
-	stepPath(currentPath[targetNodeNum]);
+	stepPath(currentPath[targetNodeNum], dTime);
 	stringstream ss;
 	ss << this->ID << " " << this->x << " " << this->y << " 0";
 	//cout << ss.str() << endl;
@@ -129,9 +132,8 @@ void Monster::buildPath(){
 	cout << currentPath.size();
 }
 	
-void Monster::stepPath(Node* currentNode){
+void Monster::stepPath(Node* currentNode,float dTime){
 	//float dTime = 1.0f/FPS;
-	float dTime = dt.asSeconds();
 	float ysign = 0.0f;
 	float xsign = 0.0f;
 

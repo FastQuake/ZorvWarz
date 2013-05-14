@@ -230,6 +230,10 @@ int main(int argc, char *argv[]){
 			if(event.type == sf::Event::Closed){
 				window.close();
 			} 
+			if(event.type == sf::Event::MouseMoved){
+				mousePos.x = event.mouseMove.x;
+				mousePos.y = event.mouseMove.y;
+			}
 			if(event.type == sf::Event::KeyReleased){
 				if(event.key.code == sf::Keyboard::W){
 					keyUp = false;
@@ -277,8 +281,6 @@ int main(int argc, char *argv[]){
 					ipText += event.text.unicode;
 				}
 			}
-			mousePos.x = event.mouseButton.x;
-			mousePos.y = event.mouseButton.y;
 		}
 
 
@@ -311,7 +313,7 @@ int main(int argc, char *argv[]){
 			
 
 			//Update all the entities
-			entities.updateEntities(fps);
+			entities.updateEntities(fps,dt.asSeconds());
 			entities.collideEntities();
 
 			p1Light->x = player->x+16;

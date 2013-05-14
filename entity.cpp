@@ -22,12 +22,12 @@ EntityManager::~EntityManager(){
   * Loop through all entities, update them if they are ready to update
   * Kill the entities if they are not alive anymore
   */
-void EntityManager::updateEntities(int framecount){
+void EntityManager::updateEntities(int framecount, float dTime){
 	//Loop through all entities
 	for(int i=0;i<entityList.size();i++){
 		//Call entities update funciton only if it is ready to update
 		if(entityList[i]->readyToUpdate){
-			entityList[i]->update(framecount);
+			entityList[i]->update(framecount, dTime);
 		}
 		//if entity is dead kill it! possibly with fire
 		if(entityList[i]->alive == false){

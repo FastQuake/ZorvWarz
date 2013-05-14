@@ -12,6 +12,9 @@ EntityManager serverEntities;
 AIManager aim;
 sf::Mutex pathMutex;
 
+sf::Clock fpsTi;
+int fps;
+
 Mob *p1;
 Mob *p2;
 
@@ -59,13 +62,26 @@ void initServer(){
 void serverLoop(){
 	readyMutex.lock();
 	serverReady = false;
+	readyMutex.unlock();
 	aim.init(serverShip);
 	cout << "done asdf" << endl;
+	readyMutex.lock();
 	serverReady = true;
 	readyMutex.unlock();
 	stringstream ss;
 	ENetEvent event;
+	fpsTi.restart();
+	sf::Clock dtClock;
+	dtClock.restart();
+	sf::Time dt;
 	while(!doShutdown){
+		if(fpsTi.getElapsedTime().asSeconds() > 1){
+			//cout << "fps: " << fps << endl;
+			fps=0;
+			fpsTi.restart();
+		} else {
+			fps++;
+		}
 		while (enet_host_service(server, &event, 10) > 0)
 		{
 			//cout << "something happen" << endl;
@@ -102,8 +118,10 @@ void serverLoop(){
 
 		//Handle entities
 		if(anyoneOn)
-			serverEntities.updateEntities(0);
+			serverEntities.updateEntities(0,dt.asSeconds());
 		serverEntities.collideEntities();
+
+		dt = dtClock.restart();
 	}
 	delete p1;
 	delete p2;
