@@ -36,6 +36,8 @@ sf::Sound bulletSound;
 sf::SoundBuffer bulletBuffer;
 sf::Sound clickSound;
 sf::SoundBuffer clickBuffer;
+sf::Sound pickupSound;
+sf::SoundBuffer pickupBuffer;
 
 sf::RectangleShape p1Health;
 
@@ -140,6 +142,9 @@ void setup(){
 
 	clickBuffer.loadFromFile("data/audio/click.wav");
 	clickSound.setBuffer(clickBuffer);
+
+	pickupBuffer.loadFromFile("data/audio/pickup.wav");
+	pickupSound.setBuffer(pickupBuffer);
 
 	initMenu();
 }
