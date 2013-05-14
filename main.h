@@ -4,6 +4,7 @@
 #include <vector>
 #include "entity.h"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #define PI 3.14159265
 
@@ -52,6 +53,9 @@ extern bool inputIP;
 extern std::string ipText;
 
 extern sf::Font font;
+extern sf::Sound bulletSound;
+extern sf::SoundBuffer bulletBuffer;
+
 
 void runClient(std::string selection);
 std::string intToStr(int num);

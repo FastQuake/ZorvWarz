@@ -81,6 +81,7 @@ void Player::update(int framecount){
 	//Shoot stuff
 	if(mouseRight && bClock.getElapsedTime().asMilliseconds() > 100 &&
 			bullets > 0){
+		bulletSound.play();
 		bClock.restart();
 		entities.entityList.push_back(new Bullet(x+16,y+16,rot));
 		bullets--;

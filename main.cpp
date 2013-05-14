@@ -32,6 +32,9 @@ sf::Font font;
 sf::Sprite bulletSprite;
 sf::Text bulletText;
 
+sf::Sound bulletSound;
+sf::SoundBuffer bulletBuffer;
+
 sf::RectangleShape p1Health;
 
 string IPad;
@@ -129,6 +132,10 @@ void setup(){
 	bulletSprite.setScale(10,10);
 	bulletSprite.rotate(270);
 	bulletSprite.setPosition(600,600-30);
+
+	bulletBuffer.loadFromFile("data/audio/bullet.wav");
+
+	bulletSound.setBuffer(bulletBuffer);
 
 	initMenu();
 }
