@@ -342,7 +342,7 @@ int main(int argc, char *argv[]){
 			window.draw(bulletSprite);
 			window.draw(bulletText);
 			window.draw(p1Health);
-			if(!twoPlayers){
+			if(!twoPlayers && !singleplayer){
 					waitingText.setString("Waiting for Player 2");
 					waitingText.setOrigin(waitingText.getGlobalBounds().width/2,
 				waitingText.getGlobalBounds().height/2);

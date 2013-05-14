@@ -164,6 +164,7 @@ void handlePacket(string packetData, ENetPeer *peer){
 				}
 				if(singleplayer)
 					aim.spawnMonsters(&serverEntities.entityList,10);
+				anyoneOn = true;
 				break;
 			case 2:
 				cout << "SPAWING P2" << endl;

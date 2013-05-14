@@ -3,6 +3,7 @@
 #include "main.h"
 #include "server.h"
 #include <math.h>
+#include <sstream>
 
 Node::Node(sf::FloatRect nodeBox){
 	this->nodeBox = nodeBox;
@@ -218,11 +219,20 @@ Node *AIManager::findVisibleNode(sf::Vector2f relPoint, vector<sf::FloatRect> ta
 }
 
 void AIManager::spawnMonsters(vector<Entity*> *entityList, int numMonsters){
+	stringstream ss;
 	for(int i=0;i<numMonsters;i++){
 		sf::Vector2f floorTile = serverShip->getRandomFloorTile();
 		Monster *newMonster = new Monster();
+		newMonster->type = "monster";
 		newMonster->x = floorTile.x*32.0f;
 		newMonster->y = floorTile.y*32.0f;
+		ss.str("");
+		ss.clear();
+		ss << newMonster->ID << " " << newMonster->type << " " << newMonster->x << " " << newMonster->y << " " << newMonster->rot;
+		ENetPacket *spawnPacket = createPacket(scSpawn,ss.str(),ENET_PACKET_FLAG_RELIABLE);
+		enet_peer_send(p1->peer,0,spawnPacket);
+		if(p2->connected)
+			enet_peer_send(p2->peer,0,spawnPacket);
 		newMonster->buildPath();
 		newMonster->pathTimer.restart();
 		entityList->push_back(newMonster);
