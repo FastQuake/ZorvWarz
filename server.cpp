@@ -170,10 +170,6 @@ void handlePacket(string packetData, ENetPeer *peer){
 					enet_peer_send(p2->peer,0,packet);
 					enet_host_flush(server);
 				}
-				pathMutex.lock();
-				testMonster->buildPath(1);
-				anyoneOn = true;
-				pathMutex.unlock();
 				break;
 			case 2:
 				cout << "SPAWING P2" << endl;

@@ -1,6 +1,7 @@
 #include "ai.h"
 #include "lighting.h"
 #include "main.h"
+#include "server.h"
 #include <math.h>
 
 Node::Node(sf::FloatRect nodeBox){
@@ -213,5 +214,17 @@ Node *AIManager::findVisibleNode(sf::Vector2f relPoint, vector<sf::FloatRect> ta
 				return &aim.nodeList[i];
 			}
 		}
+	}
+}
+
+void AIManager::spawnMonsters(vector<Entity*> *entityList, int numMonsters){
+	for(int i=0;i<numMonsters;i++){
+		sf::Vector2f floorTile = serverShip->getRandomFloorTile();
+		Monster *newMonster = new Monster();
+		newMonster->x = floorTile.x;
+		newMonster->y = floorTile.y;
+		newMonster->buildPath();
+		newMonster->pathTimer.restart();
+		entityList->push_back(newMonster);
 	}
 }

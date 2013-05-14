@@ -31,7 +31,7 @@ void Monster::onCollision(Entity *object, sf::FloatRect otherBox){
 		health--;
 		cout << "health down: " << health << endl;
 		object->alive = false;
-	} else if(object->type == "plauer"){
+	} else if(object->type == "player"){
 		return;
 	}else if(object->type == "box"){
 		return;
@@ -67,10 +67,16 @@ void Monster::update(int framecount){
 	collisionBoxes[0].top = y;
 }
 
-void Monster::buildPath(int player){
+void Monster::buildPath(){
 	//We have AIManager aim, Mob *p1 and Mob *p2 available for use
 	sf::Vector2f targetPos;
 	vector<Node*> ignoreList;
+	int player = 0;
+
+	if(singleplayer)
+		player = 1;
+	else
+		player = rand() % 2+1;
 
 	if(player == 1)
 		targetPos = sf::Vector2f(p1->x,p1->y);

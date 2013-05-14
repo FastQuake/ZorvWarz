@@ -112,7 +112,7 @@ class Monster : public Entity {
 	sf::Clock pathTimer;
 	
 	Monster();
-	void buildPath(int player);
+	void buildPath();
 	void stepPath(Node* currentNode);
 	void drawPath(sf::RenderWindow *screen, int screenx, int screeny);
 

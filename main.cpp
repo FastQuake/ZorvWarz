@@ -368,7 +368,6 @@ void runClient(string selection){
 		if(serverReady)
 			break;
 		readyMutex.unlock();
-
 	}
 	connecting = true;
 	cout << "STARTING CLIENT" << endl;
