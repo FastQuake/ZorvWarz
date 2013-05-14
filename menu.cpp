@@ -63,7 +63,7 @@ void updateMenu(){
 				loadText.getGlobalBounds().height/2);
 		//cout << "LOADING" << endl;
 		if(ready){
-			cout << "CHAING STATES" << endl;
+			cout << "CHANGING STATES" << endl;
 			state = 1;
 			sf::sleep(sf::milliseconds(500));
 	}

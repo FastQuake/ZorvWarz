@@ -56,6 +56,9 @@ int state = 0; //0 = main menu 1=game
 void clientHandlePacket(string packetData);
 void extractMap(string data);
 
+sf::Texture blackBgTex;
+sf::Sprite blackBgSprite;
+
 string intToStr(int num){
 	stringstream ss;
 	ss << num;
@@ -109,6 +112,8 @@ void setup(){
 	addEntities();
 
 	bTex.loadFromFile(bulletFile);
+	blackBgTex.loadFromFile("data/textures/black.png");
+	blackBgSprite.setTexture(blackBgTex);
 
 	initMenu();
 }
@@ -165,7 +170,10 @@ int main(int argc, char *argv[]){
 	font.loadFromFile("data/PressStart2P.ttf");
 
 	sf::Text fpsText;
+	sf::Text waitingText;
 	fpsText.setFont(font);
+	waitingText.setFont(font);
+	waitingText.setPosition(400,300);
 
 	while(window.isOpen()){
 		frameTime.restart();
@@ -289,6 +297,15 @@ int main(int argc, char *argv[]){
 			pathMutex.lock();
 			//testMonster->drawPath(&window,player->x-400,player->y-300);
 			pathMutex.unlock();
+
+			if(!twoPlayers){
+					waitingText.setString("Waiting for Player 2");
+					waitingText.setOrigin(waitingText.getGlobalBounds().width/2,
+				waitingText.getGlobalBounds().height/2);
+
+					window.draw(blackBgSprite);
+					window.draw(waitingText);
+				}
 
 			window.draw(fpsText);
 			window.display();

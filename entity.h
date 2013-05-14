@@ -108,6 +108,7 @@ class Monster : public Entity {
 	float speed;
 	int targetNodeNum;
 	std::vector<Node*> currentPath;
+	sf::Clock pathTimer;
 	
 	Monster();
 	void buildPath(int player);
