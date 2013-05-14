@@ -1,6 +1,6 @@
 SRCS = $(wildcard *.cpp)
 OBJS = $(patsubst %.cpp,%.o,$(SRCS))
-LD_FLAGS = -lsfml-system -lsfml-window -lsfml-graphics -lenet 
+LD_FLAGS = -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio -lenet 
 CC_FLAGS = -g 
 TITLE = zorv
 

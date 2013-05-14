@@ -29,6 +29,16 @@ sf::Mutex readyMutex;
 sf::Texture bTex;
 sf::Font font;
 
+sf::Sprite bulletSprite;
+sf::Text bulletText;
+
+sf::Sound bulletSound;
+sf::SoundBuffer bulletBuffer;
+sf::Sound clickSound;
+sf::SoundBuffer clickBuffer;
+
+sf::RectangleShape p1Health;
+
 string IPad;
 
 sf::Vector2i mousePos;
@@ -43,6 +53,7 @@ vector<string> packetList;
 bool twoPlayers = false;
 bool ready = false;
 bool serverReady = true;
+bool connecting = false;
 bool doShutdown = false;
 
 bool keyUp = false;
@@ -106,7 +117,6 @@ void addEntities(){
 void setup(){
 	//Set seed based on time
 	int seed = time(NULL);
-	seed = 1368481140;
 	cout << "seed: " << seed << endl;
 	srand(seed);
 	addEntities();
@@ -114,6 +124,27 @@ void setup(){
 	bTex.loadFromFile(bulletFile);
 	blackBgTex.loadFromFile("data/textures/black.png");
 	blackBgSprite.setTexture(blackBgTex);
+
+	bulletText.setFont(font);
+	bulletText.setPosition(650,600-50);
+
+	p1Health.setSize(sf::Vector2f(100,10));
+	p1Health.setPosition(10,10);
+	p1Health.setFillColor(sf::Color::Red);
+	p1Health.setOutlineThickness(1);
+	p1Health.setOutlineColor(sf::Color(50,50,50));
+	p1Health.setScale(2,2);
+
+	bulletSprite.setTexture(bTex);
+	bulletSprite.setScale(10,10);
+	bulletSprite.rotate(270);
+	bulletSprite.setPosition(600,600-30);
+
+	bulletBuffer.loadFromFile("data/audio/bullet.wav");
+	bulletSound.setBuffer(bulletBuffer);
+
+	clickBuffer.loadFromFile("data/audio/click.wav");
+	clickSound.setBuffer(clickBuffer);
 
 	initMenu();
 }
@@ -186,7 +217,7 @@ int main(int argc, char *argv[]){
 		} else {
 			fps++;
 		}
-		fpsText.setString("FPS: "+intToStr(FPS)+" BULLETS: "+intToStr(player->bullets)+"\nXY: "+floatToStr(player->x) + " " + 
+		fpsText.setString("FPS: "+intToStr(FPS)+ "\nXY: "+floatToStr(player->x) + " " + 
 			floatToStr(player->y));
 		//Get input
 		while(window.pollEvent(event)){
@@ -289,6 +320,9 @@ int main(int argc, char *argv[]){
 				p2Light->update();
 			}
 
+			bulletText.setString("x"+intToStr(player->bullets));
+			p1Health.setSize(sf::Vector2f(player->health*10,10));
+
 			//draw stuff
 			window.clear();
 			entities.drawEntities(&window,player->x-400,player->y-300); //Hardcoded screenx and screeny, may fix later
@@ -298,6 +332,10 @@ int main(int argc, char *argv[]){
 			//testMonster->drawPath(&window,player->x-400,player->y-300);
 			pathMutex.unlock();
 
+			//window.draw(fpsText);
+			window.draw(bulletSprite);
+			window.draw(bulletText);
+			window.draw(p1Health);
 			if(!twoPlayers){
 					waitingText.setString("Waiting for Player 2");
 					waitingText.setOrigin(waitingText.getGlobalBounds().width/2,
@@ -320,6 +358,7 @@ int main(int argc, char *argv[]){
 /** Thread to handle all client networking **/
 void runClient(string selection){
 	while(!serverReady){}
+	connecting = true;
 	cout << "STARTING CLIENT" << endl;
 	ENetHost *client;
 	ENetPeer *peer;
@@ -341,18 +380,19 @@ void runClient(string selection){
 	}
 
 		/* Wait up to 10 seconds for the connection attempt to succeed. */
-	if (enet_host_service (client, &event, 10000) > 0 &&
+	if (enet_host_service (client, &event, 5000) > 0 &&
 		event.type == ENET_EVENT_TYPE_CONNECT){
-		//cout << "Connection to some.server.net:1234 succeeded." << endl;
-		cout << "Connection to " << IPad << " suceeded";
+		cout << "Connection to " << IPad << " suceeded" << endl;
+		connecting = true;
 	}
 	else{
 		/* Either the 5 seconds are up or a disconnect event was */
 		/* received. Reset the peer in the event the 5 seconds   */
 		/* had run out without any significant event.            */
-		enet_peer_reset (peer);
-		//cout << "Connection to some.server.net:1234 failed." << endl;
-		cout << "Connection to " << IPad << " failed";
+		connecting = false;
+		enet_peer_reset(peer);
+		cout << "Connection to " << IPad << " failed" << endl;
+		return;
 	}
 
 	while(!doShutdown){
@@ -440,6 +480,7 @@ void clientHandlePacket(string packetData){
 			player->ID = id;
 			break;
 		case scAttack:
+			bulletSound.play();
 			entities.entityList.push_back(new Bullet(
 						player2->x+16,player2->y+16,player2->rot));
 			break;

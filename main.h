@@ -4,6 +4,7 @@
 #include <vector>
 #include "entity.h"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #define PI 3.14159265
 
@@ -27,6 +28,7 @@ extern sf::Thread *clientThread;
 extern bool ready;
 extern bool serverReady;
 extern bool twoPlayers;
+extern bool connecting;
 extern sf::Mutex packetMutex;
 
 extern std::string IPad;
@@ -52,6 +54,9 @@ extern bool inputIP;
 extern std::string ipText;
 
 extern sf::Font font;
+extern sf::Sound bulletSound;
+extern sf::Sound clickSound;
+
 
 void runClient(std::string selection);
 std::string intToStr(int num);

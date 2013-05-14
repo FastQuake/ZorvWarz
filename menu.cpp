@@ -19,6 +19,7 @@ sf::Sprite bgSprite;
 
 sf::Text ipSprite;
 sf::Text loadText;
+sf::Text enterIP;
 
 sf::Clock bTimer;
 
@@ -48,16 +49,25 @@ void initMenu(){
 	loadText.setFont(font);
 	loadText.setPosition(400,300);
 
+	enterIP.setFont(font);
+	enterIP.setPosition(100,200);
+
 	bTimer.restart();
 }
 
 void updateMenu(){
 	//get mouse position
+	enterIP.setString("Enter IP of server: ");
 	sf::Vector2f mPos;
 	mPos.x = mousePos.x;
 	mPos.y = mousePos.y;
 	//If we are the main part of the menu
 	if(loading){
+		if(!connecting){
+			loading = false;
+			inputIP = true;
+			ipText = "Bad IP";
+		}
 		loadText.setString("Loading...");
 		loadText.setOrigin(loadText.getGlobalBounds().width/2,
 				loadText.getGlobalBounds().height/2);
@@ -74,14 +84,13 @@ void updateMenu(){
 				//If user presses play button
 				if(pButSprite.getGlobalBounds().contains(mPos)){
 					mouseRight = false;
-					//state = 1;
 					IPad = "localhost";
 					initServer();
 					serverThread->launch();
 					clientThread->launch();
 					sf::sleep(sf::milliseconds(500));
 					loading = true;
-					//readyMutex.lock();
+					connecting = true;
 				}
 				//If user presses join button
 				if(jButSprite.getGlobalBounds().contains(mPos)){
@@ -98,14 +107,12 @@ void updateMenu(){
 				}
 				//If user presses join button
 				if(jButSprite.getGlobalBounds().contains(mPos)){
-					//state = 1;
 					mouseRight = false;
 					inputIP = false;
 					IPad = ipText;
 					clientThread->launch();
 					sf::sleep(sf::milliseconds(500));
 					loading = true;
-					//readyMutex.lock();
 				}
 			}
 			//Set the text for the string showing input
@@ -131,6 +138,7 @@ void drawMenu(sf::RenderWindow *screen){
 			screen->draw(jButSprite);
 		} else { //Draw the join menu
 			screen->draw(ipSprite);
+			screen->draw(enterIP);
 			screen->draw(jButSprite);
 			screen->draw(bButSprite);
 		}

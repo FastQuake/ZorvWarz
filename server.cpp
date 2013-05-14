@@ -58,7 +58,6 @@ void initServer(){
 	p1->type = "player";
 	p2->type = "player";
 	testMonster->type = "monster";
-
 	sf::Vector2f floorTile = serverShip->getRandomFloorTile();
 	testMonster->x = floorTile.x*32.0f;
 	testMonster->y = floorTile.y*32.0f;

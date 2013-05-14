@@ -90,6 +90,7 @@ class Player : public Entity {
 	int bullets;
 	int frame;
 	int state;
+	sf::Clock dTimer;
 	sf::Sprite playerSprite;
 	sf::Sprite gun;
 	sf::Texture pTexture;
