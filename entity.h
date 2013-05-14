@@ -27,7 +27,7 @@ class Entity{
 
 		void collideWall(sf::FloatRect otherBox);
 
-		virtual void update(int framecount){};
+		virtual void update(int framecount, float dTime){};
 		virtual void onCollision(Entity *object, sf::FloatRect otherBox){};
 		virtual void draw(sf::RenderWindow *screen,int screenx,int screeny){};
 };
@@ -37,7 +37,7 @@ class EntityManager{
 	std::vector<Entity*> entityList;
 
 	//~EntityManager();
-	void updateEntities(int framecount);
+	void updateEntities(int framecount, float dTime);
 	void collideEntities();
 	void drawEntities(sf::RenderWindow *screen,int screenx,int screeny);
 	void removeByID(int ID);
@@ -50,7 +50,7 @@ class Bullet : public Entity {
 	sf::Sprite sBullet;
 
 	Bullet(float x, float y, float rot);
-	void update(int framecount);
+	void update(int framecount,float dTime);
 	void onCollision(Entity *object, sf::FloatRect otherBox);
 	void draw(sf::RenderWindow *screen,int screenx,int screeny);
 };
@@ -66,7 +66,7 @@ class Mob : public Entity {
 	
 	Mob(int id);
 	Mob(std::string textureFile, int id);
-	void update(int framecount);
+	void update(int framecount, float dTime);
 	void onCollision(Entity *object, sf::FloatRect otherBox){};
 	virtual void draw(sf::RenderWindow *window, int screenx,int screeny);
 };
@@ -97,7 +97,7 @@ class Player : public Entity {
 	sf::Texture gTexture;
 	
 	Player(std::string playerTexture);
-	void update(int framecount);
+	void update(int framecount, float dTime);
 	void onCollision(Entity *object, sf::FloatRect otherBox);
 	void draw(sf::RenderWindow *screen,int screenx,int screeny);
 };
@@ -114,14 +114,14 @@ public:
 	
 	Monster();
 	void buildPath();
-	void stepPath(Node* currentNode);
+	void stepPath(Node* currentNode, float dTime);
 	void drawPath(sf::RenderWindow *screen, int screenx, int screeny);
 
-	void update(int framecount);
+	void update(int framecount,float dTime);
 	void onCollision(Entity *object, sf::FloatRect otherBox);
 	void draw(sf::RenderWindow *screen,int screenx,int screeny){};
 private:
-	void stepTowards(sf::Vector2f targetPos);
+	void stepTowards(sf::Vector2f targetPos, float dTime);
 };
 
 class ShipEntity : public Entity{

@@ -17,7 +17,7 @@ Player::Player(std::string playerTexture){
 	speed = 200.0;
 
 	health = 10;
-	bullets = 30;
+	bullets = 60;
 
 	frame = 0;
 	state = 0;
@@ -36,10 +36,7 @@ Player::Player(std::string playerTexture){
 	dTimer.restart();
 }
 
-void Player::update(int framecount){
-	//float dTime = frameTime.getElapsedTime().asMilliseconds()/1000.0f;
-	//float dTime = 1.0f/FPS;
-	float dTime = dt.asSeconds();
+void Player::update(int framecount, float dTime){
 	if(keyUp && sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
 		yVel = -speed*dTime;
 	} else if(keyDown && sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
@@ -71,12 +68,12 @@ void Player::update(int framecount){
 	collisionBoxes[0].top = y;
 
 	//Get mouse rotation
-	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+	sf::Vector2i mPos = mousePos;
 
-	mousePos.x -= 400+16;
-	mousePos.y -= 300+16;
+	mPos.x -= 400+16;
+	mPos.y -= 300+16;
 
-	rot = atan2((float)mousePos.y,(float)mousePos.x) * (180/3.14);
+	rot = atan2((float)mPos.y,(float)mPos.x) * (180/3.14);
 
 	//Shoot stuff
 	if(mouseRight && bClock.getElapsedTime().asMilliseconds() > 100){
@@ -176,7 +173,7 @@ Mob::Mob(std::string textureFile, int id){
 	animTimer.restart();
 }
 
-void Mob::update(int framecount){
+void Mob::update(int framecount, float dTime){
 
 	//If zombie id dead, prep for death animation
 	if(health == -1){
@@ -268,10 +265,7 @@ Bullet::Bullet(float x, float y, float rot){
 
 }
 
-void Bullet::update(int framecount){
-	//float dTime = 1.0f/FPS;
-	//std::cout << "FRAME: " << framecount << " X: " << x << " Y: " << y << std::endl;
-	float dTime = dt.asSeconds();
+void Bullet::update(int framecount,float dTime){
 	x += (vel.x * dTime);
 	y += (vel.y * dTime);
 

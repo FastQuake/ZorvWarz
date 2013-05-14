@@ -34,11 +34,14 @@ Monster::Monster(){
 
 void Monster::onCollision(Entity *object, sf::FloatRect otherBox){
 	//cout << "I GOT BOOM BOOM" << endl;
-	if(object->type == "bullet"){
+	if(object->type == "bullet" && object->alive){
 		health--;
 		cout << "health down: " << health << endl;
 		object->alive = false;
-	} else if(object->type == "player"){
+		return;
+	} else if(object->type == "monster"){
+		return;
+	}else if(object->type == "player"){
 		return;
 	}else if(object->type == "box"){
 		return;
@@ -47,11 +50,11 @@ void Monster::onCollision(Entity *object, sf::FloatRect otherBox){
 	}
 }
 
-void Monster::update(int framecount){
+void Monster::update(int framecount, float dTime){
 	if(!atEnd){	
 		if(pathTimer.getElapsedTime().asSeconds() == 5)
 			buildPath();
-		stepPath(currentPath[targetNodeNum]);
+		stepPath(currentPath[targetNodeNum], dTime);
 	}else{
 		sf::FloatRect targetBox;
 		if(targetPlayer == 1)
@@ -59,7 +62,7 @@ void Monster::update(int framecount){
 		else
 			targetBox = p2->collisionBoxes[0];
 		sf::Vector2f targetPos = sf::Vector2f(targetBox.left+targetBox.width/2,targetBox.top+targetBox.height/2);
-		stepTowards(targetPos);
+		stepTowards(targetPos, dTime);
 		if(!AIManager::isVisible(sf::Vector2f(this->x,this->y),targetBox,serverShip->collisionBoxes))
 			buildPath();
 	}
@@ -143,9 +146,8 @@ void Monster::buildPath(){
 	pathTimer.restart();
 }
 	
-void Monster::stepPath(Node* currentNode){
-	//float dTime = 1.0f/FPS;
-	stepTowards(currentNode->middle);
+void Monster::stepPath(Node* currentNode,float dTime){
+	stepTowards(currentNode->middle, dTime);
 
 	if(targetNodeNum+1 >= currentPath.size()){
 		atEnd = true;
@@ -181,8 +183,7 @@ void Monster::drawPath(sf::RenderWindow *screen, int screenx, int screeny){
 	}
 }
 
-void Monster::stepTowards(sf::Vector2f targetPos){
-	float dTime = dt.asSeconds();
+void Monster::stepTowards(sf::Vector2f targetPos, float dTime){
 	float ysign = 0.0f;
 	float xsign = 0.0f;
 

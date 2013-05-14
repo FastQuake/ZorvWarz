@@ -18,9 +18,9 @@ const std::string bulletFile = "data/textures/bullet.png";
 
 extern sf::Texture bTex;
 
-extern sf::RenderWindow window;
+//extern sf::RenderWindow window;
 extern sf::Clock frameTime;
-extern sf::Time dt;
+//extern sf::Time dt;
 
 extern sf::Thread *serverThread;
 extern sf::Thread *clientThread;
