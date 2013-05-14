@@ -111,6 +111,7 @@ void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 		}
 		return;
 	}else if(object->type == "box"){
+		pickupSound.play();
 		bullets += 30;
 		object->alive = false;
 		object->collides = false;
