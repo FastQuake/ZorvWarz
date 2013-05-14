@@ -34,6 +34,8 @@ sf::Text bulletText;
 
 sf::Sound bulletSound;
 sf::SoundBuffer bulletBuffer;
+sf::Sound clickSound;
+sf::SoundBuffer clickBuffer;
 
 sf::RectangleShape p1Health;
 
@@ -134,8 +136,10 @@ void setup(){
 	bulletSprite.setPosition(600,600-30);
 
 	bulletBuffer.loadFromFile("data/audio/bullet.wav");
-
 	bulletSound.setBuffer(bulletBuffer);
+
+	clickBuffer.loadFromFile("data/audio/click.wav");
+	clickSound.setBuffer(clickBuffer);
 
 	initMenu();
 }

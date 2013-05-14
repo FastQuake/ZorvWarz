@@ -54,7 +54,7 @@ extern std::string ipText;
 
 extern sf::Font font;
 extern sf::Sound bulletSound;
-extern sf::SoundBuffer bulletBuffer;
+extern sf::Sound clickSound;
 
 
 void runClient(std::string selection);

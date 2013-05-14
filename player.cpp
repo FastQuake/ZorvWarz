@@ -79,15 +79,18 @@ void Player::update(int framecount){
 	rot = atan2((float)mousePos.y,(float)mousePos.x) * (180/3.14);
 
 	//Shoot stuff
-	if(mouseRight && bClock.getElapsedTime().asMilliseconds() > 100 &&
-			bullets > 0){
-		bulletSound.play();
+	if(mouseRight && bClock.getElapsedTime().asMilliseconds() > 100){
 		bClock.restart();
-		entities.entityList.push_back(new Bullet(x+16,y+16,rot));
-		bullets--;
-		packetMutex.lock();
-		packetList.push_back("2");
-		packetMutex.unlock();
+		if(bullets > 0){
+			bulletSound.play();
+			entities.entityList.push_back(new Bullet(x+16,y+16,rot));
+			bullets--;
+			packetMutex.lock();
+			packetList.push_back("2");
+			packetMutex.unlock();
+		} else {
+			clickSound.play();
+		}
 	}
 
 	if(health < 0){
