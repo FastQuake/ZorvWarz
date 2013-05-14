@@ -14,7 +14,6 @@ sf::Mutex pathMutex;
 
 Mob *p1;
 Mob *p2;
-Monster *testMonster;
 
 bool isp1 = true;
 bool twoP = false;
@@ -41,13 +40,11 @@ void initServer(){
 
 	p1 = new Mob(1);
 	p2 = new Mob(2);
-	testMonster = new Monster();
 
 	//Attach the entites to the server's entity manager
 	serverEntities.entityList.push_back(serverShip);
 	serverEntities.entityList.push_back(p1);
 	serverEntities.entityList.push_back(p2);
-	serverEntities.entityList.push_back(testMonster);
 
 	for(int i=0;i<5;i++){
 		sf::Vector2f pos = serverShip->getRandomFloorTile();
@@ -57,11 +54,6 @@ void initServer(){
 
 	p1->type = "player";
 	p2->type = "player";
-	testMonster->type = "monster";
-	sf::Vector2f floorTile = serverShip->getRandomFloorTile();
-	testMonster->x = floorTile.x*32.0f;
-	testMonster->y = floorTile.y*32.0f;
-	cout << "vec: " << testMonster->x << " " << testMonster->y << endl;
 }
 
 void serverLoop(){
@@ -170,6 +162,8 @@ void handlePacket(string packetData, ENetPeer *peer){
 					enet_peer_send(p2->peer,0,packet);
 					enet_host_flush(server);
 				}
+				if(singleplayer)
+					aim.spawnMonsters(&serverEntities.entityList,10);
 				break;
 			case 2:
 				cout << "SPAWING P2" << endl;
@@ -198,15 +192,13 @@ void handlePacket(string packetData, ENetPeer *peer){
 					enet_peer_send(p1->peer,0,packet);
 					enet_host_flush(server);
 				}
-				//Also send p1 spawn to p2
-				if(p2->connected){
-					ss.str("");
-					ss.clear();
-					ss << p1->ID << " " << p1->type << " " << p1->x << " " << p1->y << " " << p1->rot;
-					packet = createPacket(scSpawn,ss.str(),ENET_PACKET_FLAG_RELIABLE);
-					enet_peer_send(p2->peer,0,packet);
-					enet_host_flush(server);
-				}
+				ss.str("");
+				ss.clear();
+				ss << p1->ID << " " << p1->type << " " << p1->x << " " << p1->y << " " << p1->rot;
+				packet = createPacket(scSpawn,ss.str(),ENET_PACKET_FLAG_RELIABLE);
+				enet_peer_send(p2->peer,0,packet);
+				enet_host_flush(server);
+				aim.spawnMonsters(&serverEntities.entityList,10);
 				break;
 		}
 		break;

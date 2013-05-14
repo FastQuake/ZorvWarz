@@ -146,6 +146,4 @@ class AmmoBox : public Entity {
 	void draw(sf::RenderWindow *screen, int screenx, int screeny);
 };
 
-extern Monster *testMonster;
-
 #endif

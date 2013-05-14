@@ -221,8 +221,8 @@ void AIManager::spawnMonsters(vector<Entity*> *entityList, int numMonsters){
 	for(int i=0;i<numMonsters;i++){
 		sf::Vector2f floorTile = serverShip->getRandomFloorTile();
 		Monster *newMonster = new Monster();
-		newMonster->x = floorTile.x;
-		newMonster->y = floorTile.y;
+		newMonster->x = floorTile.x*32.0f;
+		newMonster->y = floorTile.y*32.0f;
 		newMonster->buildPath();
 		newMonster->pathTimer.restart();
 		entityList->push_back(newMonster);
