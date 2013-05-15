@@ -91,6 +91,7 @@ void updateMenu(){
 				bTimer.restart();
 				//If user presses play button
 				if(pButSprite.getGlobalBounds().contains(mPos)){
+					serverReady = false;
 					mouseRight = false;
 					IPad = "localhost";
 					initServer();
@@ -103,6 +104,7 @@ void updateMenu(){
 				}
 				//If user presses Multi-Player button
 				if(mButSprite.getGlobalBounds().contains(mPos)){
+					serverReady = false;
 					mouseRight = false;
 					IPad = "localhost";
 					initServer();
