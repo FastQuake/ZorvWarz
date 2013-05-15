@@ -193,10 +193,26 @@ void AIManager::drawNet(sf::RenderWindow *screen, int screenx, int screeny){
 }
 
 Node *AIManager::findVisibleNode(sf::Vector2f relPoint, vector<sf::FloatRect> targetColBoxes){	
-	for(int i=0;i<aim.nodeList.size();i++){
-		if(isVisible(relPoint,aim.nodeList[i].nodeBox,targetColBoxes))
-			return &aim.nodeList[i];
+	Node *closestVisible;
+	bool foundOne = false;
+	for(int i=0,j=0,min=9999;i<aim.nodeList.size();i++){
+		if(isVisible(relPoint,aim.nodeList[i].nodeBox,targetColBoxes)){
+			j++;
+			float xdiff = abs(relPoint.x-aim.nodeList[i].middle.x);
+			float ydiff = abs(relPoint.y-aim.nodeList[i].middle.y);
+			float distance = sqrt(pow(xdiff,2.0f)+pow(ydiff,2.0f));
+
+			if(distance < min){
+				min = distance;
+				closestVisible = &aim.nodeList[i];
+				foundOne = true;
+			}
+			if(j>5)
+				break;
+		}
 	}
+	if(foundOne)
+		return closestVisible;
 	return &aim.nodeList[0];
 }
 
@@ -208,13 +224,13 @@ void AIManager::spawnMonsters(vector<Entity*> *entityList, int numMonsters){
 		newMonster->type = "monster";
 		newMonster->x = floorTile.x*32.0f;
 		newMonster->y = floorTile.y*32.0f;
-		ss.str("");
+		/*ss.str("");
 		ss.clear();
 		ss << newMonster->ID << " " << newMonster->type << " " << newMonster->x << " " << newMonster->y << " " << newMonster->rot;
 		ENetPacket *spawnPacket = createPacket(scSpawn,ss.str(),ENET_PACKET_FLAG_RELIABLE);
 		enet_peer_send(p1->peer,0,spawnPacket);
 		if(p2->connected)
-			enet_peer_send(p2->peer,0,spawnPacket);
+			enet_peer_send(p2->peer,0,spawnPacket);*/
 		newMonster->buildPath();
 		newMonster->pathTimer.restart();
 		entityList->push_back(newMonster);
@@ -225,7 +241,7 @@ bool AIManager::isVisible(sf::Vector2f startPoint, sf::FloatRect targetBox, vect
 	sf::Vector2f targetMiddle = sf::Vector2f(targetBox.left+targetBox.width/2,targetBox.top+targetBox.height/2);
 	float angle = atan2(targetMiddle.y-startPoint.y,targetMiddle.x-startPoint.x)*180/PI;
 	//cout << "angle: " << angle << endl;
-	for(int i=0;;i+=16){
+	for(int i=0;;i+=8){
 		//cout << "radius: " << j << endl;
 		if(targetBox.contains(LightManager::getCirclePoint(i,angle,startPoint))){
 			return true;

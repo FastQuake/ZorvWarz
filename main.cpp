@@ -322,7 +322,8 @@ int main(int argc, char *argv[]){
 			
 
 			//Update all the entities
-			entities.updateEntities(fps,dt.asSeconds());
+			if(singleplayer || (!singleplayer && twoPlayers))
+				entities.updateEntities(fps,dt.asSeconds());
 			entities.collideEntities();
 
 			p1Light->x = player->x+16;
@@ -488,11 +489,13 @@ void clientHandlePacket(string packetData){
 				monster->y = y;
 				monster->rot = rot;
 				monster->type = "monster";
+				cout << "SPAWNING MONSTER ID " << monster->ID << endl;
 				entities.entityList.push_back(monster);
 			}
 			break;
 		case scDespawn:
 			ss >> id;
+			cout << "DESPAWNING " << id << endl;
 			guy = entities.getByID(id);
 			if(guy->type == "monster"){
 				guy->health = -1;

@@ -31,6 +31,7 @@ void EntityManager::updateEntities(int framecount, float dTime){
 		}
 		//if entity is dead kill it! possibly with fire
 		if(entityList[i]->alive == false){
+			std::cout << "removing entity because dead. ID=" << entityList[i]->ID << " TYPE=" << entityList[i]->type << std::endl;
 			removeByID(entityList[i]->ID);
 		}
 	}

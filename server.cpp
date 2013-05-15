@@ -166,7 +166,7 @@ void serverLoop(){
 		}
 
 		//Handle entities
-		if(anyoneOn)
+		if(anyoneOn && (singleplayer || (!singleplayer && twoP)))
 			serverEntities.updateEntities(0,dt.asSeconds());
 		serverEntities.collideEntities();
 
@@ -219,8 +219,6 @@ void handlePacket(string packetData, ENetPeer *peer){
 				p1->y = vec.y*32;
 				p1->peer = peer;
 				p1->connected = true;
-				//Send the client spawn packets for all entities, and send the other player a spawn packet if they're connected
-				sendSpawnPackets(peer);
 				if(p2->connected){
 					ss.str("");
 					ss.clear();
@@ -231,6 +229,7 @@ void handlePacket(string packetData, ENetPeer *peer){
 				}
 				if(singleplayer)
 					aim.spawnMonsters(&serverEntities.entityList,10);
+				sendSpawnPackets(peer);
 				anyoneOn = true;
 				break;
 			case 2:
@@ -250,8 +249,6 @@ void handlePacket(string packetData, ENetPeer *peer){
 				p2->y = vec.y*32;
 				p2->peer = peer;
 				p2->connected = true;
-				//Send the client spawn packets for all entities, and send the other player a spawn packet if they're connected
-				sendSpawnPackets(peer);
 				if(p1->connected){
 					ss.str("");
 					ss.clear();
@@ -267,6 +264,8 @@ void handlePacket(string packetData, ENetPeer *peer){
 				enet_peer_send(p2->peer,0,packet);
 				enet_host_flush(server);
 				aim.spawnMonsters(&serverEntities.entityList,10);
+				sendSpawnPackets(peer);
+				sendSpawnPackets(p1->peer);
 				break;
 		}
 		break;
