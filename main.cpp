@@ -2,13 +2,13 @@
 #include <sstream>
 #include <stdlib.h>
 #include <time.h>
-#include <enet/enet.h>
 #include "ship.h"
 #include "main.h"
 #include "lighting.h"
 #include "server.h"
 #include "ai.h"
 #include "menu.h"
+#include <enet/enet.h>
 
 using namespace std;
 
