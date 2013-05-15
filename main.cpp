@@ -597,6 +597,7 @@ void clientHandlePacket(string packetData, ENetPeer *peer){
 		case scP2Dsc:
 			twoPlayers = false;
 			p2Timer.restart();
+			entities.removeByRef(player2);
 			break;
 		case scStats:
 			ss >> clientStats.p1Score;
