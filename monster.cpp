@@ -7,14 +7,13 @@
 
 using namespace std;
 
-bool atEnd = false;
-
 Monster::Monster(){
 	type = "monster";
 	drawable = false;
 	collides = true;
 	readyToUpdate = true;
 	alive = true;
+	atEnd = false;
 
 	xVel = 0.0;
 	yVel = 0.0;
@@ -62,11 +61,12 @@ void Monster::update(int framecount, float dTime){
 		else
 			targetBox = p2->collisionBoxes[0];
 		sf::Vector2f targetPos = sf::Vector2f(targetBox.left+targetBox.width/2,targetBox.top+targetBox.height/2);
+		cout << targetPos.x << " " << targetPos.y << endl;
 		sf::Vector2f thisMiddle = sf::Vector2f(this->collisionBoxes[0].left+this->collisionBoxes[0].width/2,
 			this->collisionBoxes[0].top+this->collisionBoxes[0].height/2);
+		stepTowards(targetPos, dTime);
 		if(!AIManager::isVisible(thisMiddle,targetBox,serverShip->collisionBoxes))
 			buildPath();
-		stepTowards(targetPos, dTime);
 	}
 	stringstream ss;
 	ss << this->ID << " " << this->x << " " << this->y << " 0";
@@ -155,6 +155,9 @@ void Monster::stepPath(Node* currentNode,float dTime){
 
 	if(currentPath[currentPath.size()-1]->nodeBox.intersects(this->collisionBoxes[0])){
 		cout << "path ended" << this->ID << endl;
+		cout << "node position" << this->ID << " " << currentPath[currentPath.size()-1]->middle.x << " " << currentPath[currentPath.size()-1]->middle.y << endl;
+		cout << "node position WITH THINGY" << this->ID << " " << currentPath[currentPath.size()-1]->nodeBox.left << " " << currentPath[currentPath.size()-1]->nodeBox.top << endl;
+		cout << "mah crazy ass is at" << this->ID << " " << this->x+16 << " " << this->y+16 << endl;
 		atEnd = true;
 		return;
 	}
@@ -192,16 +195,16 @@ void Monster::stepTowards(sf::Vector2f targetPos, float dTime){
 	float ysign = 0.0f;
 	float xsign = 0.0f;
 
-	if(((y+16.0f)-targetPos.y) < -0.1)
+	if(((y+16.0f)-targetPos.y) < -1.0f)
 		ysign = 1.0f;
-	else if(((y+16.0f)-targetPos.y) > 0.1)
+	else if(((y+16.0f)-targetPos.y) > 1.0f)
 		ysign = -1.0f;
 	else
 		ysign = 0.0f;
 		
-	if(((x+16.0f)-targetPos.x) < -0.1)
+	if(((x+16.0f)-targetPos.x) < -1.0f)
 		xsign = 1.0f;
-	else if(((x+16.0f)-targetPos.x) > 0.1)
+	else if(((x+16.0f)-targetPos.x) > 1.0f)
 		xsign = -1.0f;
 	else
 		xsign = 0.0f;
@@ -209,14 +212,16 @@ void Monster::stepTowards(sf::Vector2f targetPos, float dTime){
 	//cout << xsign << " " << ysign << endl;
 	xVel = xsign*(speed*dTime);
 	yVel = ysign*(speed*dTime);
+	
+//	cout << xVel << " " << yVel << endl;
 
-	if(abs(xVel) > 3){
-		xVel = (xVel/abs(xVel)) * 3; 
+	if(fabs(xVel) > 3.0f){
+		xVel = xsign*3.0f; 
 	}
-	if(abs(yVel) > 3){
-		yVel = (yVel/abs(yVel))*3;
+	if(fabs(yVel) > 3.0f){
+		yVel = ysign*3.0f;
 	}
-		
+
 	this->x += xVel;
 	this->y += yVel;
 }
