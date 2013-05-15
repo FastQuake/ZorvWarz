@@ -54,6 +54,7 @@ sf::Clock frameTime;
 int FPS = 60;
 
 sf::Time dt;
+sf::Clock p2Timer;
 
 vector<string> packetList;
 
@@ -315,6 +316,11 @@ int main(int argc, char *argv[]){
 
 		//If in game state
 		else if(state == 1){
+			//If we lost player2
+			if(!twoPlayers && p2Timer.getElapsedTime().asSeconds() > 20){
+				//GAME OVER BOYRS!
+				window.close(); // John change this line
+			}
 			//Check if player has moved, if they did move send create packet with
 			//new player location and rotation
 			if(player->x != oldx || player->y != oldy ||player->rot != oldrot){
@@ -580,6 +586,10 @@ void clientHandlePacket(string packetData, ENetPeer *peer){
 			loading = true;
 			ready = false;
 			killAll();
+			break;
+		case scP2Dsc:
+			twoPlayers = false;
+			p2Timer.restart();
 			break;
 	}
 }
