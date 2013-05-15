@@ -10,7 +10,8 @@ using namespace std;
 enum{
 	csLogin,
 	csMove,
-	csAttack
+	csAttack,
+	csTookHealth
 };
 
 //Server to client packet types
@@ -21,7 +22,8 @@ enum{
 	scMove,
 	scMap,
 	scDespawn,
-	scChgLvl
+	scChgLvl,
+	scStats
 };
 
 struct Stats{

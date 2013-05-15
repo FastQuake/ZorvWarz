@@ -244,7 +244,7 @@ void PMob::draw(sf::RenderWindow *window, int screenx, int screeny){
 }
 
 
-Bullet::Bullet(float x, float y, float rot){
+Bullet::Bullet(float x, float y, float rot, int playerFired){
 	type = "bullet";
 	drawable = true;
 	collides = true;
@@ -255,6 +255,7 @@ Bullet::Bullet(float x, float y, float rot){
 	this->y = y;
 	this->rot = rot;
 	this->ID += 1000;
+	this->playerFired = playerFired;
 
 	sBullet.setTexture(bTex);	
 	sBullet.setOrigin(9/2,2/2);

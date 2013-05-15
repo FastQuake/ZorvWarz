@@ -1,5 +1,6 @@
 #include "entity.h" 
 #include "server.h"
+#include "main.h"
 #include <sstream>
 #include <cmath>
 
@@ -139,6 +140,7 @@ HealthBox::HealthBox(float x, float y){
 
 void HealthBox::onCollision(Entity *object, sf::FloatRect otherbox){
 	if(object->type == "player"){
+		packetList.push_back("3");
 		std::cout << "REMOVEING BOX" << std::endl;
 		alive = false;
 		collides = false;

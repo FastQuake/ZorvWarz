@@ -319,14 +319,16 @@ void handlePacket(string packetData, ENetPeer *peer){
 		ss.clear();
 		if(peer == p1->peer){
 			serverEntities.entityList.push_back(new Bullet(
-						p1->x+16,p1->y+16,p1->rot));
+						p1->x+16,p1->y+16,p1->rot,1));
+			stats.p1ShotsFired++;
 			ss << p1->ID;
 			packet = createPacket(scAttack,ss.str(),ENET_PACKET_FLAG_RELIABLE);
 			if(p2->connected)
 				enet_peer_send(p2->peer,0,packet);
 		} else {
 			serverEntities.entityList.push_back(new Bullet(
-						p2->x+16,p2->y+16,p2->rot));
+						p2->x+16,p2->y+16,p2->rot,2));
+			stats.p2ShotsFired++;
 			ss << p2->ID;
 			packet = createPacket(scAttack,ss.str(),ENET_PACKET_FLAG_RELIABLE);
 			if(p1->connected)
@@ -334,6 +336,11 @@ void handlePacket(string packetData, ENetPeer *peer){
 		}
 		serverEntities.entityList.back()->ID = idCounter + 1000;
 		break;
+	case csTookHealth:
+		if(peer == p1->peer)
+			stats.p1HealthUsed++;
+		else
+			stats.p2HealthUsed++;
 	default:
 		break;
 

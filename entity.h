@@ -50,8 +50,9 @@ class Bullet : public Entity {
 	public:
 	sf::Vector2f vel;
 	sf::Sprite sBullet;
+	int playerFired;
 
-	Bullet(float x, float y, float rot);
+	Bullet(float x, float y, float rot, int playerFired);
 	void update(int framecount,float dTime);
 	void onCollision(Entity *object, sf::FloatRect otherBox);
 	void draw(sf::RenderWindow *screen,int screenx,int screeny);

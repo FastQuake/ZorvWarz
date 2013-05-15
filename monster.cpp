@@ -36,7 +36,12 @@ void Monster::onCollision(Entity *object, sf::FloatRect otherBox){
 	if(object->type == "bullet" && object->alive){
 		health--;
 		cout << "health down: " << health << endl;
+		Bullet bullet = *(Bullet*)object;
 		object->alive = false;
+		if(bullet.playerFired == 1 && health<=0)
+			stats.p1Kills++;
+		if(bullet.playerFired == 2 && health<=0)
+			stats.p2Kills++;
 		return;
 	} else if(object->type == "monster"){
 		return;
