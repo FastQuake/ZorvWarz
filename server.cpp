@@ -117,7 +117,7 @@ void serverLoop(){
 		}
 
 		//Handle entities
-		if(anyoneOn)
+		if(anyoneOn && (singleplayer || (!singleplayer && twoP)))
 			serverEntities.updateEntities(0,dt.asSeconds());
 		serverEntities.collideEntities();
 

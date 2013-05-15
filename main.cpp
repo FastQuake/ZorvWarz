@@ -313,7 +313,8 @@ int main(int argc, char *argv[]){
 			
 
 			//Update all the entities
-			entities.updateEntities(fps,dt.asSeconds());
+			if(singleplayer || (!singleplayer && twoPlayers))
+				entities.updateEntities(fps,dt.asSeconds());
 			entities.collideEntities();
 
 			p1Light->x = player->x+16;
