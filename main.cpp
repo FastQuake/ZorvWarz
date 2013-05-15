@@ -583,6 +583,24 @@ void extractMap(string data){
 		}
 	}
 	ship->getColBoxes();
+
+	sf::Vector2f pos = ship->getRandomFloorTile();
+	player->x = pos.x*32;
+	player->y = pos.y*32;
+	p1Light->x = player->x;
+	p1Light->y = player->y;
+	player->update(0,0);
+	p1Light->update();
+
+	if(twoPlayers){
+		pos = ship->getRandomFloorTile();
+		player2->x = pos.x*32;
+		player2->y = pos.y*32;
+		p2Light->x = player->x;
+		p2Light->y = player->y;
+		player->update(0,0);
+		p2Light->update();
+	}
 }
 
 vector<sf::FloatRect> whatIntersectsBox(sf::FloatRect hitBox){

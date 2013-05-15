@@ -152,6 +152,16 @@ class AmmoBox : public Entity {
 	void draw(sf::RenderWindow *screen, int screenx, int screeny);
 };
 
+class HealthBox : public Entity{
+	public:
+	sf::Texture hBoxTex;
+	sf::Sprite hBoxSprite;
+
+	HealthBox(float x, float y);
+	void onCollision(Entity *object, sf::FloatRect otherBox);
+	void draw(sf::RenderWindow *screen, int screenx, int screeny);
+};
+
 class Stairs : public Entity {
 	public:
 	int sType;

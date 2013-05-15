@@ -1,6 +1,7 @@
 #include "entity.h" 
 #include "server.h"
 #include <sstream>
+#include <cmath>
 
 AmmoBox::AmmoBox(float x, float y){
 	type = "box";
@@ -69,22 +70,41 @@ void Stairs::onCollision(Entity *object, sf::FloatRect otherBox){
 
 		//give client new XY
 		sf::Vector2f p1Pos = serverShip->getRandomFloorTile();
-		sf::Vector2f p2Pos = serverShip->getRandomFloorTile();
 		p1->x = p1Pos.x*32;
 		p1->y = p1Pos.y*32;
 		p1->update(0,0);
-		p2->x = p2Pos.x*32;
-		p2->y = p2Pos.y*32;
-		p2->update(0,0);
+		while(true){
+			sf::Vector2f p2Pos = serverShip->getRandomFloorTile();
+			sf::Vector2f dif = p2Pos - p1Pos;
+			if(abs(dif.x) > 5 || abs(dif.y) > 5)
+				continue;
+			if(serverShip->map->data[(int)p2Pos.x][(int)p2Pos.y] != FLOOR)
+				continue;
+			p2->x = p2Pos.x*32;
+			p2->y = p2Pos.y*32;
+			p2->update(0,0);	
+			break;
+		}
 		stringstream ss;
 		ss << 0 << " " << p1->x << " " << p1->y << " " << 0;
 		packet= createPacket(scMove,ss.str(),ENET_PACKET_FLAG_RELIABLE);
 		enet_peer_send(p1->peer,0,packet);
+		ss.str("");
+		ss.clear();
+		ss << p1->ID << " " << p1->x << " " << p1->y << " " << 0;
+		packet= createPacket(scMove,ss.str(),ENET_PACKET_FLAG_RELIABLE);
+		if(p2->connected)
+			enet_peer_send(p2->peer,0,packet);
 
 		ss.str("");
 		ss.clear();
 		if(p2->connected){
 			ss << 0 << " " << p2->x << " " << p2->y << " " << 0;
+			packet = createPacket(scMove,ss.str(),ENET_PACKET_FLAG_RELIABLE);
+			enet_peer_send(p1->peer,0,packet);
+			ss.str("");
+			ss.clear();
+			ss << p2->ID << " " << p2->x << " " << p2->y << " " << 0;
 			packet = createPacket(scMove,ss.str(),ENET_PACKET_FLAG_RELIABLE);
 			enet_peer_send(p1->peer,0,packet);
 		}
@@ -99,4 +119,20 @@ void Stairs::onCollision(Entity *object, sf::FloatRect otherBox){
 void Stairs::draw(sf::RenderWindow *screen, int screenx, int screeny){
 	sSprite.setPosition(x-screenx,y-screeny);
 	screen->draw(sSprite);
+}
+
+HealthBox::HealthBox(float x, float y){
+	type = "box";
+	drawable = true;
+	collides = true;
+	readyToUpdate = false;
+	alive = true;
+
+	this->x = x;
+	this->y = y;
+
+	ammoTex.loadFromFile("data/textures/ammo.png");
+	box.setTexture(ammoTex);
+
+	collisionBoxes.push_back(sf::FloatRect(x,y,20,20));
 }
