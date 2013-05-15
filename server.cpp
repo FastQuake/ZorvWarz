@@ -176,6 +176,11 @@ void serverLoop(){
 				cout << event.peer->data << " disconected." << endl;
 				/* Reset the peer's client information. */
 				event.peer -> data = NULL;
+				if(event.peer = p2->peer){
+					ENetPacket *packet = createPacket(scP2Dsc,"",ENET_PACKET_FLAG_RELIABLE);
+					enet_peer_send(p1->peer,0,packet);
+					enet_host_flush(server);
+				}
 			}
 		}
 

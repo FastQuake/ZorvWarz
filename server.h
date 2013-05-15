@@ -23,7 +23,8 @@ enum{
 	scMap,
 	scDespawn,
 	scChgLvl,
-	scStats
+	scStats,
+	scP2Dsc
 };
 
 struct Stats{
