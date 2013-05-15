@@ -31,11 +31,10 @@ void initEndScreen(){
 	player1.setFont(font);
 	player1.setOrigin(player1.getLocalBounds().width/2,player1.getLocalBounds().height/2);
 	player1.setPosition(p1Column+100,200);
-	player1.setString("Player 1");
+	
 	player2.setFont(font);
 	player2.setOrigin(player2.getLocalBounds().width/2,player2.getLocalBounds().height/2);
 	player2.setPosition(p2Column+100,200);
-	player2.setString("Player 2");
 
 	p1Score.setFont(font);
 	p1Score.setPosition(p1Column,200+spacing*1);
@@ -55,12 +54,32 @@ void initEndScreen(){
 	p2ShotsFired.setFont(font);
 	p2ShotsFired.setPosition(p2Column,200+spacing*4);
 
-	totalKills.setFont(font);
-//	totalKills.setOrigin(totalKills.getLocalBounds().width/2,totalKills.getLocalBounds().height/2);
-//	totalKills.setPosition(400,450);
 	totalScore.setFont(font);
-//	totalScore.setOrigin(totalScore.getLocalBounds().width/2,totalKills.getLocalBounds().height/2);
-//	totalScore.setPosition(400,500);
+	totalKills.setFont(font);
+}
+
+void updateEndScreen(Stats endStats){
+	player1.setString("Player 1");
+	player2.setString("Player 2");
+	p1Score.setString("Score: " + endStats.p1Score);
+	p1Kills.setString("Kills: " + endStats.p1Kills);
+	p1HealthUsed.setString("Health packs used: " + endStats.p1HealthUsed);
+	p1ShotsFired.setString("Shots fired: " + endStats.p1ShotsFired);
+
+	player1.setString("Player 1");
+	player2.setString("Player 2");
+	p1Score.setString("Score: " + endStats.p2Score);
+	p1Kills.setString("Kills: " + endStats.p2Kills);
+	p1HealthUsed.setString("Health packs used: " + endStats.p2HealthUsed);
+	p1ShotsFired.setString("Shots fired: " + endStats.p2ShotsFired);
+
+	totalScore.setString("Total score: " + (endStats.p1Score+endStats.p2Score));
+	totalScore.setOrigin(totalScore.getLocalBounds().width/2,totalKills.getLocalBounds().height/2);
+	totalScore.setPosition(400,450);
+
+	totalKills.setString("Total Kills: " + (endStats.p1Kills+endStats.p2Kills));
+	totalKills.setOrigin(totalKills.getLocalBounds().width/2,totalKills.getLocalBounds().height/2);
+	totalKills.setPosition(400,500);
 }
 
 void drawEndScreen(sf::RenderWindow *screen){
