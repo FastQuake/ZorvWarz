@@ -58,6 +58,8 @@ sf::Clock p2Timer;
 
 vector<string> packetList;
 
+Stats clientStats;
+
 bool twoPlayers = false;
 bool singleplayer = false;
 bool ready = false;
@@ -590,6 +592,19 @@ void clientHandlePacket(string packetData, ENetPeer *peer){
 		case scP2Dsc:
 			twoPlayers = false;
 			p2Timer.restart();
+			break;
+		case scStats:
+			ss >> clientStats.p1Score;
+			ss >> clientStats.p1Kills;
+			ss >> clientStats.p1HealthUsed;
+			ss >> clientStats.p1ShotsFired;
+			if(!singleplayer){
+				ss >> clientStats.p2Score;
+				ss >> clientStats.p2Kills;
+				ss >> clientStats.p2HealthUsed;
+				ss >> clientStats.p2ShotsFired;
+			}
+			state = 2;
 			break;
 	}
 }
