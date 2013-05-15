@@ -19,11 +19,11 @@ Monster::Monster(){
 	yVel = 0.0;
 	x = 800/2; //Hardcoded screen size for x,y cause fight the power
 	y = 600/2;
-	speed = 128.0;
+	speed = 152.0;
 	health = 10;
 	targetNodeNum = 0;
 
-	collisionBoxes.push_back(sf::FloatRect(x,y,32,32));
+	collisionBoxes.push_back(sf::FloatRect(x,y,30,30));
 
 	if(singleplayer)
 		targetPlayer = 1;
@@ -51,7 +51,7 @@ void Monster::onCollision(Entity *object, sf::FloatRect otherBox){
 
 void Monster::update(int framecount, float dTime){
 	if(!atEnd){	
-		if(pathTimer.getElapsedTime().asSeconds() == 5)
+		if(pathTimer.getElapsedTime().asSeconds() >= 5)
 			buildPath();
 		stepPath(currentPath[targetNodeNum], dTime);
 	}else{
@@ -64,9 +64,9 @@ void Monster::update(int framecount, float dTime){
 		cout << targetPos.x << " " << targetPos.y << endl;
 		sf::Vector2f thisMiddle = sf::Vector2f(this->collisionBoxes[0].left+this->collisionBoxes[0].width/2,
 			this->collisionBoxes[0].top+this->collisionBoxes[0].height/2);
-		stepTowards(targetPos, dTime);
 		if(!AIManager::isVisible(thisMiddle,targetBox,serverShip->collisionBoxes))
 			buildPath();
+		stepTowards(targetPos, dTime);
 	}
 	stringstream ss;
 	ss << this->ID << " " << this->x << " " << this->y << " 0";
@@ -105,6 +105,7 @@ void Monster::buildPath(){
 
 	Node *firstNode = aim.findVisibleNode(sf::Vector2f(x,y),serverShip->collisionBoxes);
 	Node *destinationNode = aim.findVisibleNode(targetPos,serverShip->collisionBoxes);
+	cout << destinationNode->middle.x << " " << destinationNode->middle.y << endl;
 	currentPath.push_back(firstNode);
 	ignoreList.push_back(firstNode);
 
