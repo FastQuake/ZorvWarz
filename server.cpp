@@ -184,6 +184,7 @@ void serverLoop(){
 					enet_peer_send(p1->peer,0,packet);
 					enet_host_flush(server);
 				}
+				twoP = false;
 			}
 		}
 
@@ -252,6 +253,7 @@ void handlePacket(string packetData, ENetPeer *peer){
 				if(singleplayer)
 					aim.spawnMonsters(&serverEntities.entityList,10);
 				sendSpawnPackets(peer);
+				sendSpawnMonsters(peer);
 				anyoneOn = true;
 				break;
 			case 2:
@@ -289,6 +291,7 @@ void handlePacket(string packetData, ENetPeer *peer){
 					enet_host_flush(server);
 					sendSpawnPackets(peer);
 					aim.spawnMonsters(&serverEntities.entityList,10);
+					sendSpawnMonsters(peer);
 					alreadyConnected = true;
 				} else {
 					cout << "player 2 has already connected, sending old data" << endl;
@@ -313,6 +316,7 @@ void handlePacket(string packetData, ENetPeer *peer){
 					enet_peer_send(p2->peer,0,packet);
 					enet_host_flush(server);
 					sendSpawnPackets(p2->peer);
+					sendSpawnMonsters(p2->peer);
 				}
 				break;
 		}
@@ -378,6 +382,7 @@ void handlePacket(string packetData, ENetPeer *peer){
 			stats.p1HealthUsed++;
 		else
 			stats.p2HealthUsed++;
+		break;
 	case csRequestEnd:
 		sendStats(peer);
 		break;
@@ -431,13 +436,31 @@ void sendSpawnPackets(ENetPeer *peer){
 		ss.clear();
 		thisEntity = serverEntities.entityList[i];
 		//if((p1Orp2(peer) == 1 && thisEntity == p1) || (p1Orp2(peer) == 2 && thisEntity == p2))
-		if(thisEntity == p1 || thisEntity == p2)
+		if(thisEntity == p1 || thisEntity == p2 || thisEntity == serverShip || thisEntity->type == "monster")
 			continue;
 		ss << thisEntity->ID << " " << thisEntity->type << " " << thisEntity->x << " " << thisEntity->y << " " << thisEntity->rot;
 		cout << ss.str() << endl;
 		packet = createPacket(scSpawn,ss.str(),ENET_PACKET_FLAG_RELIABLE);
 		enet_peer_send(peer,0,packet);
 		enet_host_flush(server);
+	}
+}
+
+void sendSpawnMonsters(ENetPeer *peer){
+	Entity *thisEntity;
+	ENetPacket *packet;
+	stringstream ss;
+	for(int i=0;i<serverEntities.entityList.size();i++){
+		ss.str("");
+		ss.clear();
+		thisEntity = serverEntities.entityList[i];
+		if(thisEntity->type == "monster" ){
+			ss << thisEntity->ID << " " << thisEntity->type << " " << thisEntity->x << " " << thisEntity->y << " " << thisEntity->rot;
+			cout << ss.str() << endl;
+			packet = createPacket(scSpawn,ss.str(),ENET_PACKET_FLAG_RELIABLE);
+			enet_peer_send(peer,0,packet);
+			enet_host_flush(server);
+		}
 	}
 }
 
