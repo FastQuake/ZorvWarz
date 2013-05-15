@@ -101,8 +101,17 @@ int charToInt(char num){
 	return intnum;
 }
 
+void killAll(){
+	for(int i=0;i<entities.entityList.size();i++){
+		Entity *thisEntity = entities.entityList[i];
+		if(thisEntity->type == "player" || thisEntity->type == "map")
+			continue;
+		entities.removeByID(thisEntity->ID);
+	}
+}
+
 void addEntities(){
-	ship = new ShipEntity(tilesFile);
+	ship = new ShipEntity(tilesFile, false);
 	player = new Player(playerFile);
 
 	entities.entityList.push_back(ship);
@@ -439,6 +448,7 @@ void runClient(string selection){
 void clientHandlePacket(string packetData){
 	stringstream ss;
 	string type;
+	string mapData;
 	int packetType;
 	int id;
 
@@ -468,8 +478,10 @@ void clientHandlePacket(string packetData){
 				lm.lightList.push_back(p2Light);
 			}else if(type == "box"){
 				entities.entityList.push_back(new AmmoBox(x,y));
+				entities.entityList.back()->ID = id;
 			}else if (type == "stairs"){
 				entities.entityList.push_back(new Stairs(x,y,1));
+				entities.entityList.back()->ID = id;
 			}else{
 				Mob *monster = new Mob(alienFile,id);
 				monster->x = x;
@@ -498,6 +510,7 @@ void clientHandlePacket(string packetData){
 			bulletSound.play();
 			entities.entityList.push_back(new Bullet(
 						player2->x+16,player2->y+16,player2->rot));
+			entities.entityList.back()->ID = idCounter + 1000;
 			break;
 		case scMove:
 			//Get player x y rot
@@ -534,10 +547,15 @@ void clientHandlePacket(string packetData){
 			break;
 		case scMap:
 			//Get map data and apply it to game map
-			string mapData;
 			ss >> mapData;
 			extractMap(mapData);
 			ready = true;
+			break;
+		case scChgLvl:
+			state = 0;
+			loading = true;
+			ready = false;
+			killAll();
 			break;
 	}
 }

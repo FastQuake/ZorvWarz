@@ -30,6 +30,7 @@ extern bool serverReady;
 extern bool twoPlayers;
 extern bool connecting;
 extern bool singleplayer;
+extern bool loading;
 extern sf::Mutex packetMutex;
 
 extern std::string IPad;

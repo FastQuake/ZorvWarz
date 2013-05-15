@@ -3,6 +3,9 @@
 #include "ai.h"
 #include <sstream>
 #include <stdio.h>
+#ifdef linux
+#include <X11/Xlib.h>
+#endif
 
 using namespace std;
 
@@ -25,7 +28,9 @@ bool anyoneOn = false;
 void sendSpawnPackets(ENetPeer *peer);
 
 void initServer(){
-	serverShip = new ShipEntity(tilesFile);
+	//serverShip = new ShipEntity(tilesFile);
+	serverShip = NULL;
+	loadLevel(false);
 	//serverShip->map->drawRoom();
 	//aim.init(serverShip);
 	ENetAddress address;
@@ -49,6 +54,46 @@ void initServer(){
 	serverEntities.entityList.push_back(p1);
 	serverEntities.entityList.push_back(p2);
 
+	/*//create 5 ammo boxes
+	for(int i=0;i<5;i++){
+		sf::Vector2f pos = serverShip->getRandomFloorTile();
+		serverEntities.entityList.push_back(new AmmoBox(pos.x*32+6
+					,pos.y*32+12));
+	}
+	//create one staircase
+	sf::Vector2f pos = serverShip->getRandomFloorTile();
+	serverEntities.entityList.push_back(new Stairs(pos.x*32,pos.y*32,0));*/
+
+	p1->type = "player";
+	p2->type = "player";
+}
+
+void despawnLevel(){
+	stringstream ss;
+	for(int i=0;i<serverEntities.entityList.size();i++){
+		Entity *thisEntity = serverEntities.entityList[i];
+		if(thisEntity->type == "map" || thisEntity->type == "player"){
+			continue;
+		}
+		ss.str("");
+		ss.clear();
+		ss << thisEntity->ID;
+		cout << "KILLING: " << ss.str() << " " << thisEntity->type << endl;
+		//ENetPacket *packet = createPacket(scDespawn,ss.str(),ENET_PACKET_FLAG_RELIABLE);
+		//enet_peer_send(p1->peer,0,packet);
+		//if(p2->connected)
+		//	enet_peer_send(p2->peer,0,packet);
+		//enet_host_flush(server);
+		serverEntities.removeByID(thisEntity->ID);
+	}
+}
+
+void loadLevel(bool ai){
+	if(serverShip != NULL){
+		cout << "KILLING SHIP" << endl;
+		delete serverShip;
+	}
+	serverShip = new ShipEntity(tilesFile, false);
 	//create 5 ammo boxes
 	for(int i=0;i<5;i++){
 		sf::Vector2f pos = serverShip->getRandomFloorTile();
@@ -57,13 +102,13 @@ void initServer(){
 	}
 	//create one staircase
 	sf::Vector2f pos = serverShip->getRandomFloorTile();
-	serverEntities.entityList.push_back(new Stairs(pos.x*32,pos.y*32,0));
-
-	p1->type = "player";
-	p2->type = "player";
+	serverEntities.entityList.push_back(new Stairs(pos.x*32,pos.y*32,0));	
+	if(ai)
+		aim.init(serverShip);
 }
 
 void serverLoop(){
+	initServer();
 	readyMutex.lock();
 	serverReady = false;
 	readyMutex.unlock();
@@ -277,6 +322,7 @@ void handlePacket(string packetData, ENetPeer *peer){
 			if(p1->connected)
 				enet_peer_send(p1->peer,0,packet);
 		}
+		serverEntities.entityList.back()->ID = idCounter + 1000;
 		break;
 	default:
 		break;

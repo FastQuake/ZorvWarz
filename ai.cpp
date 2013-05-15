@@ -66,6 +66,8 @@ void AIManager::init(ShipEntity *ship){ //This actually initializes the AI Manag
 	sf::Thread *thread3;
 	sf::Thread *thread4;
 
+	nodeList.clear();
+
 	int **level = ship->map->data;
 	//Get all the nodes, put them in a vector
 	for(int y=0;y<dunYSize;y++){

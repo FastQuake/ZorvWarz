@@ -96,6 +96,7 @@ void EntityManager::removeByID(int ID){
 Entity* EntityManager::getByID(int ID){
 	for(int i=0;i<entityList.size();i++){
 		if(entityList[i]->ID == ID){
+			std::cout << "GOT " << entityList[i]->type << std::endl;
 			return entityList[i];
 		}
 	}

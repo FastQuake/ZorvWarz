@@ -94,7 +94,7 @@ void updateMenu(){
 					serverReady = false;
 					mouseRight = false;
 					IPad = "localhost";
-					initServer();
+					//initServer();
 					serverThread->launch();
 					clientThread->launch();
 					sf::sleep(sf::milliseconds(500));
@@ -107,7 +107,7 @@ void updateMenu(){
 					serverReady = false;
 					mouseRight = false;
 					IPad = "localhost";
-					initServer();
+					//initServer();
 					serverThread->launch();
 					clientThread->launch();
 					sf::sleep(sf::milliseconds(500));

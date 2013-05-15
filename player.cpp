@@ -81,6 +81,7 @@ void Player::update(int framecount, float dTime){
 		if(bullets > 0){
 			bulletSound.play();
 			entities.entityList.push_back(new Bullet(x+16,y+16,rot));
+			entities.entityList.back()->ID = idCounter + 1000;
 			bullets--;
 			packetMutex.lock();
 			packetList.push_back("2");
@@ -100,6 +101,8 @@ void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 	if(object->type == "bullet"){
 		return;
 	}else if(object->type == "player"){
+		return;
+	}else if(object->type == "stairs"){
 		return;
 	}else if(object->type == "monster"){
 		if(dTimer.getElapsedTime().asMilliseconds() > 1000){

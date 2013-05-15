@@ -129,7 +129,7 @@ class ShipEntity : public Entity{
 	public:
 	Ship *map;
 	
-	ShipEntity(std::string tilesFile);
+	ShipEntity(std::string tilesFile, bool serv);
 	~ShipEntity();
 
 	void onCollision(Entity *object, sf::FloatRect otherBox){};

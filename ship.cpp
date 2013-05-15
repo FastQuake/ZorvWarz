@@ -6,9 +6,10 @@
 
 using namespace std;
 
-Ship::Ship(string tileFile){
+Ship::Ship(string tileFile, bool serv){
 	//Load texture data
-	tiles.loadFromFile(tileFile);
+	if(!serv)
+		tiles.loadFromFile(tileFile);
 	//Make data array
 	data = new int*[dunXSize];
 	for(int i=0;i<dunXSize;i++){
@@ -270,7 +271,7 @@ bool Room::intersects(Room otherRoom){
 	return true;
 }
 
-ShipEntity::ShipEntity(string tilesFile){
+ShipEntity::ShipEntity(string tilesFile, bool serv){
 	type = "map";
 	drawable = true;
 	collides = true;
@@ -280,7 +281,7 @@ ShipEntity::ShipEntity(string tilesFile){
 	x = 0;
 	y = 0;
 
-	map = new Ship(tilesFile);
+	map = new Ship(tilesFile,serv);
 
 	getColBoxes();
 }

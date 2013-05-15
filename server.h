@@ -20,7 +20,8 @@ enum{
 	scAttack,
 	scMove,
 	scMap,
-	scDespawn
+	scDespawn,
+	scChgLvl
 };
 
 extern ShipEntity *serverShip;
@@ -29,6 +30,8 @@ void serverLoop();
 void initServer();
 std::string getMapData(bool newlines);
 void handlePacket(string packetData, ENetPeer *peer);
+void loadLevel(bool ai);
+void despawnLevel();
 int p1Orp2(ENetPeer *peer);
 ENetPacket *createPacket(int packetType, string packetData, int packetFlag);
 

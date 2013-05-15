@@ -46,7 +46,7 @@ class Ship{
 	sf::Texture tiles;
 	public:
 	int **data;
-	Ship(std::string tileFile);
+	Ship(std::string tileFile, bool serv);
 	~Ship();
 	void drawRoom();
 	void drawMap(sf::RenderWindow *window,int screenx, int screeny);
