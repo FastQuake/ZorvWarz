@@ -60,7 +60,7 @@ void initServer(){
 	p2 = new Mob(2);
 
 	//Attach the entites to the server's entity manager
-	serverEntities.entityList.push_back(serverShip);
+	//serverEntities.entityList.push_back(serverShip);
 	serverEntities.entityList.push_back(p1);
 	serverEntities.entityList.push_back(p2);
 
@@ -97,9 +97,11 @@ void despawnLevel(){
 void loadLevel(bool ai){
 	if(serverShip != NULL){
 		cout << "KILLING SHIP" << endl;
-		delete serverShip;
+		//delete serverShip;
+		serverEntities.removeByRef(serverShip);
 	}
 	serverShip = new ShipEntity(tilesFile, false);
+	serverEntities.entityList.push_back(serverShip);
 	//create 5 ammo boxes
 	for(int i=0;i<5;i++){
 		sf::Vector2f pos = serverShip->getRandomFloorTile();
