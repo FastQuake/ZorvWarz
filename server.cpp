@@ -25,6 +25,7 @@ Mob *p2;
 bool isp1 = true;
 bool twoP = false;
 bool anyoneOn = false;
+bool alreadyConnected = false;
 
 void initServer(){
 	srand(seed);
@@ -258,33 +259,59 @@ void handlePacket(string packetData, ENetPeer *peer){
 				enet_peer_send(peer,0,packet);
 				ss.str("");
 				ss.clear();
-				//Give client a random position on map that is a floor tile
-				ss << 0 << " " << vec.x*32 << " " << vec.y*32 << " 0";
+				if(alreadyConnected == false){
+					//Give client a random position on map that is a floor tile
+					ss << 0 << " " << vec.x*32 << " " << vec.y*32 << " 0";
 
-				packet = createPacket(scMove,ss.str(),ENET_PACKET_FLAG_RELIABLE);
-				enet_peer_send(peer,0,packet);
-				//Set player's position and other info in server data
-				p2->x = vec.x*32;
-				p2->y = vec.y*32;
-				p2->peer = peer;
-				p2->connected = true;
-				if(p1->connected){
+					packet = createPacket(scMove,ss.str(),ENET_PACKET_FLAG_RELIABLE);
+					enet_peer_send(peer,0,packet);
+
+					//Set player's position and other info in server data
+					p2->x = vec.x*32;
+					p2->y = vec.y*32;
+					p2->peer = peer;
+					p2->connected = true;
+					if(p1->connected){
+						ss.str("");
+						ss.clear();
+						ss << p2->ID << " " << p2->type << " " << p2->x << " " << p2->y << " " << p2->rot;
+						packet = createPacket(scSpawn,ss.str(),ENET_PACKET_FLAG_RELIABLE);
+						enet_peer_send(p1->peer,0,packet);
+						enet_host_flush(server);
+					}
 					ss.str("");
 					ss.clear();
-					ss << p2->ID << " " << p2->type << " " << p2->x << " " << p2->y << " " << p2->rot;
+					ss << p1->ID << " " << p1->type << " " << p1->x << " " << p1->y << " " << p1->rot;
 					packet = createPacket(scSpawn,ss.str(),ENET_PACKET_FLAG_RELIABLE);
-					enet_peer_send(p1->peer,0,packet);
+					enet_peer_send(p2->peer,0,packet);
 					enet_host_flush(server);
+					sendSpawnPackets(peer);
+					aim.spawnMonsters(&serverEntities.entityList,10);
+					alreadyConnected = true;
+				} else {
+					cout << "player 2 has already connected, sending old data" << endl;
+					if(p1->connected){
+						ss.str("");
+						ss.clear();
+						ss << p2->ID << " " << p2->type << " " << p2->x << " " << p2->y << " " << p2->rot;
+						packet = createPacket(scSpawn,ss.str(),ENET_PACKET_FLAG_RELIABLE);
+						enet_peer_send(p1->peer,0,packet);
+						enet_host_flush(server);
+					}
+					ss.str("");
+					ss.clear();
+					ss << 0 << " " << p2->x << " " << p2->y << " " << p2->rot;
+					packet = createPacket(scMove,ss.str(),ENET_PACKET_FLAG_RELIABLE);
+					enet_peer_send(peer,0,packet);
+					enet_host_flush(server);
+					ss.str("");
+					ss.clear();
+					ss << p1->ID << " " << p1->type << " " << p1->x << " " << p1->y << " " << p1->rot;
+					packet = createPacket(scSpawn,ss.str(),ENET_PACKET_FLAG_RELIABLE);
+					enet_peer_send(p2->peer,0,packet);
+					enet_host_flush(server);
+					sendSpawnPackets(p2->peer);
 				}
-				ss.str("");
-				ss.clear();
-				ss << p1->ID << " " << p1->type << " " << p1->x << " " << p1->y << " " << p1->rot;
-				packet = createPacket(scSpawn,ss.str(),ENET_PACKET_FLAG_RELIABLE);
-				enet_peer_send(p2->peer,0,packet);
-				enet_host_flush(server);
-				aim.spawnMonsters(&serverEntities.entityList,10);
-				sendSpawnPackets(peer);
-				sendSpawnPackets(p1->peer);
 				break;
 		}
 		break;
