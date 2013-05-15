@@ -319,7 +319,6 @@ int main(int argc, char *argv[]){
 
 		//If in game state
 		else if(state == 1){
-			state = 2;
 			//If we lost player2
 			if(!twoPlayers && !singleplayer){
 				if(p2Timer.getElapsedTime().asSeconds() > 20){
