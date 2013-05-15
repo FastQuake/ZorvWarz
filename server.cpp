@@ -26,6 +26,8 @@ bool isp1 = true;
 bool twoP = false;
 bool anyoneOn = false;
 
+void sendStats(ENetPeer *peer);
+
 void initServer(){
 	srand(seed);
 	stats.p1Score = 0;
@@ -349,6 +351,9 @@ void handlePacket(string packetData, ENetPeer *peer){
 			stats.p1HealthUsed++;
 		else
 			stats.p2HealthUsed++;
+	case csRequestEnd:
+		sendStats(peer);
+		break;
 	default:
 		break;
 
@@ -407,4 +412,14 @@ void sendSpawnPackets(ENetPeer *peer){
 		enet_peer_send(peer,0,packet);
 		enet_host_flush(server);
 	}
+}
+
+void sendStats(ENetPeer *peer){
+	stringstream ss;
+
+	ss << stats.p1Score << " " << stats.p1Kills << " " <<stats.p1HealthUsed << " " << stats.p1ShotsFired;
+	if(!singleplayer)
+		ss << " " << stats.p2Score << " " << stats.p2Kills << " " << stats.p2HealthUsed << " " << stats.p2ShotsFired;
+	ENetPacket *statsPacket = createPacket(scStats,ss.str(),ENET_PACKET_FLAG_RELIABLE);
+	enet_peer_send(peer,0,statsPacket);
 }
