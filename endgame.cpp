@@ -21,26 +21,46 @@ sf::Text totalKills;
 sf::Text totalScore;
 
 void initEndScreen(){
+	const int p1Column = 100;
+	const int p2Column = 400;
+	const int spacing = 100;
+
 	ebgSprite.setTexture(bgTexture);
 	ebButSprite.setTexture(bButTex);
 
 	player1.setFont(font);
+	player1.setOrigin(player1.getLocalBounds().width/2,player1.getLocalBounds().height/2);
+	player1.setPosition(p1Column+100,200);
 	player1.setString("Player 1");
 	player2.setFont(font);
+	player2.setOrigin(player2.getLocalBounds().width/2,player2.getLocalBounds().height/2);
+	player2.setPosition(p2Column+100,200);
 	player2.setString("Player 2");
 
 	p1Score.setFont(font);
+	p1Score.setPosition(p1Column,200+spacing*1);
 	p1Kills.setFont(font);
+	p1Kills.setPosition(p1Column,200+spacing*2);
 	p1HealthUsed.setFont(font);
+	p1HealthUsed.setPosition(p1Column,200+spacing*3);
 	p1ShotsFired.setFont(font);
+	p1ShotsFired.setPosition(p1Column,200+spacing*4);
 
 	p2Score.setFont(font);
+	p2Score.setPosition(p2Column,200+spacing*1);
 	p2Kills.setFont(font);
+	p2Kills.setPosition(p2Column,200+spacing*2);
 	p2HealthUsed.setFont(font);
+	p2HealthUsed.setPosition(p2Column,200+spacing*3);
 	p2ShotsFired.setFont(font);
+	p2ShotsFired.setPosition(p2Column,200+spacing*4);
 
 	totalKills.setFont(font);
-	totalKills.setFont(font);
+//	totalKills.setOrigin(totalKills.getLocalBounds().width/2,totalKills.getLocalBounds().height/2);
+//	totalKills.setPosition(400,450);
+	totalScore.setFont(font);
+//	totalScore.setOrigin(totalScore.getLocalBounds().width/2,totalKills.getLocalBounds().height/2);
+//	totalScore.setPosition(400,500);
 }
 
 void drawEndScreen(sf::RenderWindow *screen){
