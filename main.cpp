@@ -468,6 +468,8 @@ void clientHandlePacket(string packetData){
 				lm.lightList.push_back(p2Light);
 			}else if(type == "box"){
 				entities.entityList.push_back(new AmmoBox(x,y));
+			}else if (type == "stairs"){
+				entities.entityList.push_back(new Stairs(x,y,1));
 			}else{
 				Mob *monster = new Mob(alienFile,id);
 				monster->x = x;
