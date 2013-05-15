@@ -19,7 +19,7 @@ Monster::Monster(){
 	yVel = 0.0;
 	x = 800/2; //Hardcoded screen size for x,y cause fight the power
 	y = 600/2;
-	speed = 152.0;
+	speed = 128.0;
 	health = 10;
 	targetNodeNum = 0;
 

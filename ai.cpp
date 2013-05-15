@@ -193,8 +193,9 @@ void AIManager::drawNet(sf::RenderWindow *screen, int screenx, int screeny){
 Node *AIManager::findVisibleNode(sf::Vector2f relPoint, vector<sf::FloatRect> targetColBoxes){	
 	Node *closestVisible;
 	bool foundOne = false;
-	for(int i=0,min=9999;i<aim.nodeList.size();i++){
+	for(int i=0,j=0,min=9999;i<aim.nodeList.size();i++){
 		if(isVisible(relPoint,aim.nodeList[i].nodeBox,targetColBoxes)){
+			j++;
 			float xdiff = abs(relPoint.x-aim.nodeList[i].middle.x);
 			float ydiff = abs(relPoint.y-aim.nodeList[i].middle.y);
 			float distance = sqrt(pow(xdiff,2.0f)+pow(ydiff,2.0f));
@@ -204,7 +205,7 @@ Node *AIManager::findVisibleNode(sf::Vector2f relPoint, vector<sf::FloatRect> ta
 				closestVisible = &aim.nodeList[i];
 				foundOne = true;
 			}
-			if(i>5)
+			if(j>5)
 				break;
 		}
 	}
