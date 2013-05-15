@@ -94,6 +94,12 @@ void loadLevel(bool ai){
 		serverEntities.entityList.push_back(new AmmoBox(pos.x*32+6
 					,pos.y*32+12));
 	}
+	//create two health packs
+	for(int i=0;i<2;i++){
+		sf::Vector2f pos = serverShip->getRandomFloorTile();
+		serverEntities.entityList.push_back(new HealthBox(pos.x*32+6
+					,pos.y*32+12));
+	}
 	//create one staircase
 	sf::Vector2f pos = serverShip->getRandomFloorTile();
 	serverEntities.entityList.push_back(new Stairs(pos.x*32,pos.y*32,0));	

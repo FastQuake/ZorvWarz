@@ -122,7 +122,7 @@ void Stairs::draw(sf::RenderWindow *screen, int screenx, int screeny){
 }
 
 HealthBox::HealthBox(float x, float y){
-	type = "box";
+	type = "hbox";
 	drawable = true;
 	collides = true;
 	readyToUpdate = false;
@@ -131,8 +131,23 @@ HealthBox::HealthBox(float x, float y){
 	this->x = x;
 	this->y = y;
 
-	ammoTex.loadFromFile("data/textures/ammo.png");
-	box.setTexture(ammoTex);
+	hBoxTex.loadFromFile("data/textures/health.png");
+	hBoxSprite.setTexture(hBoxTex);
 
 	collisionBoxes.push_back(sf::FloatRect(x,y,20,20));
 }
+
+void HealthBox::onCollision(Entity *object, sf::FloatRect otherbox){
+	if(object->type == "player"){
+		std::cout << "REMOVEING BOX" << std::endl;
+		alive = false;
+		collides = false;
+	}
+}
+
+void HealthBox::draw(sf::RenderWindow *screen, int screenx, int screeny){
+	hBoxSprite.setPosition(x-screenx,y-screeny);
+	screen->draw(hBoxSprite);
+}
+
+

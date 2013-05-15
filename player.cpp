@@ -115,6 +115,11 @@ void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 		bullets += 30;
 		object->alive = false;
 		object->collides = false;
+	}else if(object->type == "hbox"){
+		pickupSound.play();
+		health = 10;
+		object->alive = false;
+		object->collides = false;
 	}else {
 		collideWall(otherBox);
 	}

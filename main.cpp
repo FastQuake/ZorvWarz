@@ -483,6 +483,9 @@ void clientHandlePacket(string packetData, ENetPeer *peer){
 			}else if(type == "box"){
 				entities.entityList.push_back(new AmmoBox(x,y));
 				entities.entityList.back()->ID = id;
+			}else if(type == "hbox"){
+				entities.entityList.push_back(new HealthBox(x,y));
+				entities.entityList.back()->ID = id;
 			}else if (type == "stairs"){
 				entities.entityList.push_back(new Stairs(x,y,1));
 				entities.entityList.back()->ID = id;
