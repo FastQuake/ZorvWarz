@@ -2,6 +2,7 @@
 #include <sstream>
 #include <stdlib.h>
 #include <time.h>
+#include <enet/enet.h>
 #include "ship.h"
 #include "main.h"
 #include "lighting.h"
@@ -67,7 +68,7 @@ bool mouseRight = false;
 
 int state = 0; //0 = main menu 1=game
 
-void clientHandlePacket(string packetData);
+void clientHandlePacket(string packetDatak, ENetPeer *peer);
 void extractMap(string data);
 
 sf::Texture blackBgTex;
@@ -106,7 +107,9 @@ void killAll(){
 		Entity *thisEntity = entities.entityList[i];
 		if(thisEntity->type == "player" || thisEntity->type == "map")
 			continue;
-		entities.removeByID(thisEntity->ID);
+		//entities.removeByID(thisEntity->ID);
+		entities.removeByRef(thisEntity);
+		i = 0;
 	}
 }
 
@@ -436,7 +439,7 @@ void runClient(string selection){
 			switch(event.type){
 				case ENET_EVENT_TYPE_RECEIVE:
 					ss << event.packet->data;
-					clientHandlePacket(ss.str());
+					clientHandlePacket(ss.str(),peer);
 					ss.str("");
 					ss.clear();
 					break;
@@ -446,7 +449,7 @@ void runClient(string selection){
 }
 
 /** Function to handle all client packet types **/
-void clientHandlePacket(string packetData){
+void clientHandlePacket(string packetData, ENetPeer *peer){
 	stringstream ss;
 	string type;
 	string mapData;
@@ -550,11 +553,14 @@ void clientHandlePacket(string packetData){
 			break;
 		case scMap:
 			//Get map data and apply it to game map
+			enet_peer_timeout(peer,ENET_PEER_TIMEOUT_LIMIT,
+					ENET_PEER_TIMEOUT_MINIMUM,ENET_PEER_TIMEOUT_MAXIMUM);
 			ss >> mapData;
 			extractMap(mapData);
 			ready = true;
 			break;
 		case scChgLvl:
+			enet_peer_timeout(peer,100000,100000,100000);
 			state = 0;
 			loading = true;
 			ready = false;

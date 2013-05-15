@@ -7,6 +7,7 @@
 #include "ship.h"
 
 extern int idCounter;
+extern bool ready;
 
 class Node;
 
@@ -41,6 +42,7 @@ class EntityManager{
 	void collideEntities();
 	void drawEntities(sf::RenderWindow *screen,int screenx,int screeny);
 	void removeByID(int ID);
+	void removeByRef(Entity *ent);
 	Entity* getByID(int ID);
 };
 

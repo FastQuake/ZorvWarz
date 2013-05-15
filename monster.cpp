@@ -155,10 +155,10 @@ void Monster::stepPath(Node* currentNode,float dTime){
 	stepTowards(currentNode->middle, dTime);
 
 	if(currentPath[currentPath.size()-1]->nodeBox.intersects(this->collisionBoxes[0])){
-		/*cout << "path ended" << this->ID << endl;
+		cout << "path ended" << this->ID << endl;
 		cout << "node position" << this->ID << " " << currentPath[currentPath.size()-1]->middle.x << " " << currentPath[currentPath.size()-1]->middle.y << endl;
 		cout << "node position WITH THINGY" << this->ID << " " << currentPath[currentPath.size()-1]->nodeBox.left << " " << currentPath[currentPath.size()-1]->nodeBox.top << endl;
-		cout << "mah crazy ass is at" << this->ID << " " << this->x+16 << " " << this->y+16 << endl;*/
+		cout << "mah crazy ass is at" << this->ID << " " << this->x+16 << " " << this->y+16 << endl;
 		atEnd = true;
 		return;
 	}

@@ -60,6 +60,9 @@ void EntityManager::collideEntities(){
 									entityList[j]->collisionBoxes[l])){
 							//std::cout << "COLLISON on " << entityList[i]->type  << 
 							//	" WITH " << entityList[j]->type << std::endl;
+							if(!ready){
+								return;
+							}
 							entityList[i]->onCollision(entityList[j],entityList[j]->collisionBoxes[l]);
 							entityList[j]->onCollision(entityList[i],entityList[i]->collisionBoxes[k]);
 						}
@@ -87,6 +90,16 @@ void EntityManager::drawEntities(sf::RenderWindow *screen,int screenx,int screen
 void EntityManager::removeByID(int ID){
 	for(int i=0;i<entityList.size();i++){
 		if(entityList[i]->ID == ID){
+			delete entityList[i];
+			entityList.erase(entityList.begin() + i);
+			break;
+		}
+	}
+}
+
+void EntityManager::removeByRef(Entity *ent){
+	for(int i=0;i<entityList.size();i++){
+		if(entityList[i] == ent){
 			delete entityList[i];
 			entityList.erase(entityList.begin() + i);
 			break;

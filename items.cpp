@@ -50,6 +50,7 @@ Stairs::Stairs(float x,float y, int type){
 
 void Stairs::onCollision(Entity *object, sf::FloatRect otherBox){
 	if(sType == 0 && object->type == "player"){
+		alive = false;
 		//DO SHIT TO LOAD NEXT LEVEL
 		despawnLevel();
 		//Tell client to prep for change level
@@ -71,8 +72,10 @@ void Stairs::onCollision(Entity *object, sf::FloatRect otherBox){
 		sf::Vector2f p2Pos = serverShip->getRandomFloorTile();
 		p1->x = p1Pos.x*32;
 		p1->y = p1Pos.y*32;
+		p1->update(0,0);
 		p2->x = p2Pos.x*32;
 		p2->y = p2Pos.y*32;
+		p2->update(0,0);
 		stringstream ss;
 		ss << 0 << " " << p1->x << " " << p1->y << " " << 0;
 		packet= createPacket(scMove,ss.str(),ENET_PACKET_FLAG_RELIABLE);
@@ -86,6 +89,10 @@ void Stairs::onCollision(Entity *object, sf::FloatRect otherBox){
 			enet_peer_send(p1->peer,0,packet);
 		}
 		enet_host_flush(server);
+		sendSpawnPackets(p1->peer);	
+		if(p2->connected){
+			sendSpawnPackets(p2->peer);
+		}
 	}
 }
 

@@ -25,8 +25,6 @@ bool isp1 = true;
 bool twoP = false;
 bool anyoneOn = false;
 
-void sendSpawnPackets(ENetPeer *peer);
-
 void initServer(){
 	//serverShip = new ShipEntity(tilesFile);
 	serverShip = NULL;
@@ -79,12 +77,8 @@ void despawnLevel(){
 		ss.clear();
 		ss << thisEntity->ID;
 		cout << "KILLING: " << ss.str() << " " << thisEntity->type << endl;
-		//ENetPacket *packet = createPacket(scDespawn,ss.str(),ENET_PACKET_FLAG_RELIABLE);
-		//enet_peer_send(p1->peer,0,packet);
-		//if(p2->connected)
-		//	enet_peer_send(p2->peer,0,packet);
-		//enet_host_flush(server);
-		serverEntities.removeByID(thisEntity->ID);
+		serverEntities.removeByRef(thisEntity);
+		i = 0;
 	}
 }
 
@@ -125,7 +119,7 @@ void serverLoop(){
 	sf::Time dt;
 	while(!doShutdown){
 		if(fpsTi.getElapsedTime().asSeconds() > 1){
-			//cout << "fps: " << fps << endl;
+			cout << "fps: " << fps << endl;
 			fps=0;
 			fpsTi.restart();
 		} else {

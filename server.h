@@ -33,6 +33,7 @@ void handlePacket(string packetData, ENetPeer *peer);
 void loadLevel(bool ai);
 void despawnLevel();
 int p1Orp2(ENetPeer *peer);
+void sendSpawnPackets(ENetPeer *peer);
 ENetPacket *createPacket(int packetType, string packetData, int packetFlag);
 
 extern Mob *p1;

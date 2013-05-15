@@ -2,7 +2,7 @@
 #include "lighting.h"
 #include "main.h"
 #include "server.h"
-#include <math.h>
+#include <cmath>
 #include <sstream>
 
 Node::Node(sf::FloatRect nodeBox){
