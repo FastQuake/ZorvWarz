@@ -11,6 +11,7 @@ void initMenu();
 void updateMenu();
 void drawMenu(sf::RenderWindow *screen);
 
+extern sf::Texture bgTexture;
 
 #endif
 
