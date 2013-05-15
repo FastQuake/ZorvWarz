@@ -172,7 +172,6 @@ void setup(){
 	bgBuffer.loadFromFile("data/audio/bg.wav");
 	bgSound.setBuffer(bgBuffer);
 	bgSound.setLoop(true);
-	bgSound.play();
 
 	initMenu();
 }
@@ -571,6 +570,7 @@ void clientHandlePacket(string packetData, ENetPeer *peer){
 			ss >> mapData;
 			extractMap(mapData);
 			ready = true;
+			bgSound.play();
 			break;
 		case scChgLvl:
 			enet_peer_timeout(peer,100000,100000,100000);
