@@ -314,7 +314,7 @@ int main(int argc, char *argv[]){
 		}
 
 		//If in game state
-		if(state == 1){
+		else if(state == 1){
 			//Check if player has moved, if they did move send create packet with
 			//new player location and rotation
 			if(player->x != oldx || player->y != oldy ||player->rot != oldrot){
@@ -377,6 +377,8 @@ int main(int argc, char *argv[]){
 
 			window.draw(fpsText);
 			window.display();
+		}else if(state == 2){
+
 		}
 
 		dt = dtClock.restart();

@@ -2,6 +2,7 @@
 #define ENDGAME_H
 
 #include <SFML\Graphics.hpp>
+#include "server.h"
 
 void initEndScreen();
 void updateEndScreen(Stats endStats);
