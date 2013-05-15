@@ -321,8 +321,8 @@ int main(int argc, char *argv[]){
 		else if(state == 1){
 			//If we lost player2
 			if(!twoPlayers && !singleplayer && p2Timer.getElapsedTime().asSeconds() > 20){
-				//GAME OVER BOYRS!
-				window.close(); // John change this line
+				ENetPacket *endRequestPacket = createPacket(csRequestEnd,"",ENET_PACKET_FLAG_RELIABLE);
+				packetList.push_back(intToStr(csRequestEnd));
 			}
 			//Check if player has moved, if they did move send create packet with
 			//new player location and rotation

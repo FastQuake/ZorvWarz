@@ -140,7 +140,7 @@ HealthBox::HealthBox(float x, float y){
 
 void HealthBox::onCollision(Entity *object, sf::FloatRect otherbox){
 	if(object->type == "player"){
-		packetList.push_back("3");
+		packetList.push_back(intToStr(csTookHealth));
 		std::cout << "REMOVEING BOX" << std::endl;
 		alive = false;
 		collides = false;

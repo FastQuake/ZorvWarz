@@ -11,7 +11,8 @@ enum{
 	csLogin,
 	csMove,
 	csAttack,
-	csTookHealth
+	csTookHealth,
+	csRequestEnd
 };
 
 //Server to client packet types
