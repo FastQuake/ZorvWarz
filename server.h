@@ -24,6 +24,18 @@ enum{
 	scChgLvl
 };
 
+struct Stats{
+	int p1Score;
+	int p1Kills;
+	int p1HealthUsed;
+	int p1ShotsFired;
+
+	int p2Score;
+	int p2Kills;
+	int p2HealthUsed;
+	int p2ShotsFired;
+};
+
 extern ShipEntity *serverShip;
 
 void serverLoop();
@@ -40,5 +52,6 @@ extern Mob *p1;
 extern Mob *p2;
 extern ENetHost *server;
 extern sf::Mutex pathMutex;
+extern Stats stats;
 
 #endif

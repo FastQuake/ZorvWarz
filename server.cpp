@@ -9,6 +9,7 @@
 
 using namespace std;
 
+Stats stats;
 ShipEntity *serverShip;
 ENetHost *server;
 EntityManager serverEntities;
@@ -26,6 +27,16 @@ bool twoP = false;
 bool anyoneOn = false;
 
 void initServer(){
+	stats.p1Score = 0;
+	stats.p1Kills = 0;
+	stats.p1HealthUsed = 0;
+	stats.p1ShotsFired = 0;
+
+	stats.p2Score = 0;
+	stats.p2Kills = 0;
+	stats.p2HealthUsed = 0;
+	stats.p2ShotsFired = 0;
+
 	//serverShip = new ShipEntity(tilesFile);
 	serverShip = NULL;
 	loadLevel(false);
