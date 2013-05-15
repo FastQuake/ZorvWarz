@@ -319,6 +319,7 @@ int main(int argc, char *argv[]){
 
 		//If in game state
 		else if(state == 1){
+			state = 2;
 			//If we lost player2
 			if(!twoPlayers && !singleplayer && p2Timer.getElapsedTime().asSeconds() > 20){
 				ENetPacket *endRequestPacket = createPacket(csRequestEnd,"",ENET_PACKET_FLAG_RELIABLE);
