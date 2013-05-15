@@ -177,6 +177,7 @@ void setup(){
 	bgSound.setLoop(true);
 
 	initMenu();
+	initEndScreen();
 }
 
 void cleanup(){
@@ -386,7 +387,10 @@ int main(int argc, char *argv[]){
 			window.draw(fpsText);
 			window.display();
 		}else if(state == 2){
-
+			updateEndScreen(clientStats);
+			window.clear();
+			drawEndScreen(&window);
+			window.display();
 		}
 
 		dt = dtClock.restart();
