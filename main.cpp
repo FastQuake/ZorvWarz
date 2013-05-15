@@ -40,6 +40,9 @@ sf::SoundBuffer clickBuffer;
 sf::Sound pickupSound;
 sf::SoundBuffer pickupBuffer;
 
+sf::Sound bgSound;
+sf::SoundBuffer bgBuffer;
+
 sf::RectangleShape p1Health;
 
 string IPad;
@@ -163,6 +166,11 @@ void setup(){
 
 	pickupBuffer.loadFromFile("data/audio/pickup.wav");
 	pickupSound.setBuffer(pickupBuffer);
+
+	bgBuffer.loadFromFile("data/audio/bg.wav");
+	bgSound.setBuffer(bgBuffer);
+	bgSound.setLoop(true);
+	bgSound.play();
 
 	initMenu();
 }
