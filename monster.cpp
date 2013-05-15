@@ -62,9 +62,11 @@ void Monster::update(int framecount, float dTime){
 		else
 			targetBox = p2->collisionBoxes[0];
 		sf::Vector2f targetPos = sf::Vector2f(targetBox.left+targetBox.width/2,targetBox.top+targetBox.height/2);
-		stepTowards(targetPos, dTime);
-		if(!AIManager::isVisible(sf::Vector2f(this->x,this->y),targetBox,serverShip->collisionBoxes))
+		sf::Vector2f thisMiddle = sf::Vector2f(this->collisionBoxes[0].left+this->collisionBoxes[0].width/2,
+			this->collisionBoxes[0].top+this->collisionBoxes[0].height/2);
+		if(!AIManager::isVisible(thisMiddle,targetBox,serverShip->collisionBoxes))
 			buildPath();
+		stepTowards(targetPos, dTime);
 	}
 	stringstream ss;
 	ss << this->ID << " " << this->x << " " << this->y << " 0";
@@ -88,16 +90,18 @@ void Monster::update(int framecount, float dTime){
 }
 
 void Monster::buildPath(){
+	cout << "building path" << this->ID << endl;
 	currentPath.clear();
+	currentPath.swap(currentPath);
 	atEnd = false;
 	//We have AIManager aim, Mob *p1 and Mob *p2 available for use
 	sf::Vector2f targetPos;
 	vector<Node*> ignoreList;
 
 	if(targetPlayer == 1)
-		targetPos = sf::Vector2f(p1->x,p1->y);
+		targetPos = sf::Vector2f(p1->x+16.0f,p1->y+16.0f);
 	else
-		targetPos = sf::Vector2f(p2->x,p2->y);
+		targetPos = sf::Vector2f(p2->x+16.0f,p2->y+16.0f);
 
 	Node *firstNode = aim.findVisibleNode(sf::Vector2f(x,y),serverShip->collisionBoxes);
 	Node *destinationNode = aim.findVisibleNode(targetPos,serverShip->collisionBoxes);
@@ -142,18 +146,19 @@ void Monster::buildPath(){
 		if(currentPath.back() == destinationNode)
 			pathComplete = true;
 	}
-	cout << currentPath.size();
 	pathTimer.restart();
+	targetNodeNum = 0;
 }
 	
 void Monster::stepPath(Node* currentNode,float dTime){
 	stepTowards(currentNode->middle, dTime);
 
-	if(targetNodeNum+1 >= currentPath.size()){
+	if(currentPath[currentPath.size()-1]->nodeBox.intersects(this->collisionBoxes[0])){
+		cout << "path ended" << this->ID << endl;
 		atEnd = true;
 		return;
 	}
-	if(currentNode->nodeBox.contains(this->x+16.0f,this->y+16.0f))
+	if(currentNode->nodeBox.intersects(this->collisionBoxes[0]))
 		this->targetNodeNum++;
 }
 
