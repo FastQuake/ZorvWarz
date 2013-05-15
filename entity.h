@@ -109,6 +109,7 @@ public:
 	float speed;
 	int targetNodeNum;
 	int targetPlayer;
+	bool atEnd;
 	std::vector<Node*> currentPath;
 	sf::Clock pathTimer;
 	

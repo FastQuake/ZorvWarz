@@ -11,6 +11,7 @@ Node::Node(sf::FloatRect nodeBox){
 	int x = this->nodeBox.left+(this->nodeBox.width/2);
 	int y = this->nodeBox.top+(this->nodeBox.height/2);
 	this->middle = sf::Vector2f(x,y);
+	int debug = 0;
 }
 
 void Node::findNeighbors(threadArgs args){
@@ -222,21 +223,17 @@ bool AIManager::isVisible(sf::Vector2f startPoint, sf::FloatRect targetBox, vect
 	sf::Vector2f targetMiddle = sf::Vector2f(targetBox.left+targetBox.width/2,targetBox.top+targetBox.height/2);
 	float angle = atan2(targetMiddle.y-startPoint.y,targetMiddle.x-startPoint.x)*180/PI;
 	//cout << "angle: " << angle << endl;
-	bool hit = false;
-	for(int j=16;;j+=16){
+	for(int i=0;;i+=16){
 		//cout << "radius: " << j << endl;
-		for(int k=0;k<targetColBoxes.size();k++){	//Loop through all the collision objects
+		if(targetBox.contains(LightManager::getCirclePoint(i,angle,startPoint))){
+			return true;
+		}
+		for(int j=0;j<targetColBoxes.size();j++){	//Loop through all the collision objects
 													//and check if they're in the path of the ray
-			if(targetColBoxes[k].contains(LightManager::getCirclePoint(j,angle,startPoint))){
+			if(targetColBoxes[j].contains(LightManager::getCirclePoint(i,angle,startPoint))){
 				return false;
 			}
 		}
-		//Confirm that the node was actually reached
-		if(targetBox.contains(LightManager::getCirclePoint(j,angle,startPoint))){
-			/*sf::Vector2f middle2(aim.nodeList[i].nodeBox.left+(aim.nodeList[i].nodeBox.width/2),
-				aim.nodeList[i].nodeBox.top+(aim.nodeList[i].nodeBox.height/2));	
-			cout << "pushing back node " << middle2.x << "," << middle2.y << "-" << thisNode->middle.x << "," << thisNode->middle.y << endl;*/
-			return true;
-		}
 	}
+	cout << "returning something fucking stupid that I should jump off a cliff into lava for" << endl;
 }

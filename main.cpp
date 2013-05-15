@@ -335,7 +335,7 @@ int main(int argc, char *argv[]){
 			window.clear();
 			entities.drawEntities(&window,player->x-400,player->y-300); //Hardcoded screenx and screeny, may fix later
 			lm.drawLights(&window,player->x-400,player->y-300);
-			//aim.drawNet(&window,player->x-400,player->y-300);
+			aim.drawNet(&window,player->x-400,player->y-300);
 			pathMutex.lock();
 			//testMonster->drawPath(&window,player->x-400,player->y-300);
 			pathMutex.unlock();
