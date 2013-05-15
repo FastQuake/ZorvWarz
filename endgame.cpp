@@ -1,8 +1,8 @@
 #include "endgame.h"
 #include "menu.h"
 
-sf::Sprite bgSprite;
-sf::Sprite bButSprite;
+sf::Sprite ebgSprite;
+sf::Sprite ebButSprite;
 
 sf::Text player1;
 sf::Text player2;
@@ -21,8 +21,8 @@ sf::Text totalKills;
 sf::Text totalScore;
 
 void initEndScreen(){
-	bgSprite.setTexture(bgTexture);
-	bButSprite.setTexture(bButTex);
+	ebgSprite.setTexture(bgTexture);
+	ebButSprite.setTexture(bButTex);
 
 	player1.setFont(font);
 	player1.setString("Player 1");
@@ -44,7 +44,8 @@ void initEndScreen(){
 }
 
 void drawEndScreen(sf::RenderWindow *screen){
-	screen->draw(bgSprite);
+	screen->draw(ebgSprite);
+	screen->draw(ebButSprite);
 	screen->draw(player1);
 	screen->draw(p1Score);
 	screen->draw(p1Kills);

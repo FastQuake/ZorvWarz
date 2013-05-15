@@ -8,6 +8,7 @@
 #include "server.h"
 #include "ai.h"
 #include "menu.h"
+#include "endgame.h"
 #include <enet/enet.h>
 
 using namespace std;
@@ -526,7 +527,7 @@ void clientHandlePacket(string packetData, ENetPeer *peer){
 		case scAttack:
 			bulletSound.play();
 			entities.entityList.push_back(new Bullet(
-						player2->x+16,player2->y+16,player2->rot));
+						player2->x+16,player2->y+16,player2->rot,2));
 			entities.entityList.back()->ID = idCounter + 1000;
 			break;
 		case scMove:

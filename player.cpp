@@ -80,7 +80,7 @@ void Player::update(int framecount, float dTime){
 		bClock.restart();
 		if(bullets > 0){
 			bulletSound.play();
-			entities.entityList.push_back(new Bullet(x+16,y+16,rot));
+			entities.entityList.push_back(new Bullet(x+16,y+16,rot,this->ID));
 			entities.entityList.back()->ID = idCounter + 1000;
 			bullets--;
 			packetMutex.lock();
