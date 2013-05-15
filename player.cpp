@@ -246,6 +246,7 @@ Bullet::Bullet(float x, float y, float rot){
 	this->x = x;
 	this->y = y;
 	this->rot = rot;
+	this->ID += 1000;
 
 	sBullet.setTexture(bTex);	
 	sBullet.setOrigin(9/2,2/2);

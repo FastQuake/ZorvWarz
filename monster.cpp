@@ -61,7 +61,7 @@ void Monster::update(int framecount, float dTime){
 		else
 			targetBox = p2->collisionBoxes[0];
 		sf::Vector2f targetPos = sf::Vector2f(targetBox.left+targetBox.width/2,targetBox.top+targetBox.height/2);
-		cout << targetPos.x << " " << targetPos.y << endl;
+		//cout << targetPos.x << " " << targetPos.y << endl;
 		sf::Vector2f thisMiddle = sf::Vector2f(this->collisionBoxes[0].left+this->collisionBoxes[0].width/2,
 			this->collisionBoxes[0].top+this->collisionBoxes[0].height/2);
 		if(!AIManager::isVisible(thisMiddle,targetBox,serverShip->collisionBoxes))
@@ -84,13 +84,13 @@ void Monster::update(int framecount, float dTime){
 		if(p2->connected)
 			enet_peer_send(p2->peer,0,despawnPacket);
 	}
-
+	enet_host_flush(server);
 	collisionBoxes[0].left = x;
 	collisionBoxes[0].top = y;
 }
 
 void Monster::buildPath(){
-	cout << "building path" << this->ID << endl;
+	//cout << "building path" << this->ID << endl;
 	currentPath.clear();
 	currentPath.swap(currentPath);
 	atEnd = false;
@@ -105,7 +105,7 @@ void Monster::buildPath(){
 
 	Node *firstNode = aim.findVisibleNode(sf::Vector2f(x,y),serverShip->collisionBoxes);
 	Node *destinationNode = aim.findVisibleNode(targetPos,serverShip->collisionBoxes);
-	cout << destinationNode->middle.x << " " << destinationNode->middle.y << endl;
+	//cout << destinationNode->middle.x << " " << destinationNode->middle.y << endl;
 	currentPath.push_back(firstNode);
 	ignoreList.push_back(firstNode);
 
@@ -155,10 +155,10 @@ void Monster::stepPath(Node* currentNode,float dTime){
 	stepTowards(currentNode->middle, dTime);
 
 	if(currentPath[currentPath.size()-1]->nodeBox.intersects(this->collisionBoxes[0])){
-		cout << "path ended" << this->ID << endl;
+		/*cout << "path ended" << this->ID << endl;
 		cout << "node position" << this->ID << " " << currentPath[currentPath.size()-1]->middle.x << " " << currentPath[currentPath.size()-1]->middle.y << endl;
 		cout << "node position WITH THINGY" << this->ID << " " << currentPath[currentPath.size()-1]->nodeBox.left << " " << currentPath[currentPath.size()-1]->nodeBox.top << endl;
-		cout << "mah crazy ass is at" << this->ID << " " << this->x+16 << " " << this->y+16 << endl;
+		cout << "mah crazy ass is at" << this->ID << " " << this->x+16 << " " << this->y+16 << endl;*/
 		atEnd = true;
 		return;
 	}

@@ -475,11 +475,13 @@ void clientHandlePacket(string packetData){
 				monster->y = y;
 				monster->rot = rot;
 				monster->type = "monster";
+				cout << "SPAWNING MONSTER ID " << monster->ID << endl;
 				entities.entityList.push_back(monster);
 			}
 			break;
 		case scDespawn:
 			ss >> id;
+			cout << "DESPAWNING " << id << endl;
 			guy = entities.getByID(id);
 			if(guy->type == "monster"){
 				guy->health = -1;
