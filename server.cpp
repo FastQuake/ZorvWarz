@@ -27,6 +27,7 @@ bool twoP = false;
 bool anyoneOn = false;
 
 void initServer(){
+	srand(seed);
 	stats.p1Score = 0;
 	stats.p1Kills = 0;
 	stats.p1HealthUsed = 0;

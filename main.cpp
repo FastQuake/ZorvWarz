@@ -71,6 +71,7 @@ bool keyRight = false;
 bool mouseRight = false;
 
 int state = 0; //0 = main menu 1=game
+int seed = 0;
 
 void clientHandlePacket(string packetDatak, ENetPeer *peer);
 void extractMap(string data);
@@ -135,7 +136,7 @@ void addEntities(){
 
 void setup(){
 	//Set seed based on time
-	int seed = time(NULL);
+	seed = time(NULL);
 	cout << "seed: " << seed << endl;
 	srand(seed);
 	addEntities();

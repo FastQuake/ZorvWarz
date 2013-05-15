@@ -36,6 +36,7 @@ extern sf::Mutex packetMutex;
 extern std::string IPad;
 extern int FPS;
 extern int state;
+extern int seed;
 
 extern bool doShutdown;
 
