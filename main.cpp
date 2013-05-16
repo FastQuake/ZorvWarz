@@ -226,7 +226,7 @@ int main(int argc, char *argv[]){
 	clientThread = new sf::Thread(&runClient,selection);
 	serverThread = new sf::Thread(&serverLoop);
 
-	window.create(sf::VideoMode(800,600),"Test");
+	window.create(sf::VideoMode(800,600),"Zorv Warz");
 	window.setFramerateLimit(60);
 	sf::Event event;
 
@@ -265,8 +265,8 @@ int main(int argc, char *argv[]){
 		} else {
 			fps++;
 		}
-		fpsText.setString("FPS: "+intToStr(FPS)+ "\nXY: "+floatToStr(player->x) + " " + 
-			floatToStr(player->y));
+		//fpsText.setString("FPS: "+intToStr(FPS)+ "\nXY: "+floatToStr(player->x) + " " + 
+		//	floatToStr(player->y));
 		//Get input
 		while(window.pollEvent(event)){
 			if(event.type == sf::Event::Closed){
@@ -384,6 +384,7 @@ int main(int argc, char *argv[]){
 				player->collides = false;
 				player->x = player2->x;
 				player->y = player2->y;
+				fpsText.setString("\tYOU ARE DEAD");
 			}
 
 
@@ -419,7 +420,7 @@ int main(int argc, char *argv[]){
 					window.draw(waitingText);
 				}
 
-			//window.draw(fpsText);
+			window.draw(fpsText);
 			window.display();
 			gameStateDone = true;
 		}else if(state == 2){
