@@ -404,7 +404,14 @@ void handlePacket(string packetData, ENetPeer *peer){
 			stats.p2HealthUsed++;
 		break;
 	case csRequestEnd:
-		sendStats(peer);
+		switch(p1Orp2(peer)){
+		case 1:
+			sendStats(peer);
+			if(p2->connected)
+				sendStats(p2->peer);
+		case 2:
+			break;
+		}
 		break;
 	case csImDead:
 		if(peer == p1->peer){

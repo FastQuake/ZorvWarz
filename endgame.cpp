@@ -87,6 +87,7 @@ void updateEndScreen(Stats *endStats){
 		inputIP = false;
 		doShutdown = true;
 		ready = false;
+		connectedOnce = false;
 		level = 1;
 		serverThread->wait();
 		clientThread->wait();
