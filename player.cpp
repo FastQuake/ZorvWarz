@@ -1,5 +1,6 @@
 #include <cmath>
 #include "main.h"
+#include "server.h"
 
 sf::Clock bClock;
 
@@ -96,6 +97,12 @@ void Player::update(int framecount, float dTime){
 	if(health < 0){
 		health = 0;
 		std::cout << "YOU ARE DEAD" << std::endl;
+		if(singleplayer){
+			packetList.push_back(intToStr(csRequestEnd));
+		} else {
+			dead = true;
+			packetList.push_back(intToStr(csImDead));
+		}
 	}
 }
 

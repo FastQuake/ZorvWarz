@@ -78,6 +78,8 @@ bool keyLeft = false;
 bool keyRight = false;
 bool mouseRight = false;
 
+bool dead = false;
+
 int state = 0; //0 = main menu 1=game
 int seed = 0;
 
@@ -143,9 +145,6 @@ void addEntities(){
 }
 
 void setup(){
-	//Set seed based on time
-	seed = time(NULL);
-	cout << "seed: " << seed << endl;
 	srand(seed);
 	addEntities();
 
@@ -343,7 +342,7 @@ int main(int argc, char *argv[]){
 			if(!twoPlayers && !singleplayer && connectedOnce){
 				if(p2Timer.getElapsedTime().asSeconds() > 20){
 					cout << "SHUTTING DOWN" << endl;
-					ENetPacket *endRequestPacket = createPacket(csRequestEnd,"",ENET_PACKET_FLAG_RELIABLE);
+					//ENetPacket *endRequestPacket = createPacket(csRequestEnd,"",ENET_PACKET_FLAG_RELIABLE);
 					packetList.push_back(intToStr(csRequestEnd));
 				}
 			} else {
@@ -352,18 +351,20 @@ int main(int argc, char *argv[]){
 			//Check if player has moved, if they did move send create packet with
 			//new player location and rotation
 			if(player->x != oldx || player->y != oldy ||player->rot != oldrot){
-				oldx = player->x;
-				oldy = player->y;
-				oldrot = player->rot;
-				stringstream ss;
-				ss << csMove << " " << player->x << " " << player->y << " " << player->rot;
-				//cout << "SENDING: " << ss.str() << endl;
-				packetMutex.lock();
-				packetList.push_back(ss.str());
-				packetMutex.unlock();
+				if(!dead){
+					oldx = player->x;
+					oldy = player->y;
+					oldrot = player->rot;
+					stringstream ss;
+					ss << csMove << " " << player->x << " " << player->y << " " << player->rot;
+					//cout << "SENDING: " << ss.str() << endl;
+					packetMutex.lock();
+					packetList.push_back(ss.str());
+					packetMutex.unlock();
 
-				ss.str("");
-				ss.clear();
+					ss.str("");
+					ss.clear();
+				}
 			}
 			
 
@@ -372,10 +373,19 @@ int main(int argc, char *argv[]){
 				entities.updateEntities(fps,dt.asSeconds());
 			entities.collideEntities();
 
-			p1Light->x = player->x+16;
-			p1Light->y = player->y+16;
-			p1Light->rot = player->rot;
-			p1Light->update();
+			if(!dead){
+				p1Light->x = player->x+16;
+				p1Light->y = player->y+16;
+				p1Light->rot = player->rot;
+				p1Light->update();
+			} else {
+				player->drawable = false;
+				player->readyToUpdate = false;
+				player->collides = false;
+				player->x = player2->x;
+				player->y = player2->y;
+			}
+
 
 			if(twoPlayers){
 				p2Light->x = player2->x+16;
@@ -641,6 +651,11 @@ void clientHandlePacket(string packetData, ENetPeer *peer){
 				ss >> clientStats.p2ShotsFired;
 			}
 			state = 2;
+			break;
+		case scHeDead:
+			player2->collides = false;
+			player2->drawable = false;
+			player2->readyToUpdate = false;
 			break;
 	}
 }
