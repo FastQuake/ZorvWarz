@@ -39,6 +39,7 @@ extern std::string IPad;
 extern int FPS;
 extern int state;
 extern int seed;
+extern int level;
 
 extern bool doShutdown;
 

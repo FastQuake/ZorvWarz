@@ -54,6 +54,7 @@ sf::Vector2i mousePos;
 
 sf::Clock frameTime;
 int FPS = 60;
+int level = 1;
 
 sf::Time dt;
 sf::Clock p2Timer;
