@@ -31,6 +31,10 @@ void sendStats(ENetPeer *peer);
 
 void initServer(){
 	srand(seed);
+	isp1 = true;
+	twoP = false;
+	anyoneOn = false;
+	alreadyConnected = false;
 	stats.p1Score = 0;
 	stats.p1Kills = 0;
 	stats.p1HealthUsed = 0;
@@ -146,7 +150,8 @@ void serverLoop(){
 			case ENET_EVENT_TYPE_CONNECT:
 				cout << "A new client connected from " << event.peer->address.host << event.peer->address.port << "." << endl;
 				if(isp1){
-					p1->peer = event.peer;	
+					p1->peer = event.peer;
+					cout << "peer 1 is set" << endl;
 					isp1 = false;
 				} else {
 					p2->peer = event.peer;

@@ -40,6 +40,8 @@ sf::Sound clickSound;
 sf::SoundBuffer clickBuffer;
 sf::Sound pickupSound;
 sf::SoundBuffer pickupBuffer;
+sf::Sound oofSound;
+sf::SoundBuffer oofBuffer;
 
 sf::Sound bgSound;
 sf::SoundBuffer bgBuffer;
@@ -66,6 +68,7 @@ bool ready = false;
 bool serverReady = true;
 bool connecting = false;
 bool doShutdown = false;
+bool gameStateDone = false;
 
 bool keyUp = false;
 bool keyDown = false;
@@ -181,6 +184,9 @@ void setup(){
 
 	pickupBuffer.loadFromFile("data/audio/pickup.wav");
 	pickupSound.setBuffer(pickupBuffer);
+
+	oofBuffer.loadFromFile("data/audio/oof.wav");
+	oofSound.setBuffer(oofBuffer);
 
 	bgBuffer.loadFromFile("data/audio/bg.wav");
 	bgSound.setBuffer(bgBuffer);
@@ -330,6 +336,7 @@ int main(int argc, char *argv[]){
 
 		//If in game state
 		else if(state == 1){
+			gameStateDone = false;
 			//If we lost player2
 			if(!twoPlayers && !singleplayer){
 				if(p2Timer.getElapsedTime().asSeconds() > 20){
@@ -402,6 +409,7 @@ int main(int argc, char *argv[]){
 
 			window.draw(fpsText);
 			window.display();
+			gameStateDone = true;
 		}else if(state == 2){
 			updateEndScreen(&clientStats);
 			window.clear();

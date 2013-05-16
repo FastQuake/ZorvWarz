@@ -37,6 +37,8 @@ Player::Player(std::string playerTexture){
 }
 
 void Player::update(int framecount, float dTime){
+	if(dTimer.getElapsedTime().asMilliseconds() > 250)
+		this->playerSprite.setColor(sf::Color(255,255,255,255));
 	if(keyUp && sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
 		yVel = -speed*dTime;
 	} else if(keyDown && sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
@@ -108,6 +110,8 @@ void Player::onCollision(Entity *object, sf::FloatRect otherBox){
 		if(dTimer.getElapsedTime().asMilliseconds() > 1000){
 			dTimer.restart();
 			health--;
+			this->playerSprite.setColor(sf::Color(255,0,0,255));
+			oofSound.play();
 		}
 		return;
 	}else if(object->type == "box"){

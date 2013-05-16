@@ -58,5 +58,6 @@ extern Mob *p2;
 extern ENetHost *server;
 extern sf::Mutex pathMutex;
 extern Stats stats;
+extern EntityManager serverEntities;
 
 #endif

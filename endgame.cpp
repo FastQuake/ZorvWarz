@@ -78,8 +78,9 @@ void updateEndScreen(Stats *endStats){
 	mPos.x = mousePos.x;
 	mPos.y = mousePos.y;
 	if(mouseRight && ebButSprite.getGlobalBounds().contains(mPos)){
-		killAll();
 		state = 0;
+		if(gameStateDone)
+			killAll();
 		loading = false;
 		inputIP = false;
 		doShutdown = true;
@@ -87,6 +88,8 @@ void updateEndScreen(Stats *endStats){
 		serverThread->wait();
 		clientThread->wait();
 		doShutdown = false;
+		serverEntities.entityList.clear();
+		serverEntities.entityList.swap(serverEntities.entityList);
 	}
 
 	player1.setString("Player 1");
