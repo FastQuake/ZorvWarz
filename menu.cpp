@@ -101,6 +101,7 @@ void updateMenu(){
 					loading = true;
 					connecting = true;
 					singleplayer = true;
+					p2Timer.restart();
 				}
 				//If user presses Multi-Player button
 				if(mButSprite.getGlobalBounds().contains(mPos)){
@@ -114,6 +115,7 @@ void updateMenu(){
 					loading = true;
 					connecting = true;
 					singleplayer = false;
+					p2Timer.restart();
 				}
 				//If user presses join button
 				if(jButSprite.getGlobalBounds().contains(mPos)){

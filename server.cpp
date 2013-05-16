@@ -67,16 +67,6 @@ void initServer(){
 	serverEntities.entityList.push_back(p1);
 	serverEntities.entityList.push_back(p2);
 
-	/*//create 5 ammo boxes
-	for(int i=0;i<5;i++){
-		sf::Vector2f pos = serverShip->getRandomFloorTile();
-		serverEntities.entityList.push_back(new AmmoBox(pos.x*32+6
-					,pos.y*32+12));
-	}
-	//create one staircase
-	sf::Vector2f pos = serverShip->getRandomFloorTile();
-	serverEntities.entityList.push_back(new Stairs(pos.x*32,pos.y*32,0));*/
-
 	p1->type = "player";
 	p2->type = "player";
 }
@@ -195,6 +185,7 @@ void serverLoop(){
 
 		dt = dtClock.restart();
 	}
+	enet_host_destroy(server);
 	delete p1;
 	delete p2;
 }

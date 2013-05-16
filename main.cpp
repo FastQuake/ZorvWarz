@@ -407,6 +407,7 @@ int main(int argc, char *argv[]){
 /** Thread to handle all client networking **/
 void runClient(string selection){
 	while(true){
+		cout << "CHECKING IF SERVER IS READY" << endl;
 		readyMutex.lock();
 		if(serverReady)
 			break;
@@ -474,6 +475,7 @@ void runClient(string selection){
 			}
 		}
 	}
+	enet_host_destroy(client);
 }
 
 /** Function to handle all client packet types **/

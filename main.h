@@ -31,7 +31,9 @@ extern bool twoPlayers;
 extern bool connecting;
 extern bool singleplayer;
 extern bool loading;
+extern bool inputIP;
 extern sf::Mutex packetMutex;
+extern sf::Clock p2Timer;
 
 extern std::string IPad;
 extern int FPS;

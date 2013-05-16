@@ -73,6 +73,20 @@ void initEndScreen(){
 }
 
 void updateEndScreen(Stats endStats){
+
+	sf::Vector2f mPos;
+	mPos.x = mousePos.x;
+	mPos.y = mousePos.y;
+	if(mouseRight && ebButSprite.getGlobalBounds().contains(mPos)){
+		state = 0;
+		loading = false;
+		inputIP = false;
+		doShutdown = true;
+		serverThread->wait();
+		clientThread->wait();
+		doShutdown = false;
+	}
+
 	player1.setString("Player 1");
 	player2.setString("Player 2");
 	p1Score.setString("Score: " + endStats.p1Score);
@@ -94,6 +108,7 @@ void updateEndScreen(Stats endStats){
 	totalKills.setString("Total Kills: " + (endStats.p1Kills+endStats.p2Kills));
 	totalKills.setOrigin(totalKills.getLocalBounds().width/2,totalKills.getLocalBounds().height/2);
 	totalKills.setPosition(400,548);
+
 }
 
 void drawEndScreen(sf::RenderWindow *screen){
