@@ -6,10 +6,8 @@
 
 using namespace std;
 
-Ship::Ship(string tileFile, bool serv){
+Ship::Ship(bool serv){
 	//Load texture data
-	if(!serv)
-		tiles.loadFromFile(tileFile);
 	//Make data array
 	data = new int*[dunXSize];
 	for(int i=0;i<dunXSize;i++){
@@ -227,7 +225,7 @@ void Ship::drawRoom(){
 
 void Ship::drawMap(sf::RenderWindow *window,int screenx, int screeny){
 	sf::Sprite mapTile;
-	mapTile.setTexture(tiles);
+	mapTile.setTexture(tilesTex);
 	for(int y=0;y<dunYSize;y++){
 		for(int x=0;x<dunXSize;x++){
 			 if(data[x][y] == 0){
@@ -271,7 +269,7 @@ bool Room::intersects(Room otherRoom){
 	return true;
 }
 
-ShipEntity::ShipEntity(string tilesFile, bool serv){
+ShipEntity::ShipEntity(bool serv){
 	type = "map";
 	drawable = true;
 	collides = true;
@@ -281,7 +279,7 @@ ShipEntity::ShipEntity(string tilesFile, bool serv){
 	x = 0;
 	y = 0;
 
-	map = new Ship(tilesFile,serv);
+	map = new Ship(serv);
 
 	getColBoxes();
 }

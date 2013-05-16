@@ -34,6 +34,15 @@ sf::Font font;
 sf::Sprite bulletSprite;
 sf::Text bulletText;
 
+sf::Texture pTex;
+sf::Texture tilesTex;
+sf::Texture aTex;
+sf::Texture lTex;
+sf::Texture sTex;
+sf::Texture gTex;
+sf::Texture ammoTex;
+sf::Texture hTex;
+
 sf::Sound bulletSound;
 sf::SoundBuffer bulletBuffer;
 sf::Sound clickSound;
@@ -129,8 +138,8 @@ void killAll(){
 }
 
 void addEntities(){
-	ship = new ShipEntity(tilesFile, false);
-	player = new Player(playerFile);
+	ship = new ShipEntity(false);
+	player = new Player();
 
 	entities.entityList.push_back(ship);
 	entities.entityList.push_back(player);
@@ -146,6 +155,17 @@ void addEntities(){
 
 void setup(){
 	srand(seed);
+
+	pTex.loadFromFile(playerFile);
+	tilesTex.loadFromFile(tilesFile);
+	aTex.loadFromFile(alienFile);
+	lTex.loadFromFile(lightFile);
+	bTex.loadFromFile(bulletFile);
+	sTex.loadFromFile("data/textures/stairs.png");
+	gTex.loadFromFile("data/textures/gun.png");
+	ammoTex.loadFromFile("data/textures/ammo.png");
+	hTex.loadFromFile("data/textures/health.png");
+
 	addEntities();
 
 	clientStats.p1Score = 0;
@@ -535,7 +555,7 @@ void clientHandlePacket(string packetData, ENetPeer *peer){
 			ss >> rot;
 			if(type == "player"){
 				cout << "GOT P2 SPAWN" << endl;
-				player2 = new PMob(playerFile, id);
+				player2 = new PMob(id);
 				player2->x = x;
 				player2->y = y;
 				player2->rot = rot;

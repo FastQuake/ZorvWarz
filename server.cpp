@@ -115,7 +115,7 @@ void loadLevel(bool ai){
 		//delete serverShip;
 		serverEntities.removeByRef(serverShip);
 	}
-	serverShip = new ShipEntity(tilesFile, false);
+	serverShip = new ShipEntity(false);
 	serverEntities.entityList.push_back(serverShip);
 	//create 5 ammo boxes
 	for(int i=0;i<5;i++){

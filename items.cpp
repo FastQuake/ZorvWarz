@@ -15,7 +15,6 @@ AmmoBox::AmmoBox(float x, float y){
 	this->x = x;
 	this->y = y;
 
-	ammoTex.loadFromFile("data/textures/ammo.png");
 	box.setTexture(ammoTex);
 
 	collisionBoxes.push_back(sf::FloatRect(x,y,20,20));
@@ -45,7 +44,6 @@ Stairs::Stairs(float x,float y, int type){
 	this->x = x;
 	this->y = y;
 
-	sTex.loadFromFile("data/textures/stairs.png");
 	sSprite.setTexture(sTex);
 
 	collisionBoxes.push_back(sf::FloatRect(x,y,32,32));
@@ -137,8 +135,7 @@ HealthBox::HealthBox(float x, float y){
 	this->x = x;
 	this->y = y;
 
-	hBoxTex.loadFromFile("data/textures/health.png");
-	hBoxSprite.setTexture(hBoxTex);
+	hBoxSprite.setTexture(hTex);
 
 	collisionBoxes.push_back(sf::FloatRect(x,y,20,20));
 }

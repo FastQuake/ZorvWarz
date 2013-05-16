@@ -16,6 +16,16 @@ const std::string alienFile = "data/textures/alien.png";
 const std::string lightFile = "data/textures/light.png";
 const std::string bulletFile = "data/textures/bullet.png";
 
+extern sf::Texture pTex;
+extern sf::Texture tilesTex;
+extern sf::Texture aTex;
+extern sf::Texture lTex;
+extern sf::Texture bTex;
+extern sf::Texture sTex;
+extern sf::Texture gTex;
+extern sf::Texture ammoTex;
+extern sf::Texture hTex;
+
 extern sf::Texture bTex;
 
 //extern sf::RenderWindow window;

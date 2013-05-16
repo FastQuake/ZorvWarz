@@ -4,7 +4,7 @@
 
 sf::Clock bClock;
 
-Player::Player(std::string playerTexture){
+Player::Player(){
 	type = "player";
 	drawable = true;
 	collides = true;
@@ -23,12 +23,10 @@ Player::Player(std::string playerTexture){
 	frame = 0;
 	state = 0;
 
-	pTexture.loadFromFile(playerTexture);
-	gTexture.loadFromFile("data/textures/gun.png");
-	playerSprite.setTexture(pTexture);
+	playerSprite.setTexture(pTex);
 	playerSprite.setPosition(x,y);
 	playerSprite.setTextureRect(sf::IntRect(frame*32,state*32,32,32));
-	gun.setTexture(gTexture);
+	gun.setTexture(gTex);
 	gun.setOrigin(-8,5);
 	gun.setPosition(x+16,y+16);
 
@@ -168,7 +166,7 @@ Mob::Mob(int id){
 	collisionBoxes.push_back(sf::FloatRect(x,y,32,32));
 }
 
-Mob::Mob(std::string textureFile, int id){
+Mob::Mob(string bleh,int id){
 	type = "mob";
 	drawable = true;
 	collides = true;
@@ -183,8 +181,7 @@ Mob::Mob(std::string textureFile, int id){
 	frame = 0;
 	state = 0;
 
-	texture.loadFromFile(textureFile);
-	mobSprite.setTexture(texture);
+	mobSprite.setTexture(aTex);
 	mobSprite.setPosition(0,0); //Hardcoded screen size, may fix later
 	mobSprite.setTextureRect(sf::IntRect(frame*32,state*32,32,32));
 
@@ -225,12 +222,12 @@ void Mob::draw(sf::RenderWindow *window,int screenx,int screeny){
 	window->draw(mobSprite);
 }
 
-PMob::PMob(std::string textureFile, int id)
-	:Mob(textureFile, id)
+PMob::PMob(int id)
+	:Mob("hey",id)
 {
 	type = "player";
 
-	gTex.loadFromFile("data/textures/gun.png");
+	mobSprite.setTexture(pTex);
 	gSprite.setTexture(gTex);
 	gSprite.setOrigin(-8,5);
 	gSprite.setPosition(x+16,y+16);

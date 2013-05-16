@@ -43,10 +43,9 @@ class Room{
 class Ship{
 	int numOfRooms;
 	Room *roomList;
-	sf::Texture tiles;
 	public:
 	int **data;
-	Ship(std::string tileFile, bool serv);
+	Ship(bool serv);
 	~Ship();
 	void drawRoom();
 	void drawMap(sf::RenderWindow *window,int screenx, int screeny);
