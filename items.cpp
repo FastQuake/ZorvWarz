@@ -1,6 +1,7 @@
 #include "entity.h" 
 #include "server.h"
 #include "main.h"
+#include "ai.h"
 #include <sstream>
 #include <cmath>
 
@@ -52,6 +53,7 @@ Stairs::Stairs(float x,float y, int type){
 
 void Stairs::onCollision(Entity *object, sf::FloatRect otherBox){
 	if(sType == 0 && object->type == "player"){
+		level++;
 		alive = false;
 		//DO SHIT TO LOAD NEXT LEVEL
 		despawnLevel();
@@ -110,9 +112,12 @@ void Stairs::onCollision(Entity *object, sf::FloatRect otherBox){
 			enet_peer_send(p1->peer,0,packet);
 		}
 		enet_host_flush(server);
+		AIManager::spawnMonsters(&serverEntities.entityList,10+5*(level-1));
 		sendSpawnPackets(p1->peer);	
+		sendSpawnMonsters(p1->peer);
 		if(p2->connected){
 			sendSpawnPackets(p2->peer);
+			sendSpawnMonsters(p2->peer);
 		}
 	}
 }

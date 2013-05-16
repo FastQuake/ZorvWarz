@@ -39,6 +39,7 @@ extern std::string IPad;
 extern int FPS;
 extern int state;
 extern int seed;
+extern int level;
 
 extern bool doShutdown;
 extern bool dead;
@@ -63,7 +64,8 @@ extern sf::Font font;
 extern sf::Sound bulletSound;
 extern sf::Sound clickSound;
 extern sf::Sound pickupSound;
-
+extern sf::Sound oofSound;
+extern bool gameStateDone;
 
 void runClient(std::string selection);
 std::string intToStr(int num);
