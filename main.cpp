@@ -398,6 +398,7 @@ int main(int argc, char *argv[]){
 				p1Light->y = player->y+16;
 				p1Light->rot = player->rot;
 				p1Light->update();
+				fpsText.setString("");
 			} else {
 				player->drawable = false;
 				player->readyToUpdate = false;

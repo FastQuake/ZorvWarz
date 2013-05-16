@@ -101,6 +101,7 @@ void updateEndScreen(Stats *endStats){
 		player->collides = true;
 
 		player->health = 10;
+		player->bullets = 30;
 	}
 
 	player1.setString("Player 1");
