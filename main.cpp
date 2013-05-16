@@ -424,6 +424,7 @@ void runClient(string selection){
 			break;
 		readyMutex.unlock();
 	}
+	readyMutex.unlock();
 	connecting = true;
 	cout << "STARTING CLIENT" << endl;
 	ENetHost *client;
@@ -629,6 +630,7 @@ void clientHandlePacket(string packetData, ENetPeer *peer){
 				ss >> clientStats.p2ShotsFired;
 			}
 			state = 2;
+			killAll();
 			break;
 	}
 }
