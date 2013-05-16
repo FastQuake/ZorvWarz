@@ -78,6 +78,7 @@ void updateEndScreen(Stats *endStats){
 	mPos.x = mousePos.x;
 	mPos.y = mousePos.y;
 	if(mouseRight && ebButSprite.getGlobalBounds().contains(mPos)){
+		killAll();
 		state = 0;
 		loading = false;
 		inputIP = false;

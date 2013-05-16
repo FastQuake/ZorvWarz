@@ -425,7 +425,12 @@ void sendSpawnPackets(ENetPeer *peer){
 	for(int i=0;i<serverEntities.entityList.size();i++){
 		ss.str("");
 		ss.clear();
-		thisEntity = serverEntities.entityList[i];
+		try{
+			thisEntity = serverEntities.entityList.at(i);
+		} catch(const std::out_of_range& oor) {
+			i = 0;
+			continue;
+		}
 		//if((p1Orp2(peer) == 1 && thisEntity == p1) || (p1Orp2(peer) == 2 && thisEntity == p2))
 		if(thisEntity == p1 || thisEntity == p2 || thisEntity == serverShip || thisEntity->type == "monster")
 			continue;

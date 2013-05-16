@@ -67,5 +67,6 @@ extern sf::Sound pickupSound;
 void runClient(std::string selection);
 std::string intToStr(int num);
 std::vector<sf::FloatRect> whatIntersectsBox(sf::FloatRect hitBox);
+void killAll();
 
 #endif

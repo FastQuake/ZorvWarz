@@ -630,7 +630,6 @@ void clientHandlePacket(string packetData, ENetPeer *peer){
 				ss >> clientStats.p2ShotsFired;
 			}
 			state = 2;
-			killAll();
 			break;
 	}
 }
