@@ -91,6 +91,13 @@ void updateEndScreen(Stats *endStats){
 		serverEntities.entityList.clear();
 		doShutdown = false;
 		die = true;
+		dead = false;
+
+		player->readyToUpdate = true;
+		player->drawable = true;
+		player->collides = true;
+
+		player->health = 10;
 	}
 
 	player1.setString("Player 1");

@@ -3,9 +3,6 @@
 #include "ai.h"
 #include <sstream>
 #include <stdio.h>
-#ifdef linux
-#include <X11/Xlib.h>
-#endif
 
 using namespace std;
 
@@ -26,6 +23,8 @@ bool isp1 = true;
 bool twoP = false;
 bool anyoneOn = false;
 bool alreadyConnected = false;
+bool p1Dead;
+bool p2Dead;
 
 void sendStats(ENetPeer *peer);
 
@@ -34,6 +33,11 @@ void initServer(){
 	twoP = false;
 	anyoneOn = false;
 	alreadyConnected = false;
+	p1Dead = false;
+	p2Dead = false;
+	//Set seed based on time
+	seed = time(NULL);
+	cout << "seed: " << seed << endl;
 	srand(seed);
 	stats.p1Score = 0;
 	stats.p1Kills = 0;
@@ -88,6 +92,16 @@ void despawnLevel(){
 		cout << "KILLING: " << ss.str() << " " << thisEntity->type << endl;
 		serverEntities.removeByRef(thisEntity);
 		i = 0;
+	}
+}
+
+void setTarget(int t){
+	for(int i=0;i<serverEntities.entityList.size();i++){
+		Entity *thisEntity = serverEntities.entityList[i];
+		if(thisEntity->type == "monster"){
+			Monster *mon = (Monster*)thisEntity;
+			mon->targetPlayer = t;
+		}
 	}
 }
 
@@ -180,6 +194,11 @@ void serverLoop(){
 				}
 				twoP = false;
 			}
+		}
+
+		if(p1Dead && p2Dead){
+			sendStats(p1->peer);
+			sendStats(p2->peer);
 		}
 
 		//Handle entities
@@ -287,6 +306,7 @@ void handlePacket(string packetData, ENetPeer *peer){
 					sendSpawnPackets(peer);
 					aim.spawnMonsters(&serverEntities.entityList,10);
 					sendSpawnMonsters(peer);
+					sendSpawnMonsters(p1->peer);
 					alreadyConnected = true;
 				} else {
 					cout << "player 2 has already connected, sending old data" << endl;
@@ -380,6 +400,19 @@ void handlePacket(string packetData, ENetPeer *peer){
 		break;
 	case csRequestEnd:
 		sendStats(peer);
+		break;
+	case csImDead:
+		if(peer == p1->peer){
+			p1Dead = true;
+			packet = createPacket(scHeDead,"",ENET_PACKET_FLAG_RELIABLE);
+			enet_peer_send(p2->peer,0,packet);
+			setTarget(2);
+		} else {
+			p2Dead = true;
+			packet = createPacket(scHeDead,"",ENET_PACKET_FLAG_RELIABLE);
+			enet_peer_send(p1->peer,0,packet);
+			setTarget(1);
+		}
 		break;
 	default:
 		break;

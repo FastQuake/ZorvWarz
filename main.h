@@ -41,6 +41,7 @@ extern int state;
 extern int seed;
 
 extern bool doShutdown;
+extern bool dead;
 
 extern sf::Vector2i mousePos;
 

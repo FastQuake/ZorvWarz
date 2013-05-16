@@ -12,7 +12,8 @@ enum{
 	csMove,
 	csAttack,
 	csTookHealth,
-	csRequestEnd
+	csRequestEnd,
+	csImDead
 };
 
 //Server to client packet types
@@ -25,7 +26,8 @@ enum{
 	scDespawn,
 	scChgLvl,
 	scStats,
-	scP2Dsc
+	scP2Dsc,
+	scHeDead
 };
 
 struct Stats{
