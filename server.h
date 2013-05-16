@@ -41,6 +41,7 @@ struct Stats{
 };
 
 extern ShipEntity *serverShip;
+extern EntityManager serverEntities;
 
 void serverLoop();
 void initServer();

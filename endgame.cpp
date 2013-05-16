@@ -20,6 +20,8 @@ sf::Text p2ShotsFired;
 sf::Text totalKills;
 sf::Text totalScore;
 
+bool die = false;
+
 void initEndScreen(){
 	const int p1Column = 25;
 	const int p2Column = 450;
@@ -87,9 +89,9 @@ void updateEndScreen(Stats *endStats){
 		ready = false;
 		serverThread->wait();
 		clientThread->wait();
-		doShutdown = false;
 		serverEntities.entityList.clear();
-		serverEntities.entityList.swap(serverEntities.entityList);
+		doShutdown = false;
+		die = true;
 	}
 
 	player1.setString("Player 1");
@@ -117,6 +119,8 @@ void updateEndScreen(Stats *endStats){
 }
 
 void drawEndScreen(sf::RenderWindow *screen){
+	//if(die)
+	//	screen->close();
 	screen->draw(ebgSprite);
 	screen->draw(ebButSprite);
 	screen->draw(player1);

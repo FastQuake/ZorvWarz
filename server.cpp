@@ -30,6 +30,10 @@ bool alreadyConnected = false;
 void sendStats(ENetPeer *peer);
 
 void initServer(){
+	isp1 = true;
+	twoP = false;
+	anyoneOn = false;
+	alreadyConnected = false;
 	srand(seed);
 	isp1 = true;
 	twoP = false;
