@@ -511,8 +511,8 @@ void sendSpawnMonsters(ENetPeer *peer){
 
 void sendStats(ENetPeer *peer){
 
-	stats.p1Score = (stats.p1Kills*10 + stats.p1HealthUsed + level*20) - stats.p1ShotsFired;
-	stats.p2Score = (stats.p2Kills*10 + stats.p2HealthUsed + level*20) - stats.p2ShotsFired;
+	stats.p1Score = (stats.p1Kills*20 + stats.p1HealthUsed + level*30) - stats.p1ShotsFired;
+	stats.p2Score = (stats.p2Kills*20 + stats.p2HealthUsed + level*30) - stats.p2ShotsFired;
 	stringstream ss;
 	ss.str("");
 	ss.clear();
