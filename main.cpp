@@ -70,6 +70,7 @@ bool serverReady = true;
 bool connecting = false;
 bool doShutdown = false;
 bool gameStateDone = false;
+bool connectedOnce = false;
 
 bool keyUp = false;
 bool keyDown = false;
@@ -339,7 +340,7 @@ int main(int argc, char *argv[]){
 		else if(state == 1){
 			gameStateDone = false;
 			//If we lost player2
-			if(!twoPlayers && !singleplayer){
+			if(!twoPlayers && !singleplayer && connectedOnce){
 				if(p2Timer.getElapsedTime().asSeconds() > 20){
 					cout << "SHUTTING DOWN" << endl;
 					ENetPacket *endRequestPacket = createPacket(csRequestEnd,"",ENET_PACKET_FLAG_RELIABLE);
@@ -529,6 +530,7 @@ void clientHandlePacket(string packetData, ENetPeer *peer){
 				player2->rot = rot;
 				player2->type = "player";
 				twoPlayers = true;
+				connectedOnce = true;
 				entities.entityList.push_back(player2);
 				lm.lightList.push_back(p2Light);
 			}else if(type == "box"){
@@ -552,7 +554,7 @@ void clientHandlePacket(string packetData, ENetPeer *peer){
 			break;
 		case scDespawn:
 			ss >> id;
-			cout << "DESPAWNING " << id << endl;
+			cout << "DESPAWNING on client" << id << endl;
 			guy = entities.getByID(id);
 			if(guy->type == "monster"){
 				guy->health = -1;

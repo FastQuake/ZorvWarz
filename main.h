@@ -50,6 +50,7 @@ extern bool keyDown;
 extern bool keyLeft;
 extern bool keyRight;
 extern bool mouseRight;
+extern bool connectedOnce;
 
 extern EntityManager entities;
 extern ShipEntity *ship;
