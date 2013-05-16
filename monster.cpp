@@ -163,7 +163,8 @@ void Monster::stepPath(Node* currentNode,float dTime){
 		cout << "path ended" << this->ID << endl;
 		cout << "node position" << this->ID << " " << currentPath[currentPath.size()-1]->middle.x << " " << currentPath[currentPath.size()-1]->middle.y << endl;
 		cout << "node position WITH THINGY" << this->ID << " " << currentPath[currentPath.size()-1]->nodeBox.left << " " << currentPath[currentPath.size()-1]->nodeBox.top << endl;
-		cout << "mah crazy ass is at" << this->ID << " " << this->x+16 << " " << this->y+16 << endl;
+		//cout << "mah crazy ass is at" << this->ID << " " << this->x+16 << " " << this->y+16 << endl;
+		cout << "I am at" << this->ID << " " << this->x+16 << " " << this->y+16 << endl;
 		atEnd = true;
 		return;
 	}
