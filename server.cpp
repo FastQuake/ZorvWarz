@@ -457,10 +457,15 @@ void sendSpawnMonsters(ENetPeer *peer){
 
 void sendStats(ENetPeer *peer){
 	stringstream ss;
+	ss.str("");
+	ss.clear();
 
 	ss << stats.p1Score << " " << stats.p1Kills << " " <<stats.p1HealthUsed << " " << stats.p1ShotsFired;
 	if(!singleplayer)
 		ss << " " << stats.p2Score << " " << stats.p2Kills << " " << stats.p2HealthUsed << " " << stats.p2ShotsFired;
+	else
+		ss << " " << 0 << " " << 0 << " " << 0 << " " << 0 << " ";
+	cout << "SENDING: " << ss.str() << endl;
 	ENetPacket *statsPacket = createPacket(scStats,ss.str(),ENET_PACKET_FLAG_RELIABLE);
 	enet_peer_send(peer,0,statsPacket);
 }

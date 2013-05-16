@@ -72,7 +72,7 @@ void initEndScreen(){
 	totalKills.setScale(sf);
 }
 
-void updateEndScreen(Stats endStats){
+void updateEndScreen(Stats *endStats){
 
 	sf::Vector2f mPos;
 	mPos.x = mousePos.x;
@@ -89,23 +89,23 @@ void updateEndScreen(Stats endStats){
 
 	player1.setString("Player 1");
 	player2.setString("Player 2");
-	p1Score.setString("Score: " + endStats.p1Score);
-	p1Kills.setString("Kills: " + endStats.p1Kills);
-	p1HealthUsed.setString("Health packs\nused: " + endStats.p1HealthUsed);
-	p1ShotsFired.setString("Shots fired: " + endStats.p1ShotsFired);
+	p1Score.setString("Score: " + intToStr(endStats->p1Score));
+	p1Kills.setString("Kills: " + intToStr(endStats->p1Kills));
+	p1HealthUsed.setString("Health packs\nused: " + intToStr(endStats->p1HealthUsed));
+	p1ShotsFired.setString("Shots fired: " + intToStr(endStats->p1ShotsFired));
 
 	player1.setString("Player 1");
 	player2.setString("Player 2");
-	p2Score.setString("Score: " + endStats.p2Score);
-	p2Kills.setString("Kills: " + endStats.p2Kills);
-	p2HealthUsed.setString("Health packs\nused: " + endStats.p2HealthUsed);
-	p2ShotsFired.setString("Shots fired: " + endStats.p2ShotsFired);
+	p2Score.setString("Score: " + intToStr(endStats->p2Score));
+	p2Kills.setString("Kills: " + intToStr(endStats->p2Kills));
+	p2HealthUsed.setString("Health packs\nused: " + intToStr(endStats->p2HealthUsed));
+	p2ShotsFired.setString("Shots fired: " + intToStr(endStats->p2ShotsFired));
 
-	totalScore.setString("Total score: " + (endStats.p1Score+endStats.p2Score));
+	totalScore.setString("Total score: " + intToStr(endStats->p1Score+endStats->p2Score));
 	totalScore.setOrigin(totalScore.getLocalBounds().width/2,totalScore.getLocalBounds().height/2);
 	totalScore.setPosition(400,500);
 
-	totalKills.setString("Total Kills: " + (endStats.p1Kills+endStats.p2Kills));
+	totalKills.setString("Total Kills: " + intToStr(endStats->p1Kills+endStats->p2Kills));
 	totalKills.setOrigin(totalKills.getLocalBounds().width/2,totalKills.getLocalBounds().height/2);
 	totalKills.setPosition(400,548);
 

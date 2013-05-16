@@ -403,7 +403,7 @@ int main(int argc, char *argv[]){
 			window.draw(fpsText);
 			window.display();
 		}else if(state == 2){
-			updateEndScreen(clientStats);
+			updateEndScreen(&clientStats);
 			window.clear();
 			drawEndScreen(&window);
 			window.display();
@@ -418,7 +418,7 @@ int main(int argc, char *argv[]){
 /** Thread to handle all client networking **/
 void runClient(string selection){
 	while(true){
-		cout << "CHECKING IF SERVER IS READY" << endl;
+		//cout << "CHECKING IF SERVER IS READY" << endl;
 		readyMutex.lock();
 		if(serverReady)
 			break;
@@ -617,6 +617,7 @@ void clientHandlePacket(string packetData, ENetPeer *peer){
 			entities.removeByRef(player2);
 			break;
 		case scStats:
+			cout << "GOT: " << ss.str() << endl;
 			ss >> clientStats.p1Score;
 			ss >> clientStats.p1Kills;
 			ss >> clientStats.p1HealthUsed;
