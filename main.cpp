@@ -331,9 +331,14 @@ int main(int argc, char *argv[]){
 		//If in game state
 		else if(state == 1){
 			//If we lost player2
-			if(!twoPlayers && !singleplayer && p2Timer.getElapsedTime().asSeconds() > 20){
-				ENetPacket *endRequestPacket = createPacket(csRequestEnd,"",ENET_PACKET_FLAG_RELIABLE);
-				packetList.push_back(intToStr(csRequestEnd));
+			if(!twoPlayers && !singleplayer){
+				if(p2Timer.getElapsedTime().asSeconds() > 20){
+					cout << "SHUTTING DOWN" << endl;
+					ENetPacket *endRequestPacket = createPacket(csRequestEnd,"",ENET_PACKET_FLAG_RELIABLE);
+					packetList.push_back(intToStr(csRequestEnd));
+				}
+			} else {
+				p2Timer.restart();
 			}
 			//Check if player has moved, if they did move send create packet with
 			//new player location and rotation

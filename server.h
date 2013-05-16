@@ -50,6 +50,7 @@ void loadLevel(bool ai);
 void despawnLevel();
 int p1Orp2(ENetPeer *peer);
 void sendSpawnPackets(ENetPeer *peer);
+void sendSpawnMonsters(ENetPeer *peer);
 ENetPacket *createPacket(int packetType, string packetData, int packetFlag);
 
 extern Mob *p1;
