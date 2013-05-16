@@ -144,6 +144,16 @@ void setup(){
 	srand(seed);
 	addEntities();
 
+	clientStats.p1Score = 0;
+	clientStats.p1Kills = 0;
+	clientStats.p1HealthUsed = 0;
+	clientStats.p1ShotsFired = 0;
+
+	clientStats.p2Score = 0;
+	clientStats.p2Kills = 0;
+	clientStats.p2HealthUsed = 0;
+	clientStats.p2ShotsFired = 0;
+
 	bTex.loadFromFile(bulletFile);
 	blackBgTex.loadFromFile("data/textures/black.png");
 	blackBgSprite.setTexture(blackBgTex);
@@ -287,7 +297,8 @@ int main(int argc, char *argv[]){
 					keyRight = true;
 				}
 				if(event.key.code == sf::Keyboard::Escape){
-					window.close();
+					//window.close();
+					packetList.push_back(intToStr(csRequestEnd));
 				}
 			}
 			if(event.type == sf::Event::MouseButtonPressed &&
