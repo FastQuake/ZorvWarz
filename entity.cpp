@@ -3,7 +3,7 @@
 int idCounter = 0;
 
 /**
-  * Super constructor for Entities that assignes them an ID
+  * Super constructor for Entities that assigns them an ID
   */
 Entity::Entity(){
 	ID = idCounter;
@@ -12,11 +12,11 @@ Entity::Entity(){
 
 /*
 EntityManager::~EntityManager(){
-	//Delete all alocated entities from the entity list
+	//Delete all allocated entities from the entity list
 	for(int i=0;i<entityList.size();i++){
 		delete entityList[i];
 	}
-}*/ // Don't think I acutally need to delete all entities if I pass them by &entity to the list
+}*/ // Don't think I actually need to delete all entities if I pass them by &entity to the list
 
 /**
   * Loop through all entities, update them if they are ready to update
