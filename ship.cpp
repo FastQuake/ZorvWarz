@@ -34,7 +34,7 @@ Ship::Ship(bool serv){
 			if(j == i){
 				continue;
 			}
-			//Check if the rooms are inside eachother
+			//Check if the rooms are inside each other
 			if(room1.intersects(room2)){
 				roomList[j].rndRoom();
 				recheck = true;
